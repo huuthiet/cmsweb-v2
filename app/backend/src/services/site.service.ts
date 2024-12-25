@@ -11,6 +11,7 @@ import { validate } from "class-validator";
 
 class SiteService {
   public async getAllSites(): Promise<SiteResponseDto[] | []> {
+    console.log("Test 1")
     const sitesData = await siteRepository.find({
       relations: ["departments", "company", "projects"],
     });
