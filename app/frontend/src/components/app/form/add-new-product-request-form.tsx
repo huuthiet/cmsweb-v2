@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import { useTranslation } from 'react-i18next'
 
 import {
   FormField,
@@ -11,54 +11,83 @@ import {
   Form,
   Button
 } from '@/components/ui'
-import { addNewProductRequestSchema } from '@/schemas'
+import { addNewProductRequestSchema, TAddNewProductRequestSchema } from '@/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { IProductRequisitionInfo } from '@/types'
+import { IProductInfo } from '@/types'
+import { SelectUnit } from '@/components/app/select'
 
 interface IFormAddNewProductProps {
-  data?: IProductRequisitionInfo
-  onSubmit: (data: IProductRequisitionInfo) => void
+  data?: IProductInfo
+  onSubmit: (data: TAddNewProductRequestSchema) => void
 }
 
 export const AddNewProductRequestForm: React.FC<IFormAddNewProductProps> = ({ data, onSubmit }) => {
-  console.log('data in form', data)
-  const form = useForm<z.infer<typeof addNewProductRequestSchema>>({
+  const { t } = useTranslation('tableData')
+  const isEditMode = !!data
+
+  const form = useForm<TAddNewProductRequestSchema>({
     resolver: zodResolver(addNewProductRequestSchema),
     defaultValues: {
-      code: data?.code || '',
-      productSlug: data?.productSlug || '',
-      name: data?.name || '',
-      provider: data?.provider || '',
-      unit: data?.unit || '',
-      requestQuantity: data?.requestQuantity || 1,
-      description: data?.description || '',
-      status: data?.status || ''
+      slug: data?.slug || '',
+      product: {
+        code: data?.code || '',
+        slug: data?.slug || '',
+        name: data?.name || '',
+        provider: data?.provider || '',
+        unit: { name: data?.unit.name || '', slug: data?.unit.slug || '' },
+        quantity: data?.quantity || 1,
+        description: data?.description || ''
+      },
+      isExistProduct: !!data,
+      requestQuantity: data?.quantity || 1
     }
   })
 
-  const handleSubmit = (values: z.infer<typeof addNewProductRequestSchema>) => {
-    console.log('values in form', values)
-    const completeData: IProductRequisitionInfo = {
+  const handleSubmit = (values: TAddNewProductRequestSchema) => {
+    const completeData: TAddNewProductRequestSchema = {
       ...values,
       requestQuantity: Number(values.requestQuantity),
-      productSlug: values.productSlug
+      product: {
+        ...values.product,
+        unit: {
+          name: values.product.unit.name,
+          slug: values.product.unit.slug
+        }
+      }
     }
     onSubmit(completeData)
   }
+
+  const productCode = form.watch('product.code')
 
   return (
     <div className="mt-3">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+            {productCode && (
+              <FormField
+                control={form.control}
+                name="product.code"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('tableData.productCode')}</FormLabel>
+                    <FormControl>
+                      <Input {...field} readOnly />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <FormField
               control={form.control}
-              name="code"
+              name="product.name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Mã vật tư</FormLabel>
+                  <FormLabel>{t('tableData.productName')}</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} readOnly={isEditMode} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -66,43 +95,28 @@ export const AddNewProductRequestForm: React.FC<IFormAddNewProductProps> = ({ da
             />
             <FormField
               control={form.control}
-              name="name"
+              name="product.provider"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tên vật tư</FormLabel>
+                  <FormLabel>{t('tableData.provider')}</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} readOnly={isEditMode} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="provider"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nhà cung cấp</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className="grid grid-cols-3 gap-2">
             <FormField
               control={form.control}
               name="requestQuantity"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Số lượng</FormLabel>
+                  <FormLabel>{t('tableData.quantity')}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
                       min="1"
-                      placeholder="Nhập số lượng"
+                      placeholder={t('tableData.quantity')}
                       {...field}
                       value={field.value || 1}
                       onChange={(e) => field.onChange(Number(e.target.value))}
@@ -115,25 +129,34 @@ export const AddNewProductRequestForm: React.FC<IFormAddNewProductProps> = ({ da
 
             <FormField
               control={form.control}
-              name="unit"
+              name="product.unit"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Đơn vị</FormLabel>
+                  <FormLabel>{t('tableData.unit')}</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <SelectUnit
+                      onChange={(value) =>
+                        field.onChange({ name: value?.label || '', slug: value?.value || '' })
+                      }
+                      defaultValue={
+                        data?.unit ? { value: data.unit.slug, label: data.unit.name } : undefined
+                      }
+                      isDisabled={isEditMode}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
-              name="description"
+              name="product.description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Mô tả</FormLabel>
+                  <FormLabel>{t('tableData.description')}</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} readOnly={isEditMode} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -141,7 +164,7 @@ export const AddNewProductRequestForm: React.FC<IFormAddNewProductProps> = ({ da
             />
           </div>
           <div className="flex justify-end w-full">
-            <Button type="submit">Thêm</Button>
+            <Button type="submit">{isEditMode ? t('tableData.add') : t('tableData.add')}</Button>
           </div>
         </form>
       </Form>

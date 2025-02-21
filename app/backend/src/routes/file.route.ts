@@ -3,4 +3,5 @@ import { fileController } from "@controllers";
 
 export const fileRoute: Router = Router();
 
-fileRoute.route("/").post(fileController.uploadFileTest);
+// [GET] /api/v1/files
+fileRoute.route("/:name").get(fileController.getFileByName);

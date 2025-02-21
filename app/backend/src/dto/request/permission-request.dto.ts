@@ -3,13 +3,21 @@ import { Expose } from "class-transformer";
 import { IsNotEmpty } from "class-validator";
 
 export class CreatePermissionRequestDto {
-  // @IsNotEmpty({message: "INVALID_PRODUCT_NAME"})
+  @IsNotEmpty({ message: "INVALID_RESOURCE_SLUG" })
   @Expose()
   @AutoMap()
-  roleSlug?: string;
+  resourceSlug?: string;
 
-  // @IsNotEmpty({ message: "INVALID_PRODUCT_UNIT" })
+  @IsNotEmpty({ message: "INVALID_AUTHORITY_SLUG" })
   @Expose()
   @AutoMap()
   authoritySlug?: string;
+
+  @Expose()
+  @AutoMap()
+  requiredOwner?: boolean;
+}
+
+export class UpdatePermissionRequestDto extends CreatePermissionRequestDto {
+  slug?: string;
 }

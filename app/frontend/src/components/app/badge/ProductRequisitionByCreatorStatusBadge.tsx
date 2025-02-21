@@ -1,11 +1,11 @@
-import { RequestRequisitionStatus } from '@/types'
+import { ProductRequisitionStatus } from '@/types'
 
 export interface ProductRequisitionByCreatorStatusBadgeProps {
   isRecalled: boolean
-  status: RequestRequisitionStatus
+  status: ProductRequisitionStatus
 }
 
-const getBadgeColorClass = (status: RequestRequisitionStatus, isRecalled: boolean): string => {
+const getBadgeColorClass = (status: ProductRequisitionStatus, isRecalled: boolean): string => {
   if (isRecalled) {
     return 'bg-red-500'
   }
@@ -14,6 +14,7 @@ const getBadgeColorClass = (status: RequestRequisitionStatus, isRecalled: boolea
     case 'accepted_stage_1':
       return 'bg-yellow-500'
     case 'accepted_stage_2':
+      return 'bg-yellow-500'
     case 'waiting_export':
       return 'bg-green-500'
     case 'cancel':
@@ -23,17 +24,17 @@ const getBadgeColorClass = (status: RequestRequisitionStatus, isRecalled: boolea
   }
 }
 
-const getBadgeText = (status: RequestRequisitionStatus, isRecalled: boolean): string => {
+const getBadgeText = (status: ProductRequisitionStatus, isRecalled: boolean): string => {
   if (isRecalled) {
     switch (status) {
       case 'cancel':
         return 'Đã bị hủy'
       case 'waiting':
-        return 'Đã bị hoàn ở bước 2'
+        return 'Bị hoàn ở bước 2'
       case 'accepted_stage_1':
-        return 'Đã bị hoàn ở bước 3'
+        return 'Bị hoàn ở bước 3'
       default:
-        return 'Đã bị hoàn'
+        return 'Bị hoàn'
     }
   }
   switch (status) {
@@ -57,7 +58,7 @@ export const ProductRequisitionByCreatorStatusBadge: React.FC<
 > = ({ status, isRecalled }) => {
   return (
     <span
-      className={`py-1.5 px-2.5 ${getBadgeColorClass(status, isRecalled)} rounded-full text-white`}
+      className={`inline-block py-1.5 px-2.5 min-w-[8.5rem] text-center ${getBadgeColorClass(status, isRecalled)} rounded-full text-white`}
     >
       {getBadgeText(status, isRecalled)}
     </span>

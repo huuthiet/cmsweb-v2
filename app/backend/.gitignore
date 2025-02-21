@@ -4,3 +4,6 @@
 /node_modules/
 /logs/
 /coverage/
+/public/images
+/public/templates/excel/output
+/backup

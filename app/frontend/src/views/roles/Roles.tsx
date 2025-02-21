@@ -4,31 +4,32 @@ import { ReaderIcon } from '@radix-ui/react-icons'
 
 import { DataTable, Label } from '@/components/ui'
 import { usePagination, useRoles } from '@/hooks'
-import { useRoleColumns } from './DataTable/columns'
-import { CustomComponent } from './DataTable/CustomComponent'
+import { RoleActionOptions, useRoleColumns } from './data-table'
 
 const Roles: React.FC = () => {
   const { t } = useTranslation(['roles'])
-  const { pagination } = usePagination()
+  const { pagination, handlePageChange, handlePageSizeChange } = usePagination()
 
-  const { data: roles } = useRoles({})
+  const { data: roles, isLoading } = useRoles({
+    order: 'DESC',
+    page: pagination.pageIndex,
+    pageSize: pagination.pageSize
+  })
 
   return (
-    <div className="flex flex-col gap-4">
-      <Label className="flex items-center gap-1 font-semibold text-normal text-md font-beVietNam">
+    <div className="flex flex-col gap-4 mt-2">
+      <Label className="flex gap-1 items-center font-semibold text-normal text-md font-beVietNam">
         <ReaderIcon className="header-icon" />
         {t('roles.list')}
       </Label>
       <DataTable
         columns={useRoleColumns()}
-        data={roles || []}
-        pages={0}
-        page={pagination.pageIndex + 1}
-        pageSize={pagination.pageSize}
-        onPageChange={() => {}}
-        onPageSizeChange={() => {}}
-        CustomComponent={CustomComponent}
-        isLoading={false}
+        data={roles?.items || []}
+        pages={roles?.totalPages || 0}
+        onPageChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
+        isLoading={isLoading}
+        actionOptions={RoleActionOptions}
       />
     </div>
   )

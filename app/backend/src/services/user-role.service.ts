@@ -11,7 +11,6 @@ import { CreateUserRoleRequestDto } from "@dto/request";
 import { validate } from "class-validator";
 import { ErrorCodes, GlobalError, ValidationError } from "@exception";
 import { UserRole } from "@entities";
-import { logger } from "@lib";
 
 class UserRoleService {
   public async createUserRole(
@@ -28,10 +27,13 @@ class UserRoleService {
     if (!user) throw new GlobalError(ErrorCodes.USER_NOT_FOUND);
 
     // Check existed
-    const isExisted = await userRoleRepository.existsBy({
-      role: { id: role.id },
-      user: { id: user.id },
+    const isExisted = await userRoleRepository.exists({
+      where: {
+        user: { id: user.id },
+        role: { id: role.id },
+      },
     });
+
     if (isExisted) throw new GlobalError(ErrorCodes.USER_ROLE_EXIST);
 
     const userRole = new UserRole();
@@ -41,6 +43,16 @@ class UserRoleService {
     const createdUserRole = await userRoleRepository.createAndSave(userRole);
 
     return mapper.map(createdUserRole, UserRole, UserRoleResponseDto);
+  }
+
+  public async deleteUserRole(slug: string) {
+    const userRole = await userRoleRepository.findOne({
+      where: { slug },
+    });
+    if (!userRole) throw new GlobalError(ErrorCodes.USER_ROLE_NOT_FOUND);
+
+    const deleted = await userRoleRepository.softDelete({ slug });
+    return deleted.affected || 0;
   }
 }
 

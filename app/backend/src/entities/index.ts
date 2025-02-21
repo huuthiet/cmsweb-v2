@@ -22,3 +22,8 @@ export * from "./product-warehouse.entity";
 export * from "./warehouse.entity";
 export * from "./rfid.entity";
 export * from "./temporary-product.entity";
+export * from "./resource.entity";
+export * from "./role-permission.entity";
+export * from "./product-purchase-form.entity";
+export * from "./purchase-product.entity";
+export * from "./notification.entity";

@@ -1,57 +1,53 @@
-import { z } from 'zod'
+import { useTranslation } from 'react-i18next'
 
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
+  DialogTrigger,
+  ScrollArea
 } from '@/components/ui'
 
-import { AddNewProductRequestForm } from '@/components/app/form'
 import { IProductRequisitionInfo } from '@/types'
-import { addNewProductRequestSchema } from '@/schemas'
-
-interface DialogEditProductRequisitionProps {
-  handleAddRequest: (product: IProductRequisitionInfo) => void
-  openDialog: boolean
-  product: IProductRequisitionInfo | null
-  component: React.ReactNode
-  onOpenChange: () => void
-}
+import { EditProductRequisitionForm } from '@/components/app/form'
+import { useRequisitionStore } from '@/stores'
+import { useState } from 'react'
 
 export function DialogEditProductRequisition({
-  handleAddRequest,
-  openDialog,
-  product,
-  component,
-  onOpenChange
-}: DialogEditProductRequisitionProps) {
-  console.log('product in dialoggg', product)
-  const handleSubmit = (data: z.infer<typeof addNewProductRequestSchema>) => {
-    const completeData: IProductRequisitionInfo = {
-      ...data,
-      requestQuantity: Number(data.requestQuantity)
-    }
-    handleAddRequest(completeData)
-    onOpenChange()
+  product
+}: {
+  product: IProductRequisitionInfo | null
+}) {
+  const { t } = useTranslation('tableData')
+  const { updateProductToRequisition } = useRequisitionStore()
+  const [isOpen, setIsOpen] = useState(false)
+
+  const handleConfirm = (data: IProductRequisitionInfo) => {
+    updateProductToRequisition(data, data.requestQuantity)
+    setIsOpen(false)
   }
 
   return (
-    <Dialog open={openDialog} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>{component}</DialogTrigger>
-      <DialogContent className="max-w-[44rem]">
-        <DialogHeader>
-          <DialogTitle>Chỉnh sửa thông tin vật tư</DialogTitle>
-          <DialogDescription>
-            Nhập đầy đủ thông tin bên dưới để chỉnh sửa thông tin vật tư
-          </DialogDescription>
-        </DialogHeader>
-        <AddNewProductRequestForm
-          data={product || ({} as IProductRequisitionInfo)}
-          onSubmit={handleSubmit}
-        />
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger className="flex justify-start w-full" asChild>
+        <Button variant="ghost" className="gap-1 text-sm" onClick={() => setIsOpen(true)}>
+          {t('tableData.editProduct')}
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="rounded-md max-w-[20rem] sm:max-w-[60rem]">
+        <ScrollArea className="max-h-[80vh]">
+          <DialogHeader>
+            <DialogTitle>{t('tableData.editProduct')}</DialogTitle>
+            <DialogDescription>{t('tableData.editProductDescription')}</DialogDescription>
+          </DialogHeader>
+          <EditProductRequisitionForm
+            data={product || undefined}
+            onSubmit={(data: IProductRequisitionInfo) => handleConfirm(data)}
+          />
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   )

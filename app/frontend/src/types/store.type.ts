@@ -1,13 +1,20 @@
-import { IUserInfo, IUserRoleResponse } from './user.type'
+import { IUserInfo, IUserPermission } from './user.type'
 
 export interface ILayoutStore {
   isMinimized: boolean
   toggleMinimized: () => void
 }
 
+export interface IThemeStore {
+  theme: string
+  setTheme: (theme: string) => void
+  getTheme: () => string
+}
+
 export interface IUserStore {
-  userInfo?: IUserInfo
+  userInfo: IUserInfo | null
   setUserInfo: (userInfo: IUserInfo) => void
+  getUserInfo: () => IUserInfo | null
   removeUserInfo: () => void
 }
 
@@ -34,7 +41,17 @@ export interface IRequestProductRequisitionStore {
 }
 
 export interface IUserInfoPermissionsStore {
-  userRoles: IUserRoleResponse[]
-  setUserRoles: (roles: IUserRoleResponse[]) => void
+  userRoles: IUserPermission[]
+  setUserRoles: (userRoles: IUserPermission[]) => void
   clearUserRoles: () => void
+}
+
+export interface IDownloadStore {
+  progress: number
+  fileName: string
+  isDownloading: boolean
+  setProgress: (progress: number) => void
+  setFileName: (fileName: string) => void
+  setIsDownloading: (isDownloading: boolean) => void
+  reset: () => void
 }

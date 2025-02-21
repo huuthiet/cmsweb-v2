@@ -1,18 +1,17 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { format, parseISO } from 'date-fns'
 
-import { Button, DataTableRequisition } from '@/components/ui'
+import { Button, DataTable } from '@/components/ui'
 import {
   IFinalProductRequisition,
-  IProductRequirementInfoCreate,
+  IProductRequisitionFormCreate,
   IProductRequisitionInfo
 } from '@/types'
-import { useColumnsConfirm } from '@/views/product-requisitions/DataTable/columnsConfirm'
+import { useColumnsConfirm } from '@/views/product-requisitions/data-table/columns/columnsConfirm'
 import { useRequisitionStore } from '@/stores'
 
-import { TbeLogo } from '@/assets/images'
-import { MetekLogo } from '@/assets/images'
-import { SongnamLogo } from '@/assets/images'
+import { baseURL } from '@/constants'
 
 interface IConfirmProductFormProps {
   onConfirm: (data: IFinalProductRequisition) => void
@@ -22,65 +21,67 @@ interface IConfirmProductFormProps {
 export const ConfirmProductForm: React.FC<IConfirmProductFormProps> = ({ onConfirm, onBack }) => {
   const { t } = useTranslation('productRequisition')
 
-  const { requisition, getRequisition, updateProductToRequisition, deleteProductToRequisition } =
-    useRequisitionStore()
+  const { requisition, getRequisition } = useRequisitionStore()
 
-  const handleEditRequest = (product: IProductRequisitionInfo) => {
-    updateProductToRequisition(product, product.requestQuantity)
-  }
+  const columns = useColumnsConfirm()
 
-  const handleDeleteProduct = (product: IProductRequisitionInfo) => {
-    deleteProductToRequisition(product)
-  }
-
-  const columns = useColumnsConfirm(handleEditRequest, handleDeleteProduct)
-
-  const transformRequisitionToApiFormat = (requisition: IProductRequirementInfoCreate) => {
+  const transformRequisitionToApiFormat = (requisition: IProductRequisitionFormCreate) => {
     return {
       code: requisition.code,
-      companySlug: requisition.company.slug,
-      siteSlug: requisition.site.slug,
-      projectSlug: requisition.project.slug,
+      projectName: requisition.projectName,
       type: requisition.type,
+      deadlineApproval: requisition.deadlineApproval,
       description: requisition.note || '',
+      departmentSlug: requisition.department.slug,
       requestProducts: requisition.requestProducts.map((product) => ({
-        productSlug: product.productSlug,
-        requestQuantity: product.requestQuantity
-      })),
-      userApprovals: requisition.userApprovals.map((approval) => ({
-        userSlug: approval.userSlug,
-        roleApproval: approval.roleApproval
+        product: product.product.slug,
+        requestQuantity: product.requestQuantity,
+        name: product.product.name,
+        provider: product.product.provider,
+        unit: product.product.unit.slug,
+        description: product.product.description
       }))
     }
   }
 
   const handleConfirm = () => {
-    const requisition = getRequisition() as IProductRequirementInfoCreate
-    const apiFormattedRequisition = transformRequisitionToApiFormat(requisition)
-    onConfirm(apiFormattedRequisition)
+    const requisition = getRequisition() as IProductRequisitionFormCreate
+    const formattedRequisition = transformRequisitionToApiFormat(requisition)
+    onConfirm(formattedRequisition)
+  }
+
+  const formatDeadline = (dateString: string | undefined) => {
+    if (!dateString) return ''
+    try {
+      const date = parseISO(dateString)
+      return format(date, 'HH:mm dd/MM/yyyy')
+    } catch (error) {
+      console.error('Error formatting date:', error)
+      return dateString
+    }
+  }
+
+  const getLogoUrl = () => {
+    if (getRequisition()?.company.logo) return `${baseURL}/files/${getRequisition()?.company.logo}`
   }
 
   return (
     <div className="mt-3">
       <div className="flex flex-col justify-center gap-4">
-        <div className="grid items-center justify-between grid-cols-6 py-3 mb-4 border-b-2">
-          {getRequisition()?.company.name.includes('Thái Bình') ? (
-            <img className="w-24 col-span-1" src={TbeLogo} />
-          ) : getRequisition()?.company.name.includes('Mekong') ? (
-            <img src={MetekLogo} className="w-40" />
-          ) : (
-            <img className="w-40 col-span-1" src={SongnamLogo} />
-          )}
-          <span className="col-span-4 text-2xl font-extrabold text-center text-normal font-beVietNam uppercase">
+        <div className="grid items-center justify-between grid-cols-8 py-2 mb-4 border-b-2 sm:grid-cols-6">
+          <div className="w-full col-span-1">
+            <img src={getLogoUrl()} className="w-10 sm:w-[4rem]" />
+          </div>
+          <span className="col-span-4 flex justify-end sm:justify-center sm:col-span-4 text-[0.5rem] font-extrabold text-center uppercase sm:text-2xl text-normal font-beVietNam">
             {t('productRequisition.confirmProductRequisitions')}
           </span>
-          <div className="col-span-1">
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-row gap-1 p-1">
+          <div className="flex justify-end col-span-3 sm:col-span-1">
+            <div className="flex flex-col justify-end text-[0.25rem] sm:text-sm font-beVietNam">
+              <div className="flex flex-row gap-1 sm:p-1">
                 <span>KMH:</span>
                 <span>QR3-01/001</span>
               </div>
-              <div className="flex flex-row gap-1 p-1">
+              <div className="flex flex-row gap-1 sm:p-1">
                 <span>Lần ban hành:</span>
                 <span>1</span>
               </div>
@@ -88,12 +89,16 @@ export const ConfirmProductForm: React.FC<IConfirmProductFormProps> = ({ onConfi
           </div>
         </div>
         {getRequisition() && (
-          <div className="grid grid-cols-3 gap-3 mb-4 text-sm font-beVietNam">
+          <div className="grid grid-cols-1 gap-3 mb-4 text-sm sm:grid-cols-3 font-beVietNam">
             <div>
-              <strong>Mức yêu tiên: </strong>
+              <strong>Mức ưu tiên: </strong>
               <span className={requisition?.type === 'urgent' ? 'text-red-600 font-bold' : ''}>
                 {requisition?.type === 'normal' ? 'Bình thường' : 'Cần gấp'}
               </span>
+            </div>
+            <div>
+              <strong>Thời hạn duyệt: </strong>
+              <span>{formatDeadline(requisition?.deadlineApproval)}</span>
             </div>
             <div>
               <strong>Mã phiếu yêu cầu: </strong>
@@ -109,7 +114,7 @@ export const ConfirmProductForm: React.FC<IConfirmProductFormProps> = ({ onConfi
             </div>
             <div>
               <strong>Dự án: </strong>
-              {requisition?.project.name}
+              {requisition?.projectName}
             </div>
             <div>
               <strong>Ghi chú: </strong>
@@ -118,14 +123,13 @@ export const ConfirmProductForm: React.FC<IConfirmProductFormProps> = ({ onConfi
           </div>
         )}
       </div>
-      <DataTableRequisition
+      <DataTable
         isLoading={false}
         columns={columns}
         data={getRequisition()?.requestProducts || []}
         pages={1}
-        page={1}
-        pageSize={requisition?.requestProducts?.length || 0}
         onPageChange={() => {}}
+        onPageSizeChange={() => {}}
       />
 
       <div className="flex justify-end w-full gap-2 mt-4">

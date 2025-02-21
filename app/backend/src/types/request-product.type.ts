@@ -1,20 +1,28 @@
-export type TChangeQuantityRequestProductRequestDto = {
-  slug?: string;
-  newQuantity?: number;
-}
-
 export type TAddNewRequestProductRequestDto = {
-  productSlug?: string;
-  formSlug?: string;
-  requestQuantity?: number;
-}
-
-export type TCreateRequestProductRequestDto = {
-  product?: string; // slug
+  form?: string;
+  product?: string;
   requestQuantity?: number;
 
+  // product not exist
   name?: string;
   provider?: string;
   unit?: string; // slug
   description?: string;
-}
+};
+
+export type TCreateRequestProductRequestDto = {
+  product?: string; // slug
+  requestQuantity?: number;
+  name?: string;
+  provider?: string;
+  unit?: string; // slug
+  description?: string;
+};
+
+export type TUpdateRequestProductRequestDto = {
+  requestQuantity?: number;
+  name?: string;
+  provider?: string;
+  unit?: string; // slug
+  description?: string;
+};

@@ -14,10 +14,11 @@ import { useProjects } from '@/hooks'
 
 interface SelectProjectProps {
   defaultValue?: string
-  onChange: (value: { slug: string; managerSlug: string; name: string }) => void
+  onChange: (slug: string, name: string) => void
+  value?: string // Add this line
 }
 
-export const SelectProject: FC<SelectProjectProps> = ({ onChange, defaultValue }) => {
+export const SelectProject: FC<SelectProjectProps> = ({ onChange, defaultValue, value }) => {
   const { t } = useTranslation('productRequisition')
   const { data: projects } = useProjects()
 
@@ -26,16 +27,12 @@ export const SelectProject: FC<SelectProjectProps> = ({ onChange, defaultValue }
   const handleValueChange = (value: string) => {
     const selectedProject = projectList?.find((project) => project.slug === value)
     if (selectedProject) {
-      onChange({
-        slug: selectedProject.slug,
-        managerSlug: selectedProject.managerSlug,
-        name: selectedProject.name
-      })
+      onChange(selectedProject.slug, selectedProject.name)
     }
   }
 
   return (
-    <Select onValueChange={handleValueChange} defaultValue={defaultValue}>
+    <Select onValueChange={handleValueChange} defaultValue={defaultValue} value={value}>
       <SelectTrigger>
         <SelectValue placeholder={t('productRequisition.projectNameDescription')} />
       </SelectTrigger>

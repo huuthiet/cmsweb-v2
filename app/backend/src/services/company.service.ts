@@ -1,24 +1,28 @@
-import { companyRepository, userRepository } from "@repositories";
+import { companyRepository } from "@repositories";
 import { CompanyResponseDto } from "@dto/response";
 import { mapper } from "@mappers";
 import { Company } from "@entities";
-import { 
+import {
   TCreateCompanyRequestDto,
-  // TUpdateCompanyRequestDto 
+  TUpdateCompanyRequestDto,
+  TUploadCompanyLogoRequestDto,
+  // TUpdateCompanyRequestDto
 } from "@types";
-import { 
-  CreateCompanyRequestDto, 
-  // UpdateCompanyRequestDto 
+import {
+  CreateCompanyRequestDto,
+  UpdateCompanyRequestDto,
+  // UpdateCompanyRequestDto
 } from "@dto/request";
 import { ErrorCodes, GlobalError, ValidationError } from "@exception";
 
 import { validate } from "class-validator";
 import { plainToClass } from "class-transformer";
+import fileService from "./file.service";
 
-class CompanyService {
+export class CompanyService {
   public async getAllCompanies(): Promise<CompanyResponseDto[]> {
     const companiesData = await companyRepository.find({
-      relations: ['sites']
+      relations: ["sites"],
     });
 
     const companiesDto: CompanyResponseDto[] = mapper.mapArray(
@@ -43,8 +47,13 @@ class CompanyService {
     });
     if (nameExist) throw new GlobalError(ErrorCodes.COMPANY_NAME_EXIST);
 
-    const companyData = mapper.map(requestData, CreateCompanyRequestDto, Company);
-    const createdCompanyData = await companyRepository.createAndSave(companyData);
+    const companyData = mapper.map(
+      requestData,
+      CreateCompanyRequestDto,
+      Company
+    );
+    const createdCompanyData =
+      await companyRepository.createAndSave(companyData);
 
     const companyDto = mapper.map(
       createdCompanyData,
@@ -54,34 +63,59 @@ class CompanyService {
     return companyDto;
   }
 
-  // public async updateCompany(
-  //   slug: string,
-  //   plainData: TUpdateCompanyRequestDto
-  // ): Promise<CompanyResponseDto> {
-  //   const requestData = plainToClass(UpdateCompanyRequestDto, plainData);
+  public async updateCompany(
+    plainData: TUpdateCompanyRequestDto
+  ): Promise<CompanyResponseDto> {
+    const requestData = plainToClass(UpdateCompanyRequestDto, plainData);
 
-  //   const errors = await validate(requestData);
-  //   if (errors.length > 0) throw new ValidationError(errors);
+    const errors = await validate(requestData);
+    if (errors.length > 0) throw new ValidationError(errors);
 
-  //   // const nameExist = await companyRepository.existsBy({
-  //   //   name: requestData.name,
-  //   // });
-  //   // if (nameExist) throw new GlobalError(ErrorCodes.COMPANY_NAME_EXIST);
+    const company = await companyRepository.findOneBy({
+      slug: requestData.slug,
+    });
+    if (!company) throw new GlobalError(ErrorCodes.COMPANY_NOT_FOUND);
 
-  //   const company = await companyRepository.findOneBy({ slug });
-  //   if (!company) throw new GlobalError(ErrorCodes.COMPANY_NOT_FOUND);
+    Object.assign(company, { name: requestData.name });
+    const updatedCompany = await companyRepository.save(company);
 
-  //   const director = await userRepository.findOneBy({
-  //     slug: requestData.director,
-  //   });
-  //   if (!director) throw new GlobalError(ErrorCodes.COMPANY_DIRECTOR_NOT_FOUND);
+    const companyDto = mapper.map(updatedCompany, Company, CompanyResponseDto);
+    return companyDto;
+  }
 
-  //   Object.assign(company, { name: requestData.name, director });
-  //   const updatedCompany = await companyRepository.save(company);
+  public async uploadCompanyLogo(
+    requestData: TUploadCompanyLogoRequestDto
+  ): Promise<CompanyResponseDto> {
+    console.log({ requestData });
+    const company = await companyRepository.findOneBy({
+      slug: requestData.slug,
+    });
+    console.log({ company });
+    if (!company) throw new GlobalError(ErrorCodes.COMPANY_NOT_FOUND);
 
-  //   const companyDto = mapper.map(updatedCompany, Company, CompanyResponseDto);
-  //   return companyDto;
-  // }
+    const file = await fileService.uploadFile(requestData.file);
+    console.log({ file });
+
+    const oldFile = company.logo;
+    if (oldFile) await fileService.removeFileByName(oldFile);
+
+    Object.assign(company, { logo: `${file.name}.${file.extension}` });
+    const updatedCompany = await companyRepository.save(company);
+    console.log({ updatedCompany });
+
+    const companyDto = mapper.map(updatedCompany, Company, CompanyResponseDto);
+    return companyDto;
+  }
+
+  public async deleteCompany(slug: string): Promise<number> {
+    const company = await companyRepository.findOneBy({
+      slug,
+    });
+    if (!company) throw new GlobalError(ErrorCodes.COMPANY_NOT_FOUND);
+
+    const deleted = await companyRepository.softDelete({ slug });
+    return deleted.affected || 0;
+  }
 }
 
 export default new CompanyService();

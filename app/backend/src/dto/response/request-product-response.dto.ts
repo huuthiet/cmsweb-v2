@@ -1,13 +1,8 @@
 import { AutoMap } from "@automapper/classes";
-import { 
-  ProductResponseDto,
-   BaseResponseDto,
-   TemporaryProductResponseDto, 
-  } from "@dto/response";
+import { ProductResponseDto, TemporaryProductResponseDto } from "@dto/response";
+import { BaseResponseDto } from "./base-response.dto";
 
-export class RequestProductResponseDto
-// extends BaseResponseDto
-{
+export class RequestProductResponseDto extends BaseResponseDto {
   @AutoMap()
   requestQuantity?: number;
 
@@ -25,4 +20,21 @@ export class RequestProductResponseDto
 
   @AutoMap(() => TemporaryProductResponseDto)
   temporaryProduct?: TemporaryProductResponseDto;
+}
+
+export class ExportRequestProductResponseDto {
+  @AutoMap()
+  requestQuantity?: number;
+
+  @AutoMap()
+  name?: string;
+
+  @AutoMap()
+  provider?: string;
+
+  @AutoMap()
+  unit?: string; // slug
+
+  @AutoMap()
+  description?: string;
 }

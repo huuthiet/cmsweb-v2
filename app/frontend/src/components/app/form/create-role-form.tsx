@@ -1,6 +1,5 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -29,7 +28,8 @@ export const CreateRoleForm: React.FC<IFormCreateRoleProps> = ({ onSubmit }) => 
     resolver: zodResolver(createRoleSchema),
     defaultValues: {
       nameNormalize: '',
-      description: ''
+      description: '',
+      nameDisplay: ''
     }
   })
 
@@ -46,7 +46,22 @@ export const CreateRoleForm: React.FC<IFormCreateRoleProps> = ({ onSubmit }) => 
           <FormItem>
             <FormLabel>{t('roles.nameNormalize')}</FormLabel>
             <FormControl>
-              <Input {...field} placeholder="ROLE_USER" />
+              <Input {...field} placeholder="ROLE_DIRECTOR" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    ),
+    nameDisplay: (
+      <FormField
+        control={form.control}
+        name="nameDisplay"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>{t('roles.nameDisplay')}</FormLabel>
+            <FormControl>
+              <Input {...field} placeholder="Giám đốc" />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -77,14 +92,14 @@ export const CreateRoleForm: React.FC<IFormCreateRoleProps> = ({ onSubmit }) => 
     <div className="mt-3">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-          <div className="grid grid-cols-1 gap-2">
+          <div className="grid grid-cols-1 gap-2 font-beVietNam">
             {Object.keys(formFields).map((key) => (
               <React.Fragment key={key}>
                 {formFields[key as keyof typeof formFields]}
               </React.Fragment>
             ))}
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-end font-beVietNam">
             <Button className="flex justify-end" type="submit">
               {t('roles.createRole')}
             </Button>

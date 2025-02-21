@@ -2,8 +2,15 @@ import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 
 import { permissionService } from "@services";
-import { TApiResponse, TCreatePermissionRequestDto } from "@types";
+import {
+  TApiResponse,
+  TCreatePermissionRequestDto,
+  TPaginationOptionResponse,
+  TQueryRequest,
+  TUpdatePermissionRequestDto,
+} from "@types";
 import { PermissionResponseDto } from "@dto/response";
+import { UpdatePermissionRequestDto } from "@dto/request";
 
 class PermissionController {
   /**
@@ -13,18 +20,44 @@ class PermissionController {
    *     CreatePermissionRequestDto:
    *       type: object
    *       required:
-   *         - roleSlug
+   *         - resourceSlug
    *         - authoritySlug
+   *         - requiredOwner
    *       properties:
-   *         roleSlug:
+   *         resourceSlug:
    *           type: string
-   *           description: Role code. Start with ROLE_
+   *           description: Resource slug
    *         authoritySlug:
    *           type: string
    *           description: Authority code
+   *         requiredOwner:
+   *           type: boolean
+   *           description: Required owner
    *       example:
-   *         roleSlug: V56Ck-iUuV
-   *         authoritySlug: G4-uaU14OY
+   *         resourceSlug: V56Ck_iUuV
+   *         authoritySlug: G4_uaU14OY
+   *         requiredOwner: false
+   *
+   *     UpdatePermissionRequestDto:
+   *       type: object
+   *       required:
+   *         - resourceSlug
+   *         - authoritySlug
+   *         - requiredOwner
+   *       properties:
+   *         resourceSlug:
+   *           type: string
+   *           description: Resource slug
+   *         authoritySlug:
+   *           type: string
+   *           description: Authority code
+   *         requiredOwner:
+   *           type: boolean
+   *           description: Required owner
+   *       example:
+   *         resourceSlug: V56Ck_iUuV
+   *         authoritySlug: G4_uaU14OY
+   *         requiredOwner: false
    */
 
   /**
@@ -40,9 +73,32 @@ class PermissionController {
    *   get:
    *     summary: Get all permissions
    *     tags: [Permission]
+   *     parameters:
+   *       - in: query
+   *         name: order
+   *         schema:
+   *           type: string
+   *           enum: [ASC, DESC]
+   *         required: true
+   *         description: The order in which the permissions are sorted (ASC, DESC)
+   *         example: ASC
+   *       - in: query
+   *         name: page
+   *         schema:
+   *           type: integer
+   *         required: true
+   *         description: The number of permissions to skip
+   *         example: 1
+   *       - in: query
+   *         name: pageSize
+   *         schema:
+   *           type: integer
+   *         required: true
+   *         description: The number of permissions to retrieve
+   *         example: 10
    *     responses:
    *       200:
-   *         description: Get all permissions successfully.
+   *         description: Permissions have been retrieved successfully
    *       500:
    *         description: Server error
    */
@@ -52,8 +108,11 @@ class PermissionController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const results = await permissionService.getAllPermissions();
-      const response: TApiResponse<PermissionResponseDto[]> = {
+      const plainData = req.query as unknown as TQueryRequest;
+      const results = await permissionService.getAllPermissions(plainData);
+      const response: TApiResponse<
+        TPaginationOptionResponse<PermissionResponseDto[]>
+      > = {
         code: StatusCodes.OK,
         error: false,
         message: "Permissions have been retrieved successfully",
@@ -85,6 +144,8 @@ class PermissionController {
    *         description: Get permission successfully
    *       500:
    *         description: Server error
+   *       1072:
+   *         description: Permission could not be found
    */
   public async getPermissionBySlug(
     req: Request,
@@ -125,6 +186,8 @@ class PermissionController {
    *         description: Create role successfully.
    *       500:
    *         description: Server error
+   *       1070:
+   *         description: Role could not be found
    */
   public async createPermission(
     req: Request,
@@ -146,6 +209,104 @@ class PermissionController {
       };
 
       res.status(StatusCodes.CREATED).json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * @swagger
+   * /permissions/{slug}:
+   *   patch:
+   *     summary: Update permission
+   *     tags: [Permission]
+   *     parameters:
+   *       - name: slug
+   *         in: path
+   *         required: true
+   *         type: string
+   *         description: Permission slug
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *              $ref: '#/components/schemas/UpdatePermissionRequestDto'
+   *     responses:
+   *       200:
+   *         description: Permission update successfully.
+   *       500:
+   *         description: Server error
+   *       1070:
+   *         description: Permission could not be found
+   *
+   */
+  public async updatePermission(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const slug = req.params.slug as string;
+      const requestData = req.body as TUpdatePermissionRequestDto;
+      Object.assign(requestData, { slug });
+
+      const result = await permissionService.updatePermission(requestData);
+      const response: TApiResponse<UpdatePermissionRequestDto> = {
+        code: StatusCodes.OK,
+        error: false,
+        message: "The permission updated successfully",
+        method: req.method,
+        path: req.originalUrl,
+        result,
+      };
+
+      res.status(StatusCodes.OK).json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * @swagger
+   * /permissions/{slug}:
+   *   delete:
+   *     summary: Delete permission
+   *     tags: [Permission]
+   *     parameters:
+   *       - in: path
+   *         name: slug
+   *         schema:
+   *           type: string
+   *         required: true
+   *         description: The slug of permission
+   *         example: slug-123
+   *     responses:
+   *       200:
+   *         description: Permission deleted successfully.
+   *       500:
+   *         description: Server error
+   *       1070:
+   *         description: Permission not found
+   *
+   */
+  public async deletePermission(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { slug } = req.params;
+      const result = await permissionService.deletePermission(slug);
+      const response: TApiResponse<string> = {
+        code: StatusCodes.OK,
+        error: false,
+        message: `Permission has been deleted successfully`,
+        method: req.method,
+        path: req.originalUrl,
+        result: `${result} rows effected`,
+      };
+      res.status(StatusCodes.OK).json(response);
     } catch (error) {
       next(error);
     }

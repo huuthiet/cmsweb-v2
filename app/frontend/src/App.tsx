@@ -8,7 +8,8 @@ import { router } from '@/router'
 import './i18n'
 import { AxiosError, isAxiosError } from 'axios'
 import { IApiResponse } from './types'
-import { showErrorToast } from './utils'
+import { showErrorToast } from '@/utils'
+import { ThemeProvider } from '@/components/theme-provider'
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
@@ -22,6 +23,7 @@ const queryClient = new QueryClient({
   }),
   mutationCache: new MutationCache({
     onError: (error, _, __, mutation) => {
+      console.log({ error })
       if (has(mutation.meta, 'ignoreGlobalError')) if (mutation.meta.ignoreGlobalError) return
       if (isAxiosError(error)) {
         const axiosError = error as AxiosError<IApiResponse<void>>
@@ -35,9 +37,11 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
+      <ThemeProvider defaultTheme="system" storageKey="my-app-theme">
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </ThemeProvider>
     </StrictMode>
   )
 }

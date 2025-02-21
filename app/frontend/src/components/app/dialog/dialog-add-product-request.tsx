@@ -1,6 +1,8 @@
-import { z } from 'zod'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -9,47 +11,37 @@ import {
   DialogTrigger
 } from '@/components/ui'
 
-import { addNewProductRequestSchema } from '@/schemas'
+import { TAddNewProductRequestSchema } from '@/schemas'
 import { AddNewProductRequestForm } from '@/components/app/form'
-import { IProductRequisitionInfo } from '@/types'
+import { IProductInfo } from '@/types'
 import { useRequisitionStore } from '@/stores'
+import { PlusCircledIcon } from '@radix-ui/react-icons'
 
-interface DialogAddProductRequestProps {
-  openDialog: boolean
-  product?: IProductRequisitionInfo | null
-  component: React.ReactNode
-  onOpenChange: () => void
-}
-
-export function DialogAddProductRequest({
-  openDialog,
-  product,
-  component,
-  onOpenChange
-}: DialogAddProductRequestProps) {
+export function DialogAddProductRequest({ product }: { product: IProductInfo | null }) {
+  const { t } = useTranslation('tableData')
+  const [isOpen, setIsOpen] = useState(false)
   const { addProductToRequisition } = useRequisitionStore()
-  const handleAddRequest = (product: IProductRequisitionInfo) => {
-    addProductToRequisition(product)
-    onOpenChange()
-  }
-  const handleSubmit = (data: z.infer<typeof addNewProductRequestSchema>) => {
-    const completeData: IProductRequisitionInfo = {
-      ...data,
-      requestQuantity: Number(data.requestQuantity)
-    }
-    handleAddRequest(completeData)
-    onOpenChange()
+  const handleSubmit = (data: TAddNewProductRequestSchema) => {
+    addProductToRequisition(data)
+    setIsOpen(false)
   }
 
   return (
-    <Dialog open={openDialog} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>{component}</DialogTrigger>
-      <DialogContent className="max-w-[44rem]">
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button variant="ghost" className="gap-1 text-sm" onClick={() => setIsOpen(true)}>
+          <PlusCircledIcon className="icon" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="rounded-md max-w-[20rem] sm:max-w-[60rem]">
         <DialogHeader>
-          <DialogTitle>Thêm vật tư yêu cầu</DialogTitle>
-          <DialogDescription>Nhập đầy đủ thông tin bên dưới để thêm vật tư mới</DialogDescription>
+          <DialogTitle>{t('tableData.addNewProduct')}</DialogTitle>
+          <DialogDescription>{t('tableData.addNewProductDescription')}</DialogDescription>
         </DialogHeader>
-        <AddNewProductRequestForm data={product || undefined} onSubmit={handleSubmit} />
+        <AddNewProductRequestForm
+          data={product || undefined}
+          onSubmit={(data: TAddNewProductRequestSchema) => handleSubmit(data)}
+        />
       </DialogContent>
     </Dialog>
   )

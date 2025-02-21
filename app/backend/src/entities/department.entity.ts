@@ -1,11 +1,13 @@
 import { Entity, Column, OneToMany, ManyToOne, JoinColumn } from "typeorm";
 import { AutoMap } from "@automapper/classes";
 
-import { Base, Site, UserDepartment } from "@entities"; 
+import { Base } from "./base.entity";
+import { Site } from "./site.entity";
+import { UserDepartment } from "./user-department.entity";
 
 @Entity("department_tbl")
 export class Department extends Base {
-  @Column({ name: "name_normalize_column", unique: true })
+  @Column({ name: "name_normalize_column" })
   @AutoMap()
   nameNormalize?: string;
 
@@ -13,8 +15,10 @@ export class Department extends Base {
   @AutoMap()
   description?: string;
 
-  @OneToMany(() => UserDepartment, 
-    (userDepartment) => userDepartment.department)
+  @OneToMany(
+    () => UserDepartment,
+    (userDepartment) => userDepartment.department
+  )
   userDepartments?: UserDepartment[];
 
   @ManyToOne(() => Site, (site) => site.departments)

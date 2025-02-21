@@ -153,8 +153,10 @@
         "@enums": ["enums/index"],
         "@enums/*": ["enums/*"],
         
-        "@decorate": ["decorate/index"],
-        "@decorate/*": ["decorate/*"],
+        "@decorator": ["decorator/index"],
+        "@decorator/*": ["decorator/*"],
+
+        "@__tests__/*": ["__tests__/*"],
     },
   },
   "include": ["src/**/*"],

@@ -1,67 +1,55 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useRequisitionStore } from '@/stores'
-import { useProducts } from '@/hooks'
-import { IProductInfo, IProductNameSearch, IProductQuery, IProductRequisitionInfo } from '@/types'
+import { useDebouncedInput, usePagination, useProducts } from '@/hooks'
+import { IProductRequisitionInfo } from '@/types'
 
-import { Button, DataTable, DataTableRequisition, Label } from '@/components/ui'
-import { CustomComponentRequest } from '@/views/product-requisitions/CustomComponentRequest'
-import { useColumnsSearch } from '@/views/product-requisitions/DataTable/columnsSearch'
-import { useColumnsResult } from '@/views/product-requisitions/DataTable/columnsResult'
+import { Button, DataTable, Label } from '@/components/ui'
+import {
+  ProductActionOptions,
+  useColumnsSearchProduct,
+  useColumnsResult
+} from '@/views/product-requisitions/data-table'
 
 interface IFormAddProductProps {
-  onSubmit: (data: IProductNameSearch) => void
+  onSubmit: () => void
   onBack: () => void
 }
 
 export const SearchProductForm: React.FC<IFormAddProductProps> = ({ onBack, onSubmit }) => {
   const { t } = useTranslation('productRequisition')
-  const [query, setQuery] = useState<IProductQuery>({
-    order: 'DESC',
-    page: 1,
-    pageSize: 10,
-    searchTerm: ''
+  const { pagination, handlePageChange, handlePageSizeChange } = usePagination({
+    isSearchParams: false
   })
-  const [page, setPage] = useState(1)
-  const [pageSize, setPageSize] = useState(10)
-  const [selectedProducts, setSelectedProducts] = useState<IProductRequisitionInfo[]>([])
   const { requisition } = useRequisitionStore()
+  const { inputValue, setInputValue, debouncedInputValue } = useDebouncedInput()
 
-  const { data: allProduct, isLoading } = useProducts(query)
-
-  const { getRequisition, updateProductToRequisition, deleteProductToRequisition } =
-    useRequisitionStore()
-
-  const handleEditRequisition = (product: IProductRequisitionInfo) => {
-    updateProductToRequisition(product, product.requestQuantity)
-  }
-
-  const handleDeleteProduct = (product: IProductRequisitionInfo) => {
-    deleteProductToRequisition(product)
-  }
+  const { data: allProduct, isLoading } = useProducts({
+    page: pagination.pageIndex,
+    pageSize: pagination.pageSize,
+    order: 'DESC',
+    searchTerm: debouncedInputValue
+  })
 
   const handleNext = () => {
-    const productNameSearch: IProductNameSearch = {
-      name: selectedProducts.map((product) => product.name).join(', ')
-    }
-    onSubmit(productNameSearch)
+    onSubmit()
   }
 
-  const columns = useColumnsResult(handleEditRequisition, handleDeleteProduct)
+  const columns = useColumnsResult()
 
   return (
     <div className="flex flex-col w-full gap-4 mt-3">
       <DataTable
         isLoading={isLoading}
-        columns={useColumnsSearch()}
+        columns={useColumnsSearchProduct()}
         data={allProduct?.result?.items || []}
         pages={allProduct?.result?.totalPages || 0}
-        page={page}
-        pageSize={pageSize}
-        onPageChange={setPage}
-        onPageSizeChange={setPageSize}
-        CustomComponent={(props) => <CustomComponentRequest {...props} />}
+        onPageChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
+        actionOptions={ProductActionOptions}
+        inputValue={inputValue}
+        onInputChange={setInputValue}
+        hiddenInput={false} // default true
       />
 
       <div className="flex flex-col gap-2">
@@ -72,16 +60,13 @@ export const SearchProductForm: React.FC<IFormAddProductProps> = ({ onBack, onSu
           {t('productRequisition.addedProductToRequestDescription')}
         </span>
         <div className="flex flex-col gap-2">
-          <DataTableRequisition
+          <DataTable
             isLoading={isLoading}
             columns={columns}
             data={requisition?.requestProducts || []}
             pages={1}
-            page={1}
-            pageSize={requisition?.requestProducts?.length || 0}
             onPageChange={() => {}}
             onPageSizeChange={() => {}}
-            CustomComponent={undefined}
           />
         </div>
       </div>

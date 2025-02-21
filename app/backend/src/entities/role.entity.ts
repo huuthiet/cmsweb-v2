@@ -1,8 +1,8 @@
 import { Entity, Column, OneToMany } from "typeorm";
-import { Base } from "@entities/base.entity";
-import { Permission } from "./permission.entity";
+import { Base } from "./base.entity";
 import { UserRole } from "./user-role.entity";
 import { AutoMap } from "@automapper/classes";
+import { RolePermission } from "./role-permission.entity";
 
 @Entity("role_tbl")
 export class Role extends Base {
@@ -10,13 +10,18 @@ export class Role extends Base {
   @AutoMap()
   nameNormalize?: string;
 
+  @Column({ name: "name_display_column" })
+  @AutoMap()
+  nameDisplay?: string;
+
   @Column({ name: "description_column", nullable: false })
   @AutoMap()
   description?: string;
 
   // A role can have many permissions
-  @OneToMany(() => Permission, (permission) => permission.role)
-  permissions: Permission[];
+  @AutoMap()
+  @OneToMany(() => RolePermission, (rolePermission) => rolePermission.role)
+  rolePermissions: RolePermission[];
 
   // A role can have many user roles
   @OneToMany(() => UserRole, (userRole) => userRole.role)

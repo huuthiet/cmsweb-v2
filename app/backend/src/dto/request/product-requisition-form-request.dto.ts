@@ -5,28 +5,31 @@ import {
   ArrayNotEmpty,
   IsEnum,
   IsOptional,
-} from 'class-validator';
-import { Expose, Type } from 'class-transformer';
-import { AutoMap } from '@automapper/classes';
-import {
-  ProductRequisitionFormType,
-  ApprovalLogStatus,
-} from "@enums";
+} from "class-validator";
+import { Expose, Type } from "class-transformer";
+import { AutoMap } from "@automapper/classes";
+import { ProductRequisitionFormType } from "@enums";
 import {
   CreateRequestProductRequestDto,
-} from "./request-product-request.dto";
+  CreateApprovalLogRequestDto,
+} from "@dto/request";
 import { IsDateStringWithMessage } from "decorator";
 
 export class CreateProductRequisitionFormRequestDto {
-  @IsNotEmpty({ message: "INVALID_CODE_FORM" })
+  @IsNotEmpty({ message: "INVALID_FORM_CODE" })
   @Expose()
   @AutoMap()
   code?: string;
 
+  // @IsNotEmpty({ message: "INVALID_PROJECT_SLUG" })
+  // @Expose()
+  // @AutoMap()
+  // project?: string;
+
   @IsNotEmpty({ message: "INVALID_PROJECT_SLUG" })
   @Expose()
   @AutoMap()
-  project?: string;
+  projectName?: string;
 
   @IsNotEmpty({ message: "INVALID_TYPE_PRODUCT_REQUISITION_FORM" })
   @IsEnum(ProductRequisitionFormType, {
@@ -52,6 +55,13 @@ export class CreateProductRequisitionFormRequestDto {
   @Type(() => CreateRequestProductRequestDto)
   @Expose()
   requestProducts: CreateRequestProductRequestDto[];
+
+  @Expose()
+  creatorId?: string;
+
+  @IsNotEmpty({ message: "INVALID_DEPARTMENT_SLUG" })
+  @Expose()
+  departmentSlug?: string;
 }
 
 export class ApprovalProductRequisitionFormRequestDto {
@@ -60,21 +70,11 @@ export class ApprovalProductRequisitionFormRequestDto {
   @AutoMap()
   formSlug?: string;
 
-  @IsNotEmpty({ message: "INVALID_APPROVAL_STATUS" })
-  @IsEnum(ApprovalLogStatus, { message: "INVALID_APPROVAL_STATUS" })
-  @Expose()
   @AutoMap()
-  approvalLogStatus?: string;
-
-  // @IsNotEmpty({ message: "INVALID_APPROVAL_USER_SLUG" })
-  // @Expose()
-  // @AutoMap()
-  // approvalUserSlug?: string;
-
-  @IsNotEmpty({ message: "INVALID_CONTENT_APPROVAL_LOG" })
   @Expose()
-  @AutoMap()
-  approvalLogContent?: string;
+  @ValidateNested()
+  @Type(() => CreateApprovalLogRequestDto)
+  approvalLog?: CreateApprovalLogRequestDto;
 }
 
 export class ResubmitProductRequisitionFormRequestDto {
@@ -84,6 +84,36 @@ export class ResubmitProductRequisitionFormRequestDto {
   slug?: string;
 
   @IsNotEmpty({ message: "INVALID_REASON_RESUBMIT_FORM" })
+  @Expose()
+  @AutoMap()
+  description?: string;
+}
+
+export class UpdateGeneralInformationProductRequisitionFormRequestDto {
+  // @IsNotEmpty({ message: "INVALID_PROJECT_SLUG" })
+  // @Expose()
+  // @AutoMap()
+  // project?: string;
+
+  @IsNotEmpty({ message: "INVALID_PROJECT_NAME" })
+  @Expose()
+  @AutoMap()
+  projectName?: string;
+
+  @IsNotEmpty({ message: "INVALID_TYPE_PRODUCT_REQUISITION_FORM" })
+  @IsEnum(ProductRequisitionFormType, {
+    message: "INVALID_TYPE_PRODUCT_REQUISITION_FORM",
+  })
+  @Expose()
+  @AutoMap()
+  type?: string;
+
+  @IsNotEmpty({ message: "INVALID_DEADLINE_DATE_APPROVAL_FORM" })
+  @IsDateStringWithMessage({ message: "INVALID_DATE_FORMAT" })
+  @Expose()
+  deadlineApproval?: string;
+
+  @IsNotEmpty({ message: "INVALID_FORM_DESCRIPTION" })
   @Expose()
   @AutoMap()
   description?: string;

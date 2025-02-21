@@ -14,13 +14,15 @@ import { useTranslation } from 'react-i18next'
 interface RequestPrioritySelectProps {
   onChange: (value: 'normal' | 'urgent') => void
   defaultValue?: 'normal' | 'urgent'
+  value?: 'normal' | 'urgent'
 }
 
 import { cn } from '@/lib/utils'
 
 export const RequestPrioritySelect: FC<RequestPrioritySelectProps> = ({
   onChange,
-  defaultValue
+  defaultValue,
+  value
 }) => {
   const { t } = useTranslation('productRequisition')
   const priorities = useRequestPriorities()
@@ -30,9 +32,9 @@ export const RequestPrioritySelect: FC<RequestPrioritySelectProps> = ({
   }
 
   return (
-    <Select onValueChange={handleValueChange} defaultValue={defaultValue}>
+    <Select onValueChange={handleValueChange} defaultValue={defaultValue} value={value}>
       <SelectTrigger>
-        <SelectValue placeholder={t('productRequisition.priority')} />
+        <SelectValue placeholder={t('productRequisition.selectPriority')} />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>

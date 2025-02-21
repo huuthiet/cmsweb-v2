@@ -1,15 +1,13 @@
 import { AutoMap } from "@automapper/classes";
 import {
-  BaseResponseDto,
   RequestProductResponseDto,
   UserApprovalResponseDto,
   UserResponseDto,
   ProjectResponseDto
 } from "@dto/response";
+import { BaseResponseDto } from "./base-response.dto";
 
-export class ProductRequisitionFormResponseDto 
-// extends BaseResponseDto
-{
+export class ProductRequisitionFormResponseDto extends BaseResponseDto {
   @AutoMap()
   code?: string;
 
@@ -22,13 +20,17 @@ export class ProductRequisitionFormResponseDto
   @AutoMap()
   isRecalled?: boolean;
 
+  @AutoMap()
   deadlineApproval?: string;
 
   @AutoMap()
   description?: boolean;
 
-  @AutoMap(() => ProjectResponseDto)
-  project?: ProjectResponseDto;
+  // @AutoMap(() => ProjectResponseDto)
+  // project?: ProjectResponseDto;
+
+  @AutoMap()
+  projectName?: string;
   
   @AutoMap(() => UserResponseDto)
   creator?: UserResponseDto;

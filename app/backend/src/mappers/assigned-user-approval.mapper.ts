@@ -3,17 +3,16 @@ import {
   Mapper,
   createMap,
   forMember,
-  extend,
   mapWith,
 } from "@automapper/core";
 import {
   AssignedUserApprovalResponseDto,
   UserResponseDto,
   UserApprovalResponseDto,
+  SiteResponseDto,
 } from "@dto/response";
 import { CreateAssignedUserApprovalRequestDto } from "@dto/request";
-import { User, UserApproval, AssignedUserApproval } from "@entities";
-import { baseMapper } from "./base.mapper";
+import { User, UserApproval, AssignedUserApproval, Site } from "@entities";
 
 // Define the mapping profile
 export const assignedUserApprovalMapper: MappingProfile = (mapper: Mapper) => {
@@ -24,19 +23,20 @@ export const assignedUserApprovalMapper: MappingProfile = (mapper: Mapper) => {
     AssignedUserApprovalResponseDto,
     forMember(
       (destination) => destination.user,
-      mapWith(
-        UserResponseDto,
-        User,
-        (source) => source.user)
+      mapWith(UserResponseDto, User, (source) => source.user)
     ),
     forMember(
       (destination) => destination.userApprovals,
       mapWith(
         UserApprovalResponseDto,
         UserApproval,
-        (source) => source.userApprovals)
+        (source) => source.userApprovals
+      )
     ),
-    extend(baseMapper(mapper))
+    forMember(
+      (destination) => destination.site,
+      mapWith(SiteResponseDto, Site, (source) => source.site)
+    )
   );
 
   // Map request object to entity

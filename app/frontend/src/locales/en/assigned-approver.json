@@ -1,0 +1,21 @@
+{
+  "assignedApprover": {
+    "title": "Assigned Approver",
+    "list": "List approver",
+    "slug": "Slug",
+    "nameNormalize": "Name normalize",
+    "nameDisplay": "Name display",
+    "description": "Description",
+    "site": "Site",
+
+    "add": "Add approver",
+
+    "createAssignedApprover": "Create assigned approver",
+    "createAssignedApproverDescription": "Create assigned approvers",
+    "selectFormType": "Select form type",
+    "selectRoleApproval": "Select role approval",
+    "selectUser": "Select user",
+    "createAssignedApproverSuccessfully": "Create assigned approver successfully",
+    "createAssignedApproverFailed": "Create assigned approver failed"
+  }
+}

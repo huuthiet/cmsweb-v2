@@ -1,6 +1,14 @@
 export enum Gender {
   MALE = "male",
   FEMALE = "female",
+  OTHER = "other",
+}
+
+export enum ProductPurchaseFormStatus {
+  WAITING = "waiting", // storekeeper create
+  PURCHASING = "purchasing", // shopper confirm purchase with this form
+  IMPORTING = "importing",
+  DONE = "done",  // completed import
 }
 
 export enum ProductRequisitionFormStatus {
@@ -14,9 +22,10 @@ export enum ProductRequisitionFormStatus {
 }
 
 export enum FormApprovalType {
-  PRODUCT_REQUISITION_FORM = "product_requisition_form",
-  PRODUCT_EXPORT_FORM = "product_export_form",
-  PURCHASE_REQUISITION_FORM = "purchase_requisition_form",
+  PRODUCT_REQUISITION_FORM = "product-requisition-form",
+  PRODUCT_EXPORT_FORM = "product-export-form",
+  PRODUCT_IMPORT_FORM = "product-import-form",
+  PURCHASE_REQUISITION_FORM = "purchase-requisition-form",
 }
 
 export enum ApprovalLogStatus {
@@ -34,4 +43,30 @@ export enum RoleApproval {
   APPROVAL_STAGE_1 = "approval_stage_1",
   APPROVAL_STAGE_2 = "approval_stage_2",
   APPROVAL_STAGE_3 = "approval_stage_3",
+}
+
+export enum Action {
+  MANAGE = "manage",
+  CREATE = "create",
+  READ = "read",
+  UPDATE = "update",
+  DELETE = "delete",
+  VIEW = "view",
+}
+
+export enum Extension {
+  EXCEL = "xlsx",
+  PDF = "pdf",
+  WORD = "docx",
+}
+
+export enum NotificationType {
+  APPROVAL = "approval",
+  WARNING = "warning",
+  INFO = "info",
+  REMINDER = "reminder",
+}
+
+export enum Topic {
+  PRODUCT_REQUISITION_FORM = "product-requsition-form",
 }

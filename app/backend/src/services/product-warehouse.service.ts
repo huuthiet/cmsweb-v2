@@ -21,10 +21,6 @@ class ProductWarehouseService {
       ]
     });
 
-    console.log(productWarehousesData[0])
-    console.log(productWarehousesData[0].product)
-    console.log(productWarehousesData[0].product?.unit)
-
     const productWarehousesDto: ProductWarehouseResponseDto[] = mapper.mapArray(
       productWarehousesData,
       ProductWarehouse,
@@ -47,6 +43,18 @@ class ProductWarehouseService {
 
     const product = await productRepository.findOneBy({ slug: requestData.product });
     if(!product) throw new GlobalError(ErrorCodes.PRODUCT_NOT_FOUND);
+
+    const warehouseCheck = await warehouseRepository.findOne({
+      where: {
+        slug: requestData.warehouse,
+        productWarehouses: {
+          product: {
+            slug: requestData.product
+          }
+        }
+      }
+    });
+    if(warehouseCheck) throw new GlobalError(ErrorCodes.PRODUCT_EXISTED_IN_THIS_WAREHOUSE);
 
     const productWarehouseData = mapper.map(requestData, CreateProductWarehouseRequestDto, ProductWarehouse);
     productWarehouseData.warehouse = warehouse;

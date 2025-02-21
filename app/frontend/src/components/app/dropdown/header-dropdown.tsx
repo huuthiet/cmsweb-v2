@@ -1,5 +1,8 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { ExitIcon } from '@radix-ui/react-icons'
+import { UserCogIcon, UserIcon } from 'lucide-react'
 
 import {
   DropdownMenu,
@@ -13,16 +16,14 @@ import {
 } from '@/components/ui'
 import { DialogLogout } from '@/components/app/dialog'
 import { useAuthStore, useUserInfoPermissionsStore, useUserStore } from '@/stores'
-import { useNavigate } from 'react-router-dom'
-import toast from 'react-hot-toast'
-import { useTranslation } from 'react-i18next'
-import { ROUTE } from '@/constants'
+import { Role, ROUTE } from '@/constants'
+import { hasRequiredRole, showToast } from '@/utils'
 
 export function HeaderDropdown() {
   const { t } = useTranslation('auth')
+  const { t: tAccount } = useTranslation('account')
   const { setLogout } = useAuthStore()
   const [open, setOpen] = useState(false)
-  // const mutation = useLogout()
   const { removeUserInfo, userInfo } = useUserStore()
   const { clearUserRoles } = useUserInfoPermissionsStore()
   const navigate = useNavigate()
@@ -31,8 +32,8 @@ export function HeaderDropdown() {
     setLogout()
     removeUserInfo()
     clearUserRoles()
-    navigate(ROUTE.LOGIN)
-    toast.success(t('logout.logoutSuccess'))
+    navigate(ROUTE.LOGIN, { replace: true })
+    showToast(t('logout.logoutSuccess'))
   }
 
   return (
@@ -40,25 +41,46 @@ export function HeaderDropdown() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" size="icon" className="rounded-full">
-            <UserAvatar />
+            <UserAvatar
+              src={
+                userInfo?.avatar
+                  ? `${import.meta.env.VITE_BASE_API_URL}/files/${userInfo.avatar}`
+                  : undefined
+              }
+              fallback={userInfo?.fullname?.charAt(0)}
+            />
             <span className="sr-only">Toggle user menu</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="min-w-[14rem]" align="end">
-          <DropdownMenuLabel>
+          <DropdownMenuLabel className="font-beVietNam">
             {t('userInfo.hello')} {userInfo?.fullname}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {/* <DropdownMenuItem className="cursor-pointer">Thông tin tài khoản</DropdownMenuItem> */}
-          {/* <DropdownMenuItem className="cursor-pointer">Đổi mật khẩu</DropdownMenuItem> */}
-          {/* <DropdownMenuSeparator /> */}
           <DropdownMenuItem
-            className="flex items-center justify-start gap-2 cursor-pointer text-danger hover:bg-red-100"
+            className="cursor-pointer"
+            onClick={() => navigate(ROUTE.PERSONAL_ACCOUNT)}
+          >
+            <div className="flex gap-2 items-center">
+              <UserIcon className="icon" />
+              <span className="text-normal">{tAccount('account.title')}</span>
+            </div>
+          </DropdownMenuItem>
+          {hasRequiredRole(Role.ADMIN) && (
+            <DropdownMenuItem className="cursor-pointer" onClick={() => navigate(ROUTE.ADMIN)}>
+              <div className="flex gap-2 items-center">
+                <UserCogIcon className="icon" />
+                <span className="text-normal">{tAccount('account.administration')}</span>
+              </div>
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuItem
+            className="flex gap-2 justify-start items-center cursor-pointer text-danger hover:bg-red-100"
             onClick={() => setOpen(true)}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex gap-2 items-center">
               <ExitIcon className="danger-icon" />
-              {t('logout.title')}
+              <span className="text-danger">{t('logout.title')}</span>
             </div>
           </DropdownMenuItem>
         </DropdownMenuContent>

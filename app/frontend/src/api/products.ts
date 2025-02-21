@@ -1,60 +1,25 @@
 import {
-  ApprovalLogStatus,
+  IApiProductInfoCreate,
   IApiResponse,
-  IFinalProductRequisition,
   IPaginationResponse,
   IProductInfo,
+  IProductInfoCreate,
+  IProductInfoUpdate,
   IProductQuery,
-  IRequestRequisitionInfo,
-  IRequisitionFormResponseForApprover
+  IUnit
 } from '@/types'
 import { http } from '@/utils'
 
+//Product
 export async function getProducts(
   params: IProductQuery
 ): Promise<IApiResponse<IPaginationResponse<IProductInfo>>> {
+  console.log({ params })
   const response = await http.get<IApiResponse<IPaginationResponse<IProductInfo>>>('/products', {
     params
   })
   return response.data
 }
-
-// export async function postProductRequest(params: {
-//   requestCode: string
-//   requester: string
-//   project: {
-//     slug: string
-//     name: string
-//   }
-//   site: {
-//     slug: string
-//     name: string
-//   }
-//   approver: string
-//   note: string
-//   priority: string
-//   products: IProductInfo[]
-//   createdAt: string
-// }): Promise<IProductRequirementInfoCreate> {
-//   const lowercaseParams = {
-//     requestCode: params.requestCode,
-//     requester: params.requester.toLowerCase(),
-//     project: {
-//       slug: params.project.slug,
-//       name: params.project.name.toLowerCase()
-//     },
-//     site: {
-//       slug: params.site.slug,
-//       name: params.site.name.toLowerCase()
-//     },
-//     approver: params.approver.toLowerCase(),
-//     note: params.note.toLowerCase(),
-//     priority: params.priority.toLowerCase(),
-//     products: params.products,
-//     createdAt: params.createdAt
-//   }
-//   return lowercaseParams
-// }
 
 export async function getAllProduct(params: {
   order: string
@@ -72,62 +37,22 @@ export async function getAllProduct(params: {
   }
 }
 
-export async function getAllProductRequisition(params: IProductQuery) {
-  const response = await http.get<IApiResponse<IPaginationResponse<IRequestRequisitionInfo>>>(
-    '/productRequisitionForms',
-    {
-      params
-    }
-  )
+export async function createProduct(data: IApiProductInfoCreate) {
+  const response = await http.post<IApiResponse<IProductInfoCreate>>('/products', data)
   return response.data
 }
 
-export async function getProductRequisitionByApprover(params: IProductQuery) {
-  const response = await http.get<
-    IApiResponse<IPaginationResponse<IRequisitionFormResponseForApprover>>
-  >('/userApprovals', {
-    params
-  })
+export async function updateProduct(data: IProductInfoUpdate) {
+  const response = await http.patch<IApiResponse<IProductInfoCreate>>('/products', data)
   return response.data
 }
 
-export async function createProductRequisition(data: IFinalProductRequisition) {
-  console.log('product requisition', data)
-  const response = await http.post<IApiResponse<IProductInfo>>('/productRequisitionForms', data)
+export async function deleteProduct(slug: string) {
+  const response = await http.delete<IApiResponse<IProductInfo>>(`/products/${slug}`)
   return response.data
 }
 
-export async function getProductRequisitionBySlug(slug: string) {
-  const response = await http.get<IApiResponse<IRequestRequisitionInfo>>(
-    `/productRequisitionForms/${slug}`
-  )
-  return response.data
-}
-
-export async function getProductRequisitionByCreator(params: IProductQuery) {
-  const response = await http.get<IApiResponse<IPaginationResponse<IRequestRequisitionInfo>>>(
-    '/productRequisitionForms',
-    {
-      params
-    }
-  )
-  return response.data
-}
-
-export async function approveProductRequisition(
-  formSlug: string,
-  approvalUserSlug: string,
-  approvalLogStatus: ApprovalLogStatus,
-  approvalLogContent: string
-) {
-  const response = await http.patch<IApiResponse<IRequestRequisitionInfo>>(
-    `/productRequisitionForms/approval`,
-    {
-      approvalUserSlug,
-      formSlug,
-      approvalLogStatus,
-      approvalLogContent
-    }
-  )
+export async function getAllUnit() {
+  const response = await http.get<IApiResponse<IUnit[]>>('/units')
   return response.data
 }

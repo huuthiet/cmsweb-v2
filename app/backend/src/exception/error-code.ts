@@ -32,7 +32,7 @@ export const ErrorCodes: TErrorCode = {
   UNIT_EXIST: {
     httpStatusCode: StatusCodes.BAD_REQUEST,
     code: 1023,
-    message: "Unit exist",
+    message: `Unit existed`,
   },
   UNIT_NOT_FOUND: {
     httpStatusCode: StatusCodes.BAD_REQUEST,
@@ -194,10 +194,10 @@ export const ErrorCodes: TErrorCode = {
     code: 1055,
     message: "Invalid content approval log",
   },
-  INVALID_CODE_FORM: {
+  INVALID_FORM_CODE: {
     httpStatusCode: StatusCodes.BAD_REQUEST,
     code: 1056,
-    message: "Invalid code form",
+    message: "Invalid form code",
   },
   INVALID_TYPE_PRODUCT_REQUISITION_FORM: {
     httpStatusCode: StatusCodes.BAD_REQUEST,
@@ -267,7 +267,7 @@ export const ErrorCodes: TErrorCode = {
   ROLE_NOT_FOUND: {
     httpStatusCode: StatusCodes.BAD_REQUEST,
     code: 1070,
-    message: "Authority could not be found",
+    message: "Role could not be found",
   },
   AUTHORITY_NOT_FOUND: {
     httpStatusCode: StatusCodes.BAD_REQUEST,
@@ -277,12 +277,7 @@ export const ErrorCodes: TErrorCode = {
   PERMISSION_NOT_FOUND: {
     httpStatusCode: StatusCodes.BAD_REQUEST,
     code: 1072,
-    message: "Authority could not be found",
-  },
-  USER_ROLE_EXIST: {
-    httpStatusCode: StatusCodes.BAD_REQUEST,
-    code: 1072,
-    message: "User role is existed",
+    message: "Permission could not be found",
   },
   PERMISSION_EXIST: {
     httpStatusCode: StatusCodes.BAD_REQUEST,
@@ -298,11 +293,6 @@ export const ErrorCodes: TErrorCode = {
     httpStatusCode: StatusCodes.BAD_REQUEST,
     code: 1075,
     message: "Company director not found",
-  },
-  FORBIDDEN_EDIT_FORM: {
-    httpStatusCode: StatusCodes.FORBIDDEN,
-    code: 1072,
-    message: "Forbidden edit form",
   },
   INVALID_REQUEST_PRODUCT_SLUG: {
     httpStatusCode: StatusCodes.BAD_REQUEST,
@@ -322,7 +312,7 @@ export const ErrorCodes: TErrorCode = {
   REQUEST_PRODUCT_EXIST: {
     httpStatusCode: StatusCodes.BAD_REQUEST,
     code: 1076,
-    message: "Request product exist",
+    message: "Request product existed",
   },
   INVALID_REASON_RESUBMIT_FORM: {
     httpStatusCode: StatusCodes.BAD_REQUEST,
@@ -362,12 +352,7 @@ export const ErrorCodes: TErrorCode = {
   INVALID_DEADLINE_DATE_APPROVAL_FORM: {
     httpStatusCode: StatusCodes.BAD_REQUEST,
     code: 1084,
-    message: "Invalid form type",
-  },
-  FORBIDDEN_APPROVAL_FORM: {
-    httpStatusCode: StatusCodes.BAD_REQUEST,
-    code: 1085,
-    message: "Forbidden approval form",
+    message: "Invalid deadline date approval form",
   },
   INVALID_DESCRIPTION_DEPARTMENT: {
     httpStatusCode: StatusCodes.BAD_REQUEST,
@@ -384,11 +369,6 @@ export const ErrorCodes: TErrorCode = {
     code: 1088,
     message: `Invalid unit slug"`,
   },
-  INVALID_WAREHOUSE_SLUG: {
-    httpStatusCode: StatusCodes.BAD_REQUEST,
-    code: 1089,
-    message: `Invalid warehouse slug"`,
-  },
   INVALID_QUANTITY_PRODUCT_WAREHOUSE: {
     httpStatusCode: StatusCodes.BAD_REQUEST,
     code: 1089,
@@ -397,7 +377,7 @@ export const ErrorCodes: TErrorCode = {
   WAREHOUSE_NOT_FOUND: {
     httpStatusCode: StatusCodes.BAD_REQUEST,
     code: 1090,
-    message: `Warehouse not found"`,
+    message: `Warehouse not found`,
   },
   MISSING_QUANTITY_PRODUCT_WAREHOUSE_ADD_NEW: {
     httpStatusCode: StatusCodes.BAD_REQUEST,
@@ -411,28 +391,268 @@ export const ErrorCodes: TErrorCode = {
   },
   INVALID_TEMPORARY_REQUEST_PRODUCT_NAME: {
     httpStatusCode: StatusCodes.BAD_REQUEST,
-    code: 1092,
-    message: `Error when update product quantity"`,
+    code: 1093,
+    message: `Invalid temporary request product name"`,
   },
   INVALID_QUANTITY_TEMPORARY_REQUEST_PRODUCT: {
     httpStatusCode: StatusCodes.BAD_REQUEST,
-    code: 1092,
-    message: `Error when update product quantity"`,
+    code: 1094,
+    message: `Invalid quantity temporary request product"`,
   },
   INVALID_TEMPORARY_REQUEST_PRODUCT_PROVIDER: {
     httpStatusCode: StatusCodes.BAD_REQUEST,
-    code: 1092,
-    message: `Error when update product quantity"`,
+    code: 1095,
+    message: `Invalid temporary request product provider"`,
   },
   INVALID_TEMPORARY_REQUEST_PRODUCT_DESCRIPTION: {
     httpStatusCode: StatusCodes.BAD_REQUEST,
-    code: 1092,
-    message: `Error when update product quantity"`,
+    code: 1096,
+    message: `Invalid temporary request product description"`,
   },
   INVALID_PRODUCT_DESCRIPTION: {
     httpStatusCode: StatusCodes.BAD_REQUEST,
-    code: 1092,
-    message: `Error when update product quantity"`,
+    code: 1097,
+    message: `Invalid product description`,
+  },
+  FILE_NOT_FOUND: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1098,
+    message: `File not found`,
+  },
+  INVALID_NAME_NORMALIZE_DEPARTMENT: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1099,
+    message: `Name normalize department must end with "_DEPARTMENT"`,
+  },
+  INVALID_WAREHOUSE_SLUG: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1100,
+    message: `Invalid warehouse slug"`,
+  },
+  INVALID_WAREHOUSE_NAME: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1101,
+    message: `Invalid warehouse name"`,
+  },
+  INVALID_WAREHOUSE_ADDRESS: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1102,
+    message: `Invalid warehouse address"`,
+  },
+  INVALID_NAME_DISPLAY: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1103,
+    message: `Invalid display name"`,
+  },
+  INVALID_NAME_NORMALIZE: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1104,
+    message: `Invalid normalize name"`,
+  },
+  INVALID_FORM_DESCRIPTION: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1105,
+    message: `Invalid form description"`,
+  },
+  SAVE_FILE_FAIL: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1106,
+    message: `Save file fail`,
+  },
+  ERROR_GET_FILE_FROM_REQUEST: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1108,
+    message: "Error get file from request",
+  },
+  INVALID_RESOURCE_NAME: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1109,
+    message: "Resource name invalid",
+  },
+  RESOURCE_NOT_FOUND: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1110,
+    message: "Resource not found",
+  },
+  RESOURCE_EXIST: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1111,
+    message: "Resource is existed",
+  },
+  ASSIGNED_USER_APPROVAL_THIS_LEVEL_FOR_SITE_IS_EXISTED: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1112,
+    message: "Assigned user approval this level for site is existed",
+  },
+  INVALID_PURCHASE_PRODUCT_QUANTITY: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1113,
+    message: "Invalid purchase product quantity",
+  },
+  INVALID_PURCHASE_PRODUCT_ARRAY: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1114,
+    message: "Invalid purchase product array",
+  },
+  INVALID_STATUS_FORM: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1115,
+    message: "Invalid status form",
+  },
+  PRODUCT_PURCHASE_FORM_CODE_EXISTED: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1116,
+    message: "Product purchase form code existed",
+  },
+  INVALID_NEW_PASSWORD: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1117,
+    message: "New password invalid",
+  },
+  INVALID_CONFIRM_PASSWORD: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1118,
+    message: "Confirm password invalid",
+  },
+  PASSWORD_NOT_MATCH: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1119,
+    message: "Password does not match",
+  },
+  CONFIRM_PASSWORD_NOT_MATCH: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1120,
+    message: "Confirm password does not match",
+  },
+  PURCHASE_PRODUCT_IS_NOT_INCLUDE_IN_REQUEST_PRODUCTS: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1121,
+    message: "Purchase product is not include in request products",
+  },
+  PURCHASE_PRODUCT_QUANTITY_EXCEED_REQUEST_PRODUCT_QUANTITY: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1122,
+    message: "Purchase product quantity exceed request product quantity",
+  },
+  USER_DEPARTMENT_EXIST: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1123,
+    message: "User department exists",
+  },
+  INVALID_PRODUCT_REQUISITION_FORM_SLUG: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1124,
+    message: "Invalid product requisition form slug",
+  },
+  INVALID_TEMPORARY_PRODUCT_SLUG: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1125,
+    message: "Invalid temporary product slug",
+  },
+  PRODUCT_REQUISITION_FORM_NOT_FOUND: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1126,
+    message: "Product requisition form not found",
+  },
+  CAN_NOT_CREATE_PURCHASE_FORM_FROM_REQUISITION_FORM: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1127,
+    message: "Can't create purchase form from this requisition form",
+  },
+  PRODUCT_EXISTED_IN_THIS_WAREHOUSE: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1128,
+    message: "Product existed in this warehouse",
+  },
+  INVALID_USER_GENDER: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1129,
+    message: "Invalid user gender",
+  },
+  INVALID_USER_ADDRESS: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1130,
+    message: "Invalid user address",
+  },
+  INVALID_USER_PHONE_NUMBER: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1131,
+    message: "Invalid user phone number",
+  },
+  INVALID_USER_EMAIL: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1132,
+    message: "Invalid user email",
+  },
+  WORKSHEET_NOT_FOUND: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1133,
+    message: "Worksheet not found",
+  },
+  USER_DEPARTMENT_NOT_FOUND: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1134,
+    message: "User department not found",
+  },
+  INVALID_USER_DEPARTMENT_SLUG: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1135,
+    message: "User department slug invalid",
+  },
+  USER_ROLE_NOT_FOUND: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1136,
+    message: "User role not found",
+  },
+  INVALID_DOB: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1137,
+    message: "Date of birth invalid",
+  },
+  INVALID_GENDER: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1138,
+    message: "Gender invalid",
+  },
+  INVALID_ADDRESS: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1139,
+    message: "Address invalid",
+  },
+  INVALID_PHONENUMBER: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1140,
+    message: "Phone number invalid",
+  },
+  ASSIGNED_USER_APPROVAL_NOT_FOUND: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1141,
+    message: "Assigned user approval not found",
+  },
+  NOTIFICATION_NOT_FOUND: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1142,
+    message: "Notification not found",
+  },
+  ROLE_PERMISSION_NOT_FOUND: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1143,
+    message: "Role permission not found",
+  },
+  USER_ROLE_EXIST: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1144,
+    message: "User role is existed",
+  },
+  ROLE_PERMISSION_EXIST: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1145,
+    message: "Role permission is existed",
+  },
+  NAME_NORMALIZE_EXIST: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 1146,
+    message: "Name normalize is existed",
   },
 
   // AuthenticationErrors
@@ -516,5 +736,26 @@ export const ErrorCodes: TErrorCode = {
     httpStatusCode: StatusCodes.BAD_REQUEST,
     code: 1021,
     message: "Token expiration is not exist",
+  },
+
+  // DB error
+  // Code range: [4100 - 4299]
+  DUPLICATE_ENTRY: {
+    httpStatusCode: StatusCodes.CONFLICT,
+    code: 4100,
+    message: `Duplicate entry`,
+  },
+  EXPORT_DB_ERROR: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 4101,
+    message: `Error when export database`,
+  },
+
+  // System error
+  // Code range: [4300 - 4499]
+  FOLDER_NOT_FOUND: {
+    httpStatusCode: StatusCodes.BAD_REQUEST,
+    code: 4300,
+    message: `Folder is not existed`,
   },
 } as const;

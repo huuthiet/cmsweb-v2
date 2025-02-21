@@ -1,6 +1,5 @@
-import exp from "constants";
-
 export type TEnv = {
+  broker: string;
   port: number;
   dataSource: {
     hostMySql: string;
@@ -13,6 +12,8 @@ export type TEnv = {
   passportSecret: string;
   duration: number;
   refreshableDuration: number;
+  tag: string;
+  swaggerEnpoint: string;
 };
 
 export * from "./base.type";
@@ -23,7 +24,7 @@ export * from "./project.type";
 export * from "./unit.type";
 export * from "./product.type";
 export * from "./company.type";
-export * from "./product-requisition-from.types";
+export * from "./product-requisition-from.type";
 export * from "./role.type";
 export * from "./authority.type";
 export * from "./permission.type";
@@ -35,3 +36,12 @@ export * from "./assigned-user-approval.type";
 export * from "./warehouse.type";
 export * from "./product-warehouse.type";
 export * from "./temporary-product.type";
+export * from "./file.type";
+export * from "./approval-log.types";
+export * from "./user.type";
+export * from "./resource.type";
+export * from "./role-permission.type";
+export * from "./purchase-product.type";
+export * from "./product-purchase-form.type";
+export * from "./notification.type";
+export * from "./producer.type";

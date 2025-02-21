@@ -77,17 +77,24 @@
   .header{
     @apply border-b border-b-gray-200 flex h-14 items-center justify-between gap-4 px-4 lg:h-[60px] lg:px-4;
   }
+  .text-description{
+    @apply text-sm;
+  }
   .text-normal{
-    @apply text-gray-800;
+    @apply text-sm;
   }
   .text-danger{
-    @apply text-xs text-red-500;
+    @apply  text-red-500;
   }
   .icon{
-    @apply w-3.5 h-3.5 text-gray-500;
+    @apply w-3.5 h-3.5;
+  }
+
+  .icon-sm{
+    @apply w-2.5 h-2.5;
   }
   .header-icon{
-    @apply w-4 h-4 text-gray-500;
+    @apply w-4 h-4;
   }
   .danger-icon{
     @apply w-3.5 h-3.5 text-red-500;

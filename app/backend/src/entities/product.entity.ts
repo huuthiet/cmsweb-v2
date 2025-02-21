@@ -1,7 +1,11 @@
 import { Entity, Column, OneToMany, ManyToOne, JoinColumn } from "typeorm";
 import { AutoMap } from "@automapper/classes";
 
-import { Base, ProductWarehouse, RequestProduct, Unit } from "@entities";
+import { Base } from "./base.entity";
+import { Unit } from "./unit.entity";
+import { RequestProduct } from "./request-product.entity";
+import { PurchaseProduct } from "./purchase-product.entity";
+import { ProductWarehouse } from "./product-warehouse.entity";
 
 @Entity("product_tbl")
 export class Product extends Base {
@@ -13,7 +17,7 @@ export class Product extends Base {
   @AutoMap()
   quantity?: number;
 
-  @Column({ name: "code_column", nullable: true })
+  @Column({ name: "code_column", nullable: true, unique: true })
   @AutoMap()
   code?: string;
 
@@ -30,11 +34,19 @@ export class Product extends Base {
   unit?: Unit;
 
   // a product have many request product
-  @OneToMany(() => RequestProduct, (requestProduct) => requestProduct.product)
+  @OneToMany(() => RequestProduct, 
+    (requestProduct) => requestProduct.product)
   requestProducts?: RequestProduct[];
 
+  // a product have many purchase product
+  @OneToMany(() => PurchaseProduct,
+    (purchaseProduct) => purchaseProduct.product)
+  purchaseProducts?: PurchaseProduct[];
+
   // a product have many productWarehouse
-  @OneToMany(() => ProductWarehouse, 
-    (productWarehouse) => productWarehouse.product)
+  @OneToMany(
+    () => ProductWarehouse,
+    (productWarehouse) => productWarehouse.product
+  )
   productWarehouses?: ProductWarehouse[];
 }

@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 
 import { requestProductService } from "@services";
-import { TAddNewRequestProductRequestDto, TApiResponse, TChangeQuantityRequestProductRequestDto } from "@types";
+import { TAddNewRequestProductRequestDto, TApiResponse, TUpdateRequestProductRequestDto } from "@types";
 import { RequestProductResponseDto } from "@dto/response";
 
 class RequestProductController {
@@ -10,42 +10,77 @@ class RequestProductController {
  * @swagger
  * components:
  *   schemas:
- *     ChangeQuantityRequestProductRequestDto:
+ *     UpdateRequestProductRequestDto:
  *       type: object
  *       required:
- *         - slug
- *         - newQuantity
+ *         - requestQuantity
+ *         - name
+ *         - provider
+ *         - unit
+ *         - description
  *       properties:
- *         slug:
- *           type: string
- *           description: The slug of the request product.
- *         newQuantity:
+ *         requestQuantity:
  *           type: integer
  *           description: The new quantity of the product being requested.
+ *         name:
+ *           type: string
+ *           description: The name of the product being requested.
+ *         provider:
+ *           type: string
+ *           description: The provider of the product being requested.
+ *         unit:
+ *           type: string
+ *           description: The unit slug of the product being requested.
+ *         description:
+ *           type: string
+ *           description: The description of the product being requested.
  *       example:
- *         slug: KeYdkmeNg
- *         newQuantity: 10
+ *         requestQuantity: 10
+ *         name: Máy khoan
+ *         provider: BOSCH
+ *         unit: unit-slug-123
+ *         description: Dùng điện
  *
  *     AddNewRequestProductRequestDto:
  *       type: object
  *       required:
- *         - productSlug
- *         - formSlug
+ *         - form
+ *         - product
  *         - requestQuantity
+ *         - name
+ *         - provider
+ *         - unit
+ *         - description
  *       properties:
- *         productSlug:
+ *         product:
  *           type: string
  *           description: The slug of the product being added.
- *         formSlug:
+ *         form:
  *           type: string
  *           description: The slug of the form to add the new request product.
  *         requestQuantity:
  *           type: integer
  *           description: The quantity of the requested product.
+ *         name:
+ *           type: string
+ *           description: The name of product.
+ *         provider:
+ *           type: string
+ *           description: The provider of product.
+ *         unit:
+ *           type: string
+ *           description: The slug of unit for new product not exist.
+ *         description:
+ *           type: string
+ *           description: The description of product.
  *       example:
- *         productSlug: KeYdkmeNg
- *         formSlug: formSlug-123
+ *         form: KeYdkmeNg
+ *         product: KeYdkmeNg
  *         requestQuantity: 10
+ *         name: Máy tiện
+ *         provider: BOSCH
+ *         unit: unit-slug-123
+ *         description: description
  */
 
   /**
@@ -76,6 +111,12 @@ class RequestProductController {
    *         description: Delete request product successfully.
    *       500:
    *         description: Server error
+   *       1074:
+   *         description: Request product not found
+   *       1046:
+   *         description: Form not found
+   *       1072:
+   *         description: Forbidden edit form
    */
   public async deleteRequestProductInProductRequisitionForm(
     req: Request,
@@ -106,43 +147,61 @@ class RequestProductController {
 
   /**
    * @swagger
-   * /requestProducts/updateQuantity:
+   * /requestProducts/{slug}:
    *   patch:
-   *     summary: Change quantity request product of product requisition form
+   *     summary: Update request product of product requisition form
    *     tags: [RequestProduct]
+   *     parameters:
+   *       - name: slug
+   *         in: path
+   *         required: true
+   *         type: string
+   *         description: Request product slug     
    *     requestBody:
    *       required: true
    *       content:
    *         application/json:
    *           schema:
-   *              $ref: '#/components/schemas/ChangeQuantityRequestProductRequestDto'
+   *              $ref: '#/components/schemas/UpdateRequestProductRequestDto'
    *     responses:
    *       200:
-   *         description: Change quantity request product successfully.
+   *         description: Update request product successfully.
    *         content:
    *           application/json:
    *             schema:
    *       500:
    *         description: Server error
+   *       1074:
+   *         description: Request product not found
+   *       1046:
+   *         description: Form not found
+   *       1066:
+   *         description: Invalid request product quantity
+   *       1072:
+   *         description: Forbidden edit form
+   *       1073:
+   *         description: Invalid request product slug
    *
    */
-  public async changeQuantityRequestProductInProductRequisitionForm(
+  public async updateRequestProductInProductRequisitionForm(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const data = req.body as TChangeQuantityRequestProductRequestDto;
+      const data = req.body as TUpdateRequestProductRequestDto;
       const creatorId = req.userId as string;
+      const slug = req.params.slug;
       const requestProduct = 
-        await requestProductService.changeQuantityRequestProductInProductRequisitionForm(
+        await requestProductService.updateRequestProductInProductRequisitionForm(
+          slug,
           data,
           creatorId
         );
       const response: TApiResponse<RequestProductResponseDto> = {
         code: StatusCodes.OK,
         error: false,
-        message: "Change quantity request product successfully",
+        message: "Update request product successfully",
         method: req.method,
         path: req.originalUrl,
         result: requestProduct,
@@ -173,6 +232,26 @@ class RequestProductController {
    *             schema:
    *       500:
    *         description: Server error
+   *       1024:
+   *         description: Unit not found
+   *       1026:
+   *         description: Invalid product provider
+   *       1027:
+   *         description: Invalid product name
+   *       1046:
+   *         description: Form not found
+   *       1063:
+   *         description: Invalid form slug
+   *       1066:
+   *         description: Invalid request product quantity
+   *       1072:
+   *         description: Forbidden edit form
+   *       1076:
+   *         description: Request product exist
+   *       1088:
+   *         description: Invalid unit slug
+   *       1097:
+   *         description: Invalid product description
    *
    */
   public async addNewRequestProductInProductRequisitionForm(

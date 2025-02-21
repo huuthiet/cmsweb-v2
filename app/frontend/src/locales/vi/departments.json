@@ -1,0 +1,35 @@
+{
+  "department": {
+    "list": "Danh sách bộ phận",
+    "create": "Tạo bộ phận",
+    "createDescription": "Điền đầy đủ thông tin bên dưới để tạo bộ phận mới",
+    "nameNormalize": "Mã chuẩn hóa",
+    "nameNormalizeDescription": "Nhập mã chuẩn hóa",
+    "siteName": "Tên địa chỉ công trình",
+    "selectSite": "Chọn địa chỉ công trình",
+    "name": "Tên bộ phận",
+    "slug": "Mã bộ phận",
+    "company": "Công ty",
+    "description": "Mô tả",
+    "descriptionDescription": "Nhập mô tả",
+    "site": "Địa điểm",
+
+    "confirmCreate": "Xác nhận tạo bộ phận",
+    "confirmCreateDescription": "Xác nhận tạo mới bộ phận",
+    "belongsToLocation": "thuộc địa điểm",
+    "cancelCreate": "Hủy",
+    "confirm": "Xác nhận",
+    "cancel": "Hủy",
+
+    "updateDepartment": "Cập nhật bộ phận",
+    "updateDepartmentDescription": "Thay đổi các thông tin bên dưới để cập nhật bộ phận",
+    "update": "Cập nhật",
+
+    "deleteDepartment": "Xóa bộ phận",
+    "deleteDepartmentDescription": "Lưu ý: Thao tác này không thể hoàn tác",
+    "deleteDepartmentWarning1": "Bạn sắp sửa xóa",
+    "deleteDepartmentWarning2": "thuộc địa điểm",
+    "deleteDepartmentConfirmation": "Bạn có chắc chắn muốn xóa không?",
+    "confirmDelete": "Tôi đã hiểu, xác nhận xóa"
+  }
+}

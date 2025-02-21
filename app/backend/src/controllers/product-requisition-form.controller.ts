@@ -3,6 +3,7 @@ import {
   TPaginationOptionResponse,
   TQueryRequest,
   TResubmitProductRequisitionFormRequestDto,
+  TUpdateGeneralInformationProductRequisitionFormRequestDto,
 } from "@types";
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
@@ -59,18 +60,19 @@ class ProductRequisitionFormController {
    *       type: object
    *       required:
    *         - code
-   *         - project
+   *         - projectName
    *         - type
    *         - deadlineApproval
    *         - description
    *         - requestProducts
+   *         - departmentSlug
    *       properties:
    *         code:
    *           type: string
    *           description: The code for the requisition form.
-   *         project:
+   *         projectName:
    *           type: string
-   *           description: The slug of the project.
+   *           description: The name of the project.
    *         type:
    *           type: string
    *           description: The type of form.
@@ -80,6 +82,9 @@ class ProductRequisitionFormController {
    *         description:
    *           type: string
    *           description: The opinion of creator.
+   *         departmentSlug:
+   *           type: string
+   *           description: The slug of department
    *         requestProducts:
    *           type: array
    *           description: List of products being requested.
@@ -87,10 +92,11 @@ class ProductRequisitionFormController {
    *             $ref: '#/components/schemas/CreateRequestProductDto'
    *       example:
    *         code: YCVT123
-   *         project: project-789
+   *         projectName: project-789
    *         deadlineApproval: 2024-09-12 20:45:15
    *         type: urgent
    *         description: Ý kiến người tạo
+   *         departmentSlug: bcOJsOG72
    *         requestProducts:
    *           - product: KeYdkmeNg
    *             requestQuantity: 10
@@ -99,26 +105,42 @@ class ProductRequisitionFormController {
    *             unit: unit-slug-123
    *             description: Loại nhỏ
    *
+   *     CreateApprovalLogRequestDto:
+   *       type: object
+   *       required:
+   *         - status
+   *         - content
+   *       properties:
+   *         status:
+   *           type: string
+   *           description: The slug of approval user (accept/give_back/cancel)
+   *         content:
+   *           type: string
+   *           description: The content of approval user
+   *       example:
+   *         status: accept
+   *         content: yêu cầu ổn
+   *
+   *
    *     ApprovalProductRequisitionFormRequestDto:
    *       type: object
    *       required:
    *         - formSlug
-   *         - approvalLogStatus
-   *         - approvalLogContent
+   *         - approvalLog
    *       properties:
    *         formSlug:
    *           type: string
    *           description: The slug of the form.
-   *         approvalLogStatus:
-   *           type: string
-   *           description: The status approval form (accept/give_back/cancel)
-   *         approvalLogContent:
-   *           type: string
-   *           description: The reason approval form.
+   *         approvalLog:
+   *           type: object
+   *           description: Object approval log.
+   *           items:
+   *             $ref: '#/components/schemas/CreateApprovalLogRequestDto'
    *       example:
    *         formSlug: XUWyA6fr7i
-   *         approvalLogStatus: accept
-   *         approvalLogContent: Yêu cầu đã ok
+   *         approvalLog:
+   *             status: accept
+   *             content: Yêu cầu ổn
    *
    *     ResubmitProductRequisitionFormRequestDto:
    *       type: object
@@ -134,6 +156,32 @@ class ProductRequisitionFormController {
    *           description: The reason resubmit form.
    *       example:
    *         slug: XUWyA6fr7i
+   *         description: Đã chỉnh sửa
+   *
+   *     UpdateGeneralInformationProductRequisitionFormRequestDto:
+   *       type: object
+   *       required:
+   *         - projectName
+   *         - type
+   *         - deadlineApproval
+   *         - description
+   *       properties:
+   *         projectName:
+   *           type: string
+   *           description: Project name
+   *         type:
+   *           type: string
+   *           description: Type of product requisition form, it can be normal or urgent
+   *         deadlineApproval:
+   *           type: string
+   *           description: Deadline approval for product requisition form
+   *         description:
+   *           type: string
+   *           description: Description for product requisition form
+   *       example:
+   *         projectName: project-123
+   *         type: normal
+   *         deadlineApproval: 2024-09-15 10:25:45
    *         description: Đã chỉnh sửa
    *
    */
@@ -201,7 +249,73 @@ class ProductRequisitionFormController {
       > = {
         code: StatusCodes.OK,
         error: false,
-        message: "Get list productRequisitionForms successfully",
+        message: "Product requisition forms have been retrieved successfully",
+        method: req.method,
+        path: req.originalUrl,
+        result: results,
+      };
+      res.status(StatusCodes.OK).json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * @swagger
+   * /productRequisitionForms/completedApproval:
+   *   get:
+   *     summary: Get completed approval product requisition forms
+   *     tags: [ProductRequisitionForm]
+   *     parameters:
+   *       - in: query
+   *         name: order
+   *         schema:
+   *           type: string
+   *           enum: [ASC, DESC]
+   *         required: true
+   *         description: The order in which the product requisition forms are sorted (ASC, DESC)
+   *         example: ASC
+   *       - in: query
+   *         name: page
+   *         schema:
+   *           type: integer
+   *         required: true
+   *         description: The number of product requisition forms to skip
+   *         example: 1
+   *       - in: query
+   *         name: pageSize
+   *         schema:
+   *           type: integer
+   *         required: true
+   *         description: The number of product requisition forms to retrieve
+   *         example: 10
+   *     responses:
+   *       200:
+   *         description: Get completed approval product requisition forms successfully.
+   *       500:
+   *         description: Server error
+   */
+
+  public async getAllProductRequisitionFormsCompletedApproval(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const query = req.query as unknown as TQueryRequest;
+      logger.info(`[${ProductRequisitionFormController.name}]`, query);
+      const results =
+        await productRequisitionFormService.getAllProductRequisitionFormsCompletedApproval(
+          query
+        );
+
+      const response: TApiResponse<
+        TPaginationOptionResponse<ProductRequisitionFormResponseDto[]>
+      > = {
+        code: StatusCodes.OK,
+        error: false,
+        message:
+          "Get list completed approval product requisition forms successfully",
         method: req.method,
         path: req.originalUrl,
         result: results,
@@ -232,6 +346,38 @@ class ProductRequisitionFormController {
    *             schema:
    *       500:
    *         description: Server error
+   *       1026:
+   *         description: Invalid product provider
+   *       1027:
+   *         description: Invalid product name
+   *       1039:
+   *         description: Invalid date format
+   *       1042:
+   *         description: Product requisition form code exist
+   *       1044:
+   *         description: Invalid quantity user approval
+   *       1052:
+   *         description: Project not found
+   *       1053:
+   *         description: Invalid creator
+   *       1056:
+   *         description: Invalid form code
+   *       1057:
+   *         description: Invalid type of product requisition form
+   *       1060:
+   *         description: Invalid project slug
+   *       1061:
+   *         description: Invalid request product array
+   *       1066:
+   *         description: Invalid request product quantity
+   *       1069:
+   *         description: Missing user approval
+   *       1084:
+   *         description: Invalid deadline date approval form
+   *       1088:
+   *         description: Invalid unit slug
+   *       1097:
+   *         description: Invalid product description
    *
    */
   public async createProductRequisitionForm(
@@ -242,9 +388,10 @@ class ProductRequisitionFormController {
     try {
       const requestData = req.body as TCreateProductRequisitionFormRequestDto;
       const creatorId = req.userId as string;
+      Object.assign(requestData, { creatorId });
+
       const form =
         await productRequisitionFormService.createProductRequisitionForm(
-          creatorId,
           requestData
         );
 
@@ -256,7 +403,7 @@ class ProductRequisitionFormController {
         path: req.originalUrl,
         result: form,
       };
-      res.status(StatusCodes.OK).json(response);
+      res.status(StatusCodes.CREATED).json(response);
     } catch (error) {
       next(error);
     }
@@ -266,7 +413,7 @@ class ProductRequisitionFormController {
    * @swagger
    * /productRequisitionForms/{slug}:
    *   get:
-   *     summary: get productRequisitionForm by slug
+   *     summary: get product requisition form by slug
    *     tags: [ProductRequisitionForm]
    *     produces:
    *       - application/json
@@ -281,6 +428,8 @@ class ProductRequisitionFormController {
    *         description: get product requisition form successfully.
    *       500:
    *         description: Server error
+   *       1046:
+   *         description: Form not found
    *
    */
 
@@ -327,6 +476,12 @@ class ProductRequisitionFormController {
    *         description: update status for product requisition form successfully.
    *       500:
    *         description: Server error
+   *       1046:
+   *         description: Form not found
+   *       1050:
+   *         description: Product requisition form done approval
+   *       1085:
+   *         description: Forbidden approval form
    *
    */
 
@@ -375,23 +530,30 @@ class ProductRequisitionFormController {
    *         description: resubmit product requisition form successfully.
    *       500:
    *         description: Server error
+   *       1046:
+   *         description: Form not found
+   *       1063:
+   *         description: Invalid form slug
+   *       1072:
+   *         description: Forbidden edit form
+   *       1077:
+   *         description: Invalid reason resubmit form
    *
    */
 
-  public async resubmitRequisitionForm(
+  public async resubmitProductRequisitionForm(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
       const data = req.body as TResubmitProductRequisitionFormRequestDto;
-      const creatorId = req.userId as string;
       logger.info("ResubmitProductRequisitionFormRequest", { data });
 
       const result =
-        await productRequisitionFormService.resubmitRequisitionForm(
+        await productRequisitionFormService.resubmitProductRequisitionForm(
           data,
-          creatorId
+          req.ability
         );
 
       const response: TApiResponse<ProductRequisitionFormResponseDto> = {
@@ -401,6 +563,223 @@ class ProductRequisitionFormController {
         method: req.method,
         path: req.originalUrl,
         result: result,
+      };
+      res.status(StatusCodes.OK).json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * @swagger
+   * /productRequisitionForms/{slug}:
+   *   patch:
+   *     summary: Update general information of product requisition form
+   *     tags: [ProductRequisitionForm]
+   *     parameters:
+   *       - name: slug
+   *         in: path
+   *         required: true
+   *         type: string
+   *         description: Form slug
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *              $ref: '#/components/schemas/UpdateGeneralInformationProductRequisitionFormRequestDto'
+   *     responses:
+   *       200:
+   *         description: Product requisition form update successfully.
+   *         content:
+   *           application/json:
+   *             schema:
+   *       500:
+   *         description: Server error
+   *       1039:
+   *         description: Invalid date format
+   *       1046:
+   *         description: Form not found
+   *       1052:
+   *         description: Project not found
+   *       1057:
+   *         description: Invalid type of product requisition form
+   *       1060:
+   *         description: Invalid project slug
+   *       1084:
+   *         description: Invalid deadline date approval form
+   *
+   */
+  public async updateGeneralInformationForm(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const data =
+        req.body as TUpdateGeneralInformationProductRequisitionFormRequestDto;
+      const slug = req.params.slug;
+      const ability = req.ability;
+
+      const result =
+        await productRequisitionFormService.updateGeneralInformationForm(
+          slug,
+          data,
+          ability
+        );
+
+      const response: TApiResponse<ProductRequisitionFormResponseDto> = {
+        code: StatusCodes.OK,
+        error: false,
+        message: "Product requisition form has been updated successfully",
+        method: req.method,
+        path: req.originalUrl,
+        result: result,
+      };
+      res.status(StatusCodes.OK).json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * @swagger
+   * /productRequisitionForms/{slug}/exportExcel:
+   *   get:
+   *     summary: Export productRequisitionForm to excel by slug
+   *     tags: [ProductRequisitionForm]
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: slug
+   *         in: path
+   *         required: true
+   *         type: string
+   *         description: slug of product requisition form
+   *     responses:
+   *       200:
+   *         description: Export excel product requisition form successfully.
+   *       500:
+   *         description: Server error
+   *       1046:
+   *         description: Form not found
+   *
+   */
+
+  public async exportExcel(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const slug = req.params.slug as string;
+      const requestUrl = `${req.protocol}://${req.get("host")}`;
+      const { filename, buffer } =
+        await productRequisitionFormService.exportExcel({
+          formSlug: slug,
+          requestUrl,
+        });
+
+      res.writeHead(200, {
+        "Content-Type":
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "Content-Disposition": `attachment; filename=${filename}`,
+      });
+
+      // End the response after the file is sent
+      res.end(buffer);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * @swagger
+   * /productRequisitionForms/{slug}/exportPdf:
+   *   get:
+   *     summary: Export productRequisitionForm to pdf by slug
+   *     tags: [ProductRequisitionForm]
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: slug
+   *         in: path
+   *         required: true
+   *         type: string
+   *         description: slug of product requisition form
+   *     responses:
+   *       200:
+   *         description: Export pdf product requisition form successfully.
+   *       500:
+   *         description: Server error
+   *       1046:
+   *         description: Form not found
+   *
+   */
+
+  public async exportPdf(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const requestUrl = `${req.protocol}://${req.get("host")}`;
+      const slug = req.params.slug as string;
+      const { filename, buffer } =
+        await productRequisitionFormService.exportPdf({
+          slug,
+          requestUrl,
+        });
+
+      res.writeHead(200, {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename=${filename}`,
+      });
+
+      // End the response after the file is sent
+      res.end(buffer);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * @swagger
+   * /productRequisitionForms/{slug}:
+   *   delete:
+   *     summary: Delete product requisition form
+   *     tags: [ProductRequisitionForm]
+   *     parameters:
+   *       - in: path
+   *         name: slug
+   *         schema:
+   *           type: string
+   *         required: true
+   *         description: The slug of form
+   *         example: slug-123
+   *     responses:
+   *       200:
+   *         description: Product requisition form has been deleted successfully
+   *       500:
+   *         description: Server error
+   *       1046:
+   *         description: Form not found
+   */
+  public async deleteProductRequisitionForm(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { slug } = req.params;
+      const result = await productRequisitionFormService.deleteProductRequisitionForm(slug);
+      const response: TApiResponse<string> = {
+        code: StatusCodes.OK,
+        error: false,
+        message: "The form deleted successfully",
+        method: req.method,
+        path: req.originalUrl,
+        result: `${result} rows affected`,
       };
       res.status(StatusCodes.OK).json(response);
     } catch (error) {

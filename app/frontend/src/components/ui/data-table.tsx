@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+import { Dispatch, SetStateAction, useState } from 'react'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -10,9 +12,16 @@ import {
   VisibilityState,
   useReactTable,
   Column,
-  Table as ReactTable,
-  PaginationState
+  Table as ReactTable
 } from '@tanstack/react-table'
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  Loader2Icon,
+  SearchIcon
+} from 'lucide-react'
 
 import {
   Table,
@@ -31,25 +40,43 @@ import {
   SelectTrigger,
   SelectValue,
   DropdownMenuItem,
-  DropdownMenuSeparator
+  DropdownMenuSeparator,
+  Input,
+  DropdownMenuLabel,
+  DropdownMenuCheckboxItem
 } from '@/components/ui'
-import { useEffect, useState } from 'react'
-import {
-  ArrowDownIcon,
-  ArrowUpIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ChevronsLeftIcon,
-  ChevronsRightIcon,
-  Loader2Icon
-} from 'lucide-react'
+import React from 'react'
 import { cn } from '@/lib/utils'
-import { useTranslation } from 'react-i18next'
 import {
-  IRequisitionFormResponseForApprover,
-  RequestRequisitionRoleApproval,
-  RequestRequisitionStatus
-} from '@/types'
+  DoubleArrowLeftIcon,
+  DoubleArrowRightIcon,
+  MixerHorizontalIcon
+} from '@radix-ui/react-icons'
+
+interface DataTablePaginationProps<TData> {
+  table: ReactTable<TData>
+  onPageChange: (page: number) => void
+  onPageSizeChange: (size: number) => void
+}
+
+export interface DataTableFilterOptionsProps<TData> {
+  setFilterOption: React.Dispatch<React.SetStateAction<ColumnFiltersState>>
+  data: TData[]
+}
+
+// DataTableColumnHeader Component
+interface DataTableColumnHeaderProps<TData, TValue> extends React.HTMLAttributes<HTMLDivElement> {
+  column: Column<TData, TValue>
+  title: string
+}
+
+export interface DataTableActionOptionsProps<TData> {
+  table: ReactTable<TData>
+}
+
+interface DataTableViewOptionsProps<TData> {
+  table: ReactTable<TData>
+}
 
 // DataTable Component
 interface DataTableProps<TData, TValue> {
@@ -57,12 +84,14 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   pages: number
-  page: number
-  pageSize: number
+  inputValue?: string
+  hiddenInput?: boolean
   onPageChange: (pageIndex: number) => void
-  onPageSizeChange?: (pageSize: number) => void
+  onPageSizeChange: (pageSize: number) => void
   onRowClick?: (row: TData) => void
-  CustomComponent?: React.ElementType<{ table: ReactTable<TData> }>
+  onInputChange?: Dispatch<SetStateAction<string>>
+  filterOptions?: React.FC<DataTableFilterOptionsProps<TData>>
+  actionOptions?: React.FC<DataTableActionOptionsProps<TData>>
 }
 
 export function DataTable<TData, TValue>({
@@ -70,33 +99,21 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   pages,
-  page,
-  pageSize,
+  inputValue,
+  hiddenInput = true,
   onPageChange,
   onPageSizeChange,
-  CustomComponent,
-  onRowClick
+  onRowClick,
+  onInputChange,
+  filterOptions: DataTableFilterOptions,
+  actionOptions: DataTableActionOptions
 }: DataTableProps<TData, TValue>) {
   const { t } = useTranslation('tableData')
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [filterValue, setFilterValue] = useState<string>('all')
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = useState({})
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: page - 1,
-    pageSize
-  })
-  const [availableRoleApprovals, setAvailableRoleApprovals] = useState<string[]>([])
-
-  useEffect(() => {
-    // Extract unique roleApproval values from the data
-    const roleApprovals = data.map(
-      (item: TData) => (item as IRequisitionFormResponseForApprover).roleApproval
-    )
-    setAvailableRoleApprovals(roleApprovals)
-  }, [data])
 
   const table = useReactTable({
     data,
@@ -106,10 +123,8 @@ export function DataTable<TData, TValue>({
       sorting,
       columnFilters,
       columnVisibility,
-      rowSelection,
-      pagination
+      rowSelection
     },
-    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -122,116 +137,36 @@ export function DataTable<TData, TValue>({
     debugTable: true
   })
 
-  const handleFilterChange = (value: string) => {
-    setFilterValue(value)
-
-    let filterConditions: ColumnFiltersState = []
-
-    const applyFilter = (
-      roleApproval: RequestRequisitionRoleApproval,
-      status: RequestRequisitionStatus,
-      isRecalled: boolean
-    ) => {
-      filterConditions = [
-        { id: 'roleApproval', value: roleApproval },
-        { id: 'status', value: status },
-        { id: 'isRecalled', value: isRecalled }
-      ]
-    }
-
-    switch (value) {
-      // Approval Stage 1
-      case 'waiting_approval_1':
-        applyFilter('approval_stage_1', 'waiting', false)
-        break
-      case 'approved_stage_1':
-        applyFilter('approval_stage_1', 'accepted_stage_1', false)
-        break
-      case 'canceled_stage_1':
-        applyFilter('approval_stage_1', 'cancel', true)
-        break
-
-      // Approval Stage 2
-      case 'waiting_approval_2':
-        applyFilter('approval_stage_2', 'accepted_stage_1', false)
-        break
-      case 'approved_stage_2':
-        applyFilter('approval_stage_2', 'accepted_stage_2', false)
-        break
-      case 'returned_stage_2':
-        applyFilter('approval_stage_2', 'waiting', true)
-        break
-      case 'canceled_stage_2':
-        applyFilter('approval_stage_2', 'cancel', true)
-        break
-
-      // Approval Stage 3
-      case 'waiting_approval_3':
-        applyFilter('approval_stage_3', 'accepted_stage_2', false)
-        break
-      case 'approved_stage_3':
-        applyFilter('approval_stage_3', 'waiting_export', false)
-        break
-      case 'returned_stage_3':
-        applyFilter('approval_stage_3', 'accepted_stage_1', true)
-        break
-      case 'canceled_stage_3':
-        applyFilter('approval_stage_3', 'cancel', true)
-        break
-
-      default:
-        filterConditions = []
-    }
-
-    setColumnFilters(filterConditions)
-  }
-
   return (
     <div>
-      <div className="flex justify-between gap-2">
-        {CustomComponent && <CustomComponent table={table} />}
-        <Select value={filterValue} onValueChange={handleFilterChange}>
-          <SelectTrigger className="w-[12rem]">
-            <SelectValue placeholder={t('tablePaging.filter')} />
-          </SelectTrigger>
-
-          <SelectContent side="top">
-            <SelectItem value="all">{t('tableData.all')}</SelectItem>
-
-            {availableRoleApprovals.includes('approval_stage_1') && (
-              <>
-                <SelectItem value="waiting_approval_1">
-                  {t('tableData.waiting_approval_1')}
-                </SelectItem>
-                <SelectItem value="approved_stage_1">{t('tableData.approved_stage_1')}</SelectItem>
-                <SelectItem value="canceled_stage_1">{t('tableData.canceled_stage_1')}</SelectItem>
-              </>
-            )}
-
-            {availableRoleApprovals.includes('approval_stage_2') && (
-              <>
-                <SelectItem value="waiting_approval_2">
-                  {t('tableData.waiting_approval_2')}
-                </SelectItem>
-                <SelectItem value="approved_stage_2">{t('tableData.approved_stage_2')}</SelectItem>
-                <SelectItem value="returned_stage_2">{t('tableData.returned_stage_2')}</SelectItem>
-                <SelectItem value="canceled_stage_2">{t('tableData.canceled_stage_2')}</SelectItem>
-              </>
-            )}
-
-            {availableRoleApprovals.includes('approval_stage_3') && (
-              <>
-                <SelectItem value="waiting_approval_3">
-                  {t('tableData.waiting_approval_3')}
-                </SelectItem>
-                <SelectItem value="approved_stage_3">{t('tableData.approved_stage_3')}</SelectItem>
-                <SelectItem value="returned_stage_3">{t('tableData.returned_stage_3')}</SelectItem>
-                <SelectItem value="canceled_stage_3">{t('tableData.canceled_stage_3')}</SelectItem>
-              </>
-            )}
-          </SelectContent>
-        </Select>
+      <div className="flex justify-end gap-2">
+        {/* Input search */}
+        {!hiddenInput && (
+          <div className="relative max-w-sm">
+            <SearchIcon className="absolute w-4 h-4 text-gray-400 transform -translate-y-1/2 left-2 top-1/2" />
+            <Input
+              placeholder={t('tableData.search')}
+              value={inputValue}
+              onChange={(e) => {
+                onInputChange?.(e.target.value)
+              }}
+              className="border sm:pr-2 sm:pl-8 sm:w-full sm:h-auto md:w-auto placeholder:sm:inline placeholder:hidden"
+            />
+          </div>
+        )}
+        <div className="flex items-center gap-2">
+          {/* Actions */}
+          {DataTableActionOptions && <DataTableActionOptions table={table} />}
+          {/* Filter */}
+          {DataTableFilterOptions && (
+            <DataTableFilterOptions setFilterOption={setColumnFilters} data={data} />
+          )}
+          {/* View options */}
+          <DataTableViewOptions table={table} />
+        </div>
       </div>
+
+      {/* Table */}
       <div className="mt-3 border rounded-md">
         <Table>
           <TableHeader>
@@ -251,7 +186,7 @@ export function DataTable<TData, TValue>({
             {isLoading ? (
               <TableRow>
                 <TableCell colSpan={columns.length} className="w-full h-full mx-auto text-center">
-                  <Loader2Icon className="w-6 h-6 mx-auto text-primary animate-spin" />
+                  <Loader2Icon className="w-6 h-6 mx-auto animate-spin text-primary" />
                 </TableCell>
               </TableRow>
             ) : table.getRowModel().rows.length ? (
@@ -279,328 +214,17 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      {/* <div className="flex-1 mt-2 text-sm text-muted-foreground">
-        {table.getFilteredSelectedRowModel().rows.length} {t('tablePaging.select')}
-        {table.getFilteredRowModel().rows.length} {t('tablePaging.rows')}
-      </div> */}
+
+      {/* Pagination */}
       <div className="flex items-center justify-end py-4 space-x-2">
         <DataTablePagination
           table={table}
-          pages={pages}
-          page={pagination.pageIndex + 1}
-          pageSize={pagination.pageSize}
-          onPageChange={(pageIndex) => {
-            setPagination((prev) => ({ ...prev, pageIndex: pageIndex - 1 }))
-            onPageChange(pageIndex)
-          }}
-          onPageSizeChange={(pageSize) => {
-            setPagination((prev) => ({ ...prev, pageSize }))
-            if (onPageSizeChange) {
-              onPageSizeChange(pageSize)
-            }
-          }}
+          onPageChange={onPageChange}
+          onPageSizeChange={onPageSizeChange}
         />
       </div>
     </div>
   )
-}
-
-export function DataTableByCreator<TData, TValue>({
-  isLoading,
-  columns,
-  data,
-  pages,
-  page,
-  pageSize,
-  onPageChange,
-  onPageSizeChange,
-  CustomComponent
-}: DataTableProps<TData, TValue>) {
-  const { t } = useTranslation('tableData')
-
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [filterValue, setFilterValue] = useState<string>('all')
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = useState({})
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: page - 1,
-    pageSize
-  })
-
-  const table = useReactTable({
-    data,
-    columns,
-    pageCount: pages,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-      pagination
-    },
-    onPaginationChange: setPagination,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    manualPagination: true,
-    debugTable: true
-  })
-
-  const handleFilterChange = (value: string) => {
-    setFilterValue(value)
-
-    let filterConditions: ColumnFiltersState = []
-
-    switch (value) {
-      case 'waiting_approval_1':
-        filterConditions = [
-          { id: 'status', value: 'waiting' },
-          { id: 'isRecalled', value: false }
-        ]
-        break
-      case 'returned_stage_1':
-        filterConditions = [
-          { id: 'status', value: 'cancel' },
-          { id: 'isRecalled', value: true }
-        ]
-        break
-      case 'approved_stage_1':
-        filterConditions = [
-          { id: 'status', value: 'accepted_stage_1' },
-          { id: 'isRecalled', value: false }
-        ]
-        break
-      case 'returned_stage_2':
-        filterConditions = [
-          { id: 'status', value: 'waiting' },
-          { id: 'isRecalled', value: true }
-        ]
-        break
-      case 'approved_stage_2':
-        filterConditions = [
-          { id: 'status', value: 'accepted_stage_2' },
-          { id: 'isRecalled', value: false }
-        ]
-        break
-      case 'returned_stage_3':
-        filterConditions = [
-          { id: 'status', value: 'accepted_stage_1' },
-          { id: 'isRecalled', value: true }
-        ]
-        break
-      case 'approved_stage_3':
-        filterConditions = [
-          { id: 'status', value: 'waiting_export' },
-          { id: 'isRecalled', value: false }
-        ]
-        break
-      case 'canceled':
-        filterConditions = [
-          { id: 'status', value: 'cancel' },
-          { id: 'isRecalled', value: true }
-        ]
-        break
-      default:
-        filterConditions = []
-    }
-
-    setColumnFilters(filterConditions)
-  }
-
-  return (
-    <div>
-      <div className="flex justify-between gap-2">
-        {CustomComponent && <CustomComponent table={table} />}
-        <Select value={filterValue} onValueChange={handleFilterChange}>
-          <SelectTrigger className="w-[12rem]">
-            <SelectValue placeholder={t('tablePaging.filter')} />
-          </SelectTrigger>
-
-          <SelectContent side="top">
-            <SelectItem value="all">{t('tableData.all')}</SelectItem>
-            <SelectItem value="waiting">{t('tableData.waiting')}</SelectItem>
-            <SelectItem value="approved_stage_1">{t('tableData.approved_stage_1')}</SelectItem>
-            <SelectItem value="approved_stage_2">{t('tableData.approved_stage_2')}</SelectItem>
-            <SelectItem value="waiting_export">{t('tableData.waiting_export')}</SelectItem>
-            <SelectItem value="recalled">{t('tableData.recalled')}</SelectItem>
-            <SelectItem value="canceled">{t('tableData.canceled')}</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="mt-3 border rounded-md">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder ? null : (
-                      <div>{flexRender(header.column.columnDef.header, header.getContext())}</div>
-                    )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="w-full h-full mx-auto text-center">
-                  <Loader2Icon className="w-6 h-6 mx-auto text-primary animate-spin" />
-                </TableCell>
-              </TableRow>
-            ) : table.getRowModel().rows.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() ? t('tablePaging.selected') : undefined}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-full text-center">
-                  {t('tablePaging.noData')}
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      {/* <div className="flex-1 mt-2 text-sm text-muted-foreground">
-        {table.getFilteredSelectedRowModel().rows.length} {t('tablePaging.select')}
-        {table.getFilteredRowModel().rows.length} {t('tablePaging.rows')}
-      </div> */}
-      <div className="flex items-center justify-end py-4 space-x-2">
-        <DataTablePagination
-          table={table}
-          pages={pages}
-          page={pagination.pageIndex + 1}
-          pageSize={pagination.pageSize}
-          onPageChange={(pageIndex) => {
-            setPagination((prev) => ({ ...prev, pageIndex: pageIndex - 1 }))
-            onPageChange(pageIndex)
-          }}
-          onPageSizeChange={(pageSize) => {
-            setPagination((prev) => ({ ...prev, pageSize }))
-            if (onPageSizeChange) {
-              onPageSizeChange(pageSize)
-            }
-          }}
-        />
-      </div>
-    </div>
-  )
-}
-
-// DataTableRequisition Component
-export function DataTableRequisition<TData, TValue>({
-  isLoading,
-  columns,
-  data,
-  pages,
-  page,
-  pageSize,
-  CustomComponent
-}: DataTableProps<TData, TValue>) {
-  const { t } = useTranslation('tableData')
-
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: page - 1,
-    pageSize
-  })
-
-  const table = useReactTable({
-    data,
-    columns,
-    pageCount: pages,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      pagination
-    },
-    onPaginationChange: setPagination,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
-    manualPagination: true,
-    debugTable: true
-  })
-
-  return (
-    <div>
-      <div className="flex justify-between gap-2">
-        {CustomComponent && <CustomComponent table={table} />}
-      </div>
-      <div className="mt-3 border rounded-md">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="w-full h-full mx-auto text-center">
-                  <Loader2Icon className="w-6 h-6 mx-auto text-primary animate-spin" />
-                </TableCell>
-              </TableRow>
-            ) : table.getRowModel().rows.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-full text-center">
-                  {t('tablePaging.noData')}
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-    </div>
-  )
-}
-
-// DataTableColumnHeader Component
-interface DataTableColumnHeaderProps<TData, TValue> extends React.HTMLAttributes<HTMLDivElement> {
-  column: Column<TData, TValue>
-  title: string
 }
 
 export function DataTableColumnHeader<TData, TValue>({
@@ -615,7 +239,7 @@ export function DataTableColumnHeader<TData, TValue>({
   }
 
   return (
-    <div className={cn('flex items-center min-w-32 space-x-2 text-[0.8rem]', className)}>
+    <div className={cn('flex items-center min-w-[6rem] space-x-2 text-[0.8rem]', className)}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="-ml-3 h-8 data-[state=open]:bg-accent">
@@ -739,96 +363,121 @@ export function DataTableColumnActionHeader<TData, TValue>({
   )
 }
 
-// DataTablePagination Component
-interface PaginationProps<TData> {
-  table: ReactTable<TData>
-  // total: number
-  pages: number
-  page: number
-  pageSize: number
-  onPageChange: (page: number) => void
-  onPageSizeChange?: (size: number) => void
-}
-
-interface PaginationProps<TData> {
-  table: ReactTable<TData>
-  pages: number
-  page: number
-  pageSize: number
-  onPageChange: (page: number) => void
-  onPageSizeChange?: (size: number) => void
-}
-
 export function DataTablePagination<TData>({
-  pages,
-  page,
-  pageSize,
+  table,
   onPageChange,
   onPageSizeChange
-}: PaginationProps<TData>) {
-  const { t } = useTranslation('tableData')
-
+}: DataTablePaginationProps<TData>) {
   return (
-    <div className="flex items-center space-x-6">
-      <div className="flex items-center space-x-2">
-        <p className="text-sm font-medium">{t('tablePaging.rowsPerPage')}</p>
-        <Select
-          value={`${pageSize}`}
-          onValueChange={(value) => onPageSizeChange && onPageSizeChange(Number(value))}
-        >
-          <SelectTrigger className="h-8 w-[70px]">
-            <SelectValue placeholder={`${pageSize}`} />
-          </SelectTrigger>
-          <SelectContent side="top">
-            {[10, 20, 30, 40, 50].map((size) => (
-              <SelectItem key={size} value={`${size}`}>
-                {size}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="flex items-center gap-2 text-sm font-medium">
-        {t('tablePaging.page')} {page} {t('tablePaging.of')} {pages}
-      </div>
-      <div className="flex items-center space-x-2">
-        <Button
-          variant="outline"
-          className="w-8 h-8 p-0"
-          onClick={() => onPageChange(1)}
-          disabled={page === 1}
-        >
-          <span className="sr-only">{t('tablePaging.firstPage')}</span>
-          <ChevronsLeftIcon className="w-4 h-4" />
-        </Button>
-        <Button
-          variant="outline"
-          className="w-8 h-8 p-0"
-          onClick={() => onPageChange(page - 1)}
-          disabled={page === 1}
-        >
-          <span className="sr-only">{t('tablePaging.previousPage')}</span>
-          <ChevronLeftIcon className="w-4 h-4" />
-        </Button>
-        <Button
-          variant="outline"
-          className="w-8 h-8 p-0"
-          onClick={() => onPageChange(page + 1)}
-          disabled={page === pages}
-        >
-          <span className="sr-only">{t('tablePaging.nextPage')}</span>
-          <ChevronRightIcon className="w-4 h-4" />
-        </Button>
-        <Button
-          variant="outline"
-          className="w-8 h-8 p-0"
-          onClick={() => onPageChange(pages)}
-          disabled={page === pages}
-        >
-          <span className="sr-only">{t('tablePaging.lastPage')}</span>
-          <ChevronsRightIcon className="w-4 h-4" />
-        </Button>
+    <div className="flex flex-wrap items-center justify-between px-2">
+      <div className="flex items-center space-x-6 lg:space-x-8">
+        <div className="flex items-center space-x-2">
+          <p className="text-sm font-medium sr-only">Rows per page</p>
+          <Select
+            value={`${table.getState().pagination.pageSize}`}
+            onValueChange={(value) => {
+              table.setPageSize(Number(value))
+              onPageSizeChange?.(Number(value))
+            }}
+          >
+            <SelectTrigger className="h-8 w-[70px]">
+              <SelectValue placeholder={table.getState().pagination.pageSize} />
+            </SelectTrigger>
+            <SelectContent side="top">
+              {[10, 20, 30, 40, 50].map((pageSize) => (
+                <SelectItem key={pageSize} value={`${pageSize}`}>
+                  {pageSize}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex w-[100px] items-center sr-only justify-center text-sm font-medium">
+          Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+        </div>
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            className="hidden w-8 h-8 p-0 lg:flex"
+            onClick={() => {
+              table.setPageIndex(0)
+              onPageChange?.(1)
+            }}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <span className="sr-only">Go to first page</span>
+            <DoubleArrowLeftIcon className="w-4 h-4" />
+          </Button>
+          <Button
+            variant="outline"
+            className="w-8 h-8 p-0"
+            onClick={() => {
+              onPageChange(table.getState().pagination.pageIndex)
+              table.previousPage()
+            }}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <span className="sr-only">Go to previous page</span>
+            <ChevronLeftIcon className="w-4 h-4" />
+          </Button>
+          <Button
+            variant="outline"
+            className="w-8 h-8 p-0"
+            onClick={() => {
+              onPageChange(table.getState().pagination.pageIndex + 2)
+              table.nextPage()
+            }}
+            disabled={!table.getCanNextPage()}
+          >
+            <span className="sr-only">Go to next page</span>
+            <ChevronRightIcon className="w-4 h-4" />
+          </Button>
+          <Button
+            variant="outline"
+            className="hidden w-8 h-8 p-0 lg:flex"
+            onClick={() => {
+              onPageChange(table.getPageCount())
+              table.setPageIndex(table.getPageCount() - 1)
+            }}
+            disabled={!table.getCanNextPage()}
+          >
+            <span className="sr-only">Go to last page</span>
+            <DoubleArrowRightIcon className="w-4 h-4" />
+          </Button>
+        </div>
       </div>
     </div>
+  )
+}
+
+export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps<TData>) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="sm" className="items-center h-10 gap-1 lg:flex">
+          <MixerHorizontalIcon className="w-4 h-4 mr-2" />
+          Hiển thị
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-[150px]">
+        <DropdownMenuLabel>Hiện thị cột</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {table
+          .getAllColumns()
+          .filter((column) => typeof column.accessorFn !== 'undefined' && column.getCanHide())
+          .map((column) => {
+            return (
+              <DropdownMenuCheckboxItem
+                key={column.id}
+                className="capitalize cursor-pointer"
+                checked={column.getIsVisible()}
+                onCheckedChange={(value) => column.toggleVisibility(!!value)}
+              >
+                {column.id}
+              </DropdownMenuCheckboxItem>
+            )
+          })}
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }

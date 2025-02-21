@@ -15,7 +15,21 @@ export interface IPaginationResponse<T> {
 }
 
 export interface IQuery {
-  page?: number
-  pageSize?: number
-  order?: string
+  page: number | 1
+  pageSize: number | 10
+  order: 'ASC' | 'DESC'
+}
+
+export interface IBase {
+  createdAt?: string
+  updatedAt?: string
+  slug?: string
+}
+
+export interface IApiErrorResponse {
+  code: number
+  error: boolean
+  message: string
+  method: string
+  path: string
 }
