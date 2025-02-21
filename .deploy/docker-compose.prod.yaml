@@ -32,11 +32,6 @@ services:
       TAG: ${TAG}
       BROKER_URL: ${BROKER_URL}
       TZ: Asia/Ho_Chi_Minh
-    depends_on:
-      mysql_db:
-        condition: service_healthy
-      kafka:
-        condition: service_healthy
     restart: unless-stopped
 
   cmsweb-db:
@@ -107,9 +102,6 @@ services:
       NODE_ENV: ${NODE_ENV}
       BROKER_URL: ${BROKER_URL}
       TZ: Asia/Ho_Chi_Minh
-    depends_on:
-      backend:
-        condition: service_healthy
     restart: unless-stopped
 
 networks:
