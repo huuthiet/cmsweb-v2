@@ -34,9 +34,7 @@ services:
       BROKER_URL: ${BROKER_URL}
       TZ: Asia/Ho_Chi_Minh
     depends_on:
-      mysql_db:
-        condition: service_healthy
-      kafka:
+      cmsweb-kafka:
         condition: service_healthy
     restart: unless-stopped
     ports:
@@ -101,7 +99,7 @@ services:
       BROKER_URL: ${BROKER_URL}
       TZ: Asia/Ho_Chi_Minh
     depends_on:
-      backend:
+      cmsweb-api:
         condition: service_healthy
     restart: unless-stopped
 
