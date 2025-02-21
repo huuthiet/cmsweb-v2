@@ -2,10 +2,8 @@ volumes:
   mysql:
 
 services:
-  backend:
-    build:
-      context: ../app/backend
-      dockerfile: ../../.build/backend/Dockerfile # Adjusted to be relative to the context
+  cmsweb-api:
+    image: ghcr.io/homeslands/cmsweb-api:latest
     healthcheck:
       test:
         [
@@ -39,10 +37,10 @@ services:
         condition: service_healthy
       kafka:
         condition: service_healthy
+    restart: unless-stopped
 
-  mysql_db:
-    build:
-      context: ../.build/mysql
+  cmsweb-db:
+    image: mysql:8.2.0
     volumes:
       - mysql:/var/lib/mysql
     environment:
@@ -55,30 +53,27 @@ services:
       timeout: 60s # Increase timeout to give MySQL more time
       retries: 5
 
-  frontend:
-    build:
-      context: ../app/frontend
-      dockerfile: ../../.build/frontend/Dockerfile # Adjusted to be relative to the context
+  cmsweb-ui:
+    image: ghcr.io/homeslands/cmsweb-ui:latest
     healthcheck:
       test: ["CMD", "nc", "-z", "localhost", "5137"] # TCP check on port 5137
       interval: 10s # Increase interval between health checks
       timeout: 10s # Increase timeout for slower responses
       retries: 5
       start_period: 60s # Give the frontend app more time to become ready
-    restart: always
+    restart: unless-stopped
 
-  docs:
-    build:
-      context: ../docsify
-      dockerfile: ../.build/docsify/Dockerfile # Adjusted to be relative to the context
+  cmsweb-docs:
+    image: ghcr.io/homeslands/cmsweb-docs:latest
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3001"]
       interval: 10s # Increase interval between health checks
       timeout: 10s # Increase timeout for slower responses
       retries: 5
       start_period: 60s # Give the frontend app more time to become ready
+    restart: unless-stopped
 
-  kafka:
+  cmsweb-kafka:
     image: "bitnami/kafka:latest"
     environment:
       KAFKA_CFG_NODE_ID: 0
@@ -101,10 +96,8 @@ services:
       timeout: 10s # Timeout for each health check
       retries: 5 # Number of retries before marking the container as unhealthy
 
-  notification:
-    build:
-      context: ../app/notification-service
-      dockerfile: ../../.build/notification/Dockerfile # Adjusted to be relative to the context
+  cmsweb-notification:
+    image: ghcr.io/homeslands/cmsweb-notification:latest
     environment:
       HOST_MYSQL: ${HOST_MYSQL}
       PORT_MYSQL: ${PORT_MYSQL}
@@ -117,6 +110,7 @@ services:
     depends_on:
       backend:
         condition: service_healthy
+    restart: unless-stopped
 
 networks:
   default:
