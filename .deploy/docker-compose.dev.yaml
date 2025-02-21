@@ -1,7 +1,3 @@
-volumes:
-  mysql:
-  kafka:
-
 services:
   cmsweb-api:
     image: ghcr.io/homeslands/cmsweb-api:dev
@@ -33,9 +29,6 @@ services:
       TAG: ${TAG:-v1}
       BROKER_URL: ${BROKER_URL}
       TZ: Asia/Ho_Chi_Minh
-    depends_on:
-      cmsweb-kafka:
-        condition: service_healthy
     restart: unless-stopped
     ports:
       - "3000:3000"
@@ -98,9 +91,6 @@ services:
       NODE_ENV: ${NODE_ENV}
       BROKER_URL: ${BROKER_URL}
       TZ: Asia/Ho_Chi_Minh
-    depends_on:
-      cmsweb-api:
-        condition: service_healthy
     restart: unless-stopped
 
 networks:
