@@ -1,17 +1,12 @@
-name: Deploy-dev
+name: deploy-dev
 
 on:
-  pull_request_target:
-    branches: [dev]
-    types: [opened, closed]
-  workflow_run:
-    workflows: ["Build and Test"] # Trigger after 'Build and Test' workflow succeeds
-    types:
-      - completed
+  push:
+    branches:
+      - dev
 
 jobs:
   deploy:
-    if: github.event.pull_request.merged
     runs-on: ubuntu-latest
     environment: development
     steps:
@@ -25,7 +20,7 @@ jobs:
         env:
           ENV_DEV: ${{ secrets.ENV_DEV }}
         run: |
-          echo "$ENV_DEV" > .deploy/.env
+          echo "$ENV_DEV" > .deploy/dev/.env
 
       - name: Deploy with Docker Compose
         env:
@@ -40,7 +35,7 @@ jobs:
           ssh-keyscan -p $SSH_PORT $REMOTE_HOST >> ~/.ssh/known_hosts
           export DOCKER_HOST="ssh://$REMOTE_USER@$REMOTE_HOST:$SSH_PORT"
 
-          docker ps -a
-          docker compose -f .deploy/docker-compose.dev.yaml down
-          docker compose -f .deploy/docker-compose.dev.yaml up -d
+          docker compose -f .deploy/dev/docker-compose.yml pull
+          docker compose -f .deploy/dev/docker-compose.yml down
+          docker compose -f .deploy/dev/docker-compose.yml up -d
           docker image prune -f  # clean up none image after built
