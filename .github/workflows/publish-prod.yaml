@@ -1,4 +1,4 @@
-name: publish-dev
+name: publish-prod
 
 on:
   push:
