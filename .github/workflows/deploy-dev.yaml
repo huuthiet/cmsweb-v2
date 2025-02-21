@@ -1,17 +1,12 @@
 name: Deploy-dev
 
 on:
-  pull_request_target:
-    branches: [dev]
-    types: [opened, closed]
-  workflow_run:
-    workflows: ["Build and Test"] # Trigger after 'Build and Test' workflow succeeds
-    types:
-      - completed
+  push:
+    branches:
+      - staging
 
 jobs:
   deploy:
-    if: github.event.pull_request.merged
     runs-on: ubuntu-latest
     environment: development
     steps:

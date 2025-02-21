@@ -72,7 +72,7 @@ jobs:
       - name: Build and push cmsweb-notification image
         uses: docker/build-push-action@v4
         with:
-          context: ./app/notification
+          context: ./app/notification-service
           file: ./.build/notification/Dockerfile
           tags: ${{ env.REGISTRY }}/${{ env.REPOSITORY_OWNER }}/cmsweb-notification:latest
           labels: ${{ env.REGISTRY }}/${{ env.REPOSITORY_OWNER }}/cmsweb-notification
