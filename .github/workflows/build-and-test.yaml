@@ -1,10 +1,8 @@
 name: Build and Test
 
 on:
-  push:
+  pull_request: # Trigger on pull request creation and updates
     branches: [dev]
-  pull_request:  # Trigger on pull request creation and updates
-    branches: [main]
 
 jobs:
   build-and-test:
@@ -16,7 +14,7 @@ jobs:
       - name: Set up Node.js for FE
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: "18"
 
       - name: Install FE dependencies
         working-directory: ./app/frontend
@@ -33,7 +31,7 @@ jobs:
       - name: Set up Node.js for BE
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: "18"
 
       - name: Install BE dependencies
         working-directory: ./app/backend

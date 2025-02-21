@@ -86,22 +86,22 @@ export class CompanyService {
   public async uploadCompanyLogo(
     requestData: TUploadCompanyLogoRequestDto
   ): Promise<CompanyResponseDto> {
-    console.log({requestData})
+    console.log({ requestData });
     const company = await companyRepository.findOneBy({
       slug: requestData.slug,
     });
-    console.log({company})
+    console.log({ company });
     if (!company) throw new GlobalError(ErrorCodes.COMPANY_NOT_FOUND);
 
     const file = await fileService.uploadFile(requestData.file);
-    console.log({file})
+    console.log({ file });
 
     const oldFile = company.logo;
     if (oldFile) await fileService.removeFileByName(oldFile);
 
-    // Object.assign(company, { logo: `${file.name}.${file.extension}` });
+    Object.assign(company, { logo: `${file.name}.${file.extension}` });
     const updatedCompany = await companyRepository.save(company);
-    console.log({updatedCompany})
+    console.log({ updatedCompany });
 
     const companyDto = mapper.map(updatedCompany, Company, CompanyResponseDto);
     return companyDto;
