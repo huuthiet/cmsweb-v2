@@ -247,11 +247,10 @@ const ApprovalProductRequisitionDetail: React.FC = () => {
             </span>
             <div className="flex justify-end col-span-3 sm:col-span-1">
               <div className="flex flex-col justify-end text-[0.25rem] sm:text-sm font-beVietNam">
-                <div className="flex flex-row gap-1 sm:p-1">
-                  <span>KMH:</span>
-                  <span>QR3-01/001</span>
+                <div className="sm:p-0">
+                  <span>KMH: QR3-01/001</span>
                 </div>
-                <div className="flex flex-row gap-1 sm:p-1">
+                <div className="flex flex-row gap-1">
                   <span>{t('productRequisition.issuedDate')}</span>
                   <span>1</span>
                 </div>
@@ -316,8 +315,8 @@ const ApprovalProductRequisitionDetail: React.FC = () => {
             })) || []
           }
           pages={1}
-          onPageChange={() => {}}
-          onPageSizeChange={() => {}}
+          onPageChange={() => { }}
+          onPageSizeChange={() => { }}
         />
 
         <RequisitionTimeline items={renderTimeline()} />

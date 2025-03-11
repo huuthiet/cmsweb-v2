@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ReaderIcon } from '@radix-ui/react-icons'
 import { useNavigate } from 'react-router-dom'
@@ -8,7 +8,7 @@ import { useColumnsRequisitionList } from './data-table/columns/columns'
 import { usePagination, useProductRequisitionByApprover } from '@/hooks'
 import { IRequisitionFormResponseForApprover } from '@/types'
 import { DataTableFilterOptions } from './data-table'
-import { baseURL, ROUTE } from '@/constants'
+import { ROUTE } from '@/constants'
 
 const ApprovalProductRequisitions: React.FC = () => {
   const { t } = useTranslation(['productRequisition'])
