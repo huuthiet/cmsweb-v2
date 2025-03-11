@@ -15,6 +15,7 @@ export const ROUTE = {
 
   // Warehouse
   WAREHOUSE: '/warehouses',
+  WAREHOUSE_LIST: '/warehouses/list',
   ADD_WAREHOUSE: '/warehouses/add',
 
   // Company
