@@ -65,8 +65,8 @@ export const SearchProductForm: React.FC<IFormAddProductProps> = ({ onBack, onSu
             columns={columns}
             data={requisition?.requestProducts || []}
             pages={1}
-            onPageChange={() => {}}
-            onPageSizeChange={() => {}}
+            onPageChange={() => { }}
+            onPageSizeChange={() => { }}
           />
         </div>
       </div>
