@@ -53,10 +53,12 @@
     "canceled_stage_1": "Đã hủy ở bước 1",
     "approved_stage_1": "Đã duyệt bước 1",
     "approved_stage_2": "Đã duyệt bước 2",
+    "waiting_approval_3": "Chờ duyệt bước 3",
     "approved_stage_3": "Đã duyệt bước 3",
     "returned_stage_1": "Đã hoàn ở bước 1",
     "returned_stage_2": "Đã hoàn ở bước 2",
     "returned_stage_3": "Đã hoàn ở bước 3",
+    "canceled_stage_3": "Đã hủy ở bước 3",
     "canceled": "Đã hủy",
     "recalled": "Hoàn lại",
     "waiting_export": "Đang xuất kho"

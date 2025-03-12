@@ -21,6 +21,7 @@ import {
   ROUTE,
   UserApprovalStage
 } from '@/constants'
+import moment from 'moment'
 
 const ApprovalProductRequisitionDetail: React.FC = () => {
   const queryClient = useQueryClient()
@@ -260,6 +261,34 @@ const ApprovalProductRequisitionDetail: React.FC = () => {
           {data?.result && (
             <div className="grid grid-cols-1 gap-3 mb-4 text-sm sm:grid-cols-3 font-beVietNam">
               <div>
+                <strong>{t('requisitionDetail.requester')}</strong>
+                {data?.result?.productRequisitionForm.creator.fullname}
+              </div>
+              <div>
+                <strong>{t('requisitionDetail.createdAt')}</strong>
+                {moment(data?.result?.productRequisitionForm.createdAt).format('hh:mm DD/MM/YYYY')}
+              </div>
+              <div>
+                <strong>{t('requisitionDetail.requestCode')}</strong>
+                {data?.result?.productRequisitionForm.code}
+              </div>
+              <div>
+                <strong>{t('requisitionDetail.siteName')}</strong>
+                {
+                  data?.result?.productRequisitionForm.creator.userDepartments[0].department.site
+                    .name
+                }
+              </div>
+
+              <div>
+                <strong>{t('requisitionDetail.projectName')}</strong>
+                {data?.result?.productRequisitionForm.projectName}
+              </div>
+              <div>
+                <strong>{t('requisitionDetail.note')}</strong>
+                {data?.result?.productRequisitionForm.description}
+              </div>
+              <div>
                 <strong>{t('productRequisition.priority')}:</strong>{' '}
                 <span
                   className={
@@ -273,35 +302,12 @@ const ApprovalProductRequisitionDetail: React.FC = () => {
                     : t('requestPriority.urgent')}
                 </span>
               </div>
-              <div>
-                <strong>{t('requisitionDetail.requestCode')}</strong>
-                {data?.result?.productRequisitionForm.code}
-              </div>
-              <div>
-                <strong>{t('requisitionDetail.requestCode')}</strong>
-                {data?.result?.productRequisitionForm.creator.fullname}
-              </div>
-              <div>
-                <strong>{t('requisitionDetail.siteName')}</strong>
-                {
-                  data?.result?.productRequisitionForm.creator.userDepartments[0].department.site
-                    .name
-                }
-              </div>
-              <div>
-                <strong>{t('requisitionDetail.projectName')}</strong>
-                {data?.result?.productRequisitionForm.projectName}
-              </div>
-              <div>
-                <strong>{t('requisitionDetail.note')}</strong>
-                {data?.result?.productRequisitionForm.description}
-              </div>
-              <div>
+              {/* <div>
                 <strong>{t('requisitionDetail.status')}</strong>
                 <span className={getStatusColor(buttonStates.statusDisplay)}>
                   {buttonStates.statusDisplay}
                 </span>
-              </div>
+              </div> */}
             </div>
           )}
         </div>
