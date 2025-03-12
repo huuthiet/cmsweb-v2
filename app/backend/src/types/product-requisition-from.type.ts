@@ -5,6 +5,7 @@ import {
 
 export type TCreateProductRequisitionFormRequestDto = {
   code?: string;
+  PO?: string;
   // project?: string;
   projectName?: string;
   type?: string; //normal, urgent
@@ -28,6 +29,7 @@ export type TResubmitProductRequisitionFormRequestDto = {
 export type TUpdateGeneralInformationProductRequisitionFormRequestDto = {
   // project?: string;
   projectName?: string;
+  PO?: string;
   type?: string;
   deadlineApproval?: string;
   description?: string;

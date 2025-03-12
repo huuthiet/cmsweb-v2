@@ -21,6 +21,11 @@ export class CreateProductRequisitionFormRequestDto {
   @AutoMap()
   code?: string;
 
+  @IsNotEmpty({ message: "INVALID_PO" })
+  @Expose()
+  @AutoMap()
+  PO?: string;
+
   // @IsNotEmpty({ message: "INVALID_PROJECT_SLUG" })
   // @Expose()
   // @AutoMap()
@@ -94,6 +99,11 @@ export class UpdateGeneralInformationProductRequisitionFormRequestDto {
   // @Expose()
   // @AutoMap()
   // project?: string;
+
+  @IsNotEmpty({ message: "INVALID_PO" })
+  @Expose()
+  @AutoMap()
+  PO?: string;
 
   @IsNotEmpty({ message: "INVALID_PROJECT_NAME" })
   @Expose()
