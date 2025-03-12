@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import i18next from 'i18next'
+// import i18next from 'i18next'
 import { ReaderIcon } from '@radix-ui/react-icons'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -30,6 +30,7 @@ const ApprovalProductRequisitionDetail: React.FC = () => {
   const { t } = useTranslation(['productRequisition'])
   const { slug } = useParams<{ slug: string }>()
   const { data } = useRequisitionByUserApproval(slug!)
+  console.log('data', data)
   const { mutate: approveProductRequisition } = useApproveProductRequisition()
   const { roleApproval } = data?.result || {}
 
@@ -133,6 +134,10 @@ const ApprovalProductRequisitionDetail: React.FC = () => {
       : []
   }, [data])
 
+  console.log('userApprovals', userApprovals)
+
+
+
   const handleAccept = () => setOpenDialog(ApprovalAction.ACCEPT)
   const handleGiveBack = () => setOpenDialog(ApprovalAction.GIVE_BACK)
   const handleCancel = () => setOpenDialog(ApprovalAction.CANCEL)
@@ -184,8 +189,8 @@ const ApprovalProductRequisitionDetail: React.FC = () => {
     return userApprovals
       .flatMap((userApproval) =>
         userApproval.approvalLogs.map((log) => ({
-          user: userApproval.assignedUserApproval.user.fullname,
-          role: userApproval.assignedUserApproval.roleApproval,
+          user: userApproval.assignedUserApproval?.user?.fullname || '',
+          role: userApproval.assignedUserApproval?.roleApproval || '',
           status: log.status,
           content: log.content,
           createdAt: new Date(log.createdAt).toISOString() // Format as a string
@@ -338,22 +343,22 @@ const ApprovalProductRequisitionDetail: React.FC = () => {
   )
 }
 
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case i18next.t('status.waiting'):
-    case i18next.t('status.waitingStep2'):
-    case i18next.t('status.waitingStep3'):
-      return 'text-yellow-600 font-bold'
-    case i18next.t('status.approved'):
-      return 'text-green-600 font-bold'
-    case i18next.t('status.cancelled'):
-    case i18next.t('status.cancel'):
-    case i18next.t('status.recalledForReview'):
-    case i18next.t('status.returnedForReview'):
-      return 'text-red-600 font-bold'
-    default:
-      return ''
-  }
-}
+// const getStatusColor = (status: string) => {
+//   switch (status) {
+//     case i18next.t('status.waiting'):
+//     case i18next.t('status.waitingStep2'):
+//     case i18next.t('status.waitingStep3'):
+//       return 'text-yellow-600 font-bold'
+//     case i18next.t('status.approved'):
+//       return 'text-green-600 font-bold'
+//     case i18next.t('status.cancelled'):
+//     case i18next.t('status.cancel'):
+//     case i18next.t('status.recalledForReview'):
+//     case i18next.t('status.returnedForReview'):
+//       return 'text-red-600 font-bold'
+//     default:
+//       return ''
+//   }
+// }
 
 export default ApprovalProductRequisitionDetail
