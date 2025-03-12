@@ -16,7 +16,7 @@ import {
 import { IProductRequisitionFormInfo, ProductRequisitionStatus } from '@/types'
 import { ProductRequisitionByCreatorStatusBadge } from '@/components/app/badge'
 import { RequisitionTypeBadge } from '@/components/app/badge'
-import { DialogRequisitionDetail } from '@/components/app/dialog'
+import { DialogDeleteProductRequisition, DialogRequisitionDetail } from '@/components/app/dialog'
 import { RecalledStatusBadge } from '@/components/app/badge'
 import { ROUTE } from '@/constants'
 import { useTranslation } from 'react-i18next'
@@ -129,6 +129,7 @@ export const useColumnsRequisitionListCreator = (): ColumnDef<IProductRequisitio
                     {t('requisitionEdit.requestEdit')}
                   </DropdownMenuItem>
                 )}
+                <DialogDeleteProductRequisition requisition={requisition} />
               </DropdownMenuContent>
             </DropdownMenu>
           </>

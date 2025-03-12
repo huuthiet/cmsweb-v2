@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { AxiosError, isAxiosError } from 'axios'
-import { useNavigate } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { Trash2, TriangleAlert } from 'lucide-react'
 
@@ -15,30 +14,37 @@ import {
   DialogTrigger
 } from '@/components/ui'
 
-import { IApiResponse, IRequisitionByUserApproval } from '@/types'
+import { IApiResponse, IProductRequisitionFormInfo } from '@/types'
 
-import { useDeleteProductRequisition } from '@/hooks'
+import { useDeleteProductRequisition, usePagination } from '@/hooks'
 import { showErrorToast, showToast } from '@/utils'
-
-import { ROUTE } from '@/constants'
+import { useQueryClient } from '@tanstack/react-query'
 
 export default function DialogDeleteProductRequisition({
   requisition // IRequisitionByUserApproval
 }: {
-  requisition: IRequisitionByUserApproval | null
+  requisition: IProductRequisitionFormInfo | null
 }) {
+  const queryClient = useQueryClient()
   const { t } = useTranslation('productRequisition')
   const { t: tToast } = useTranslation('toast')
+  const { pagination } = usePagination()
   const { mutate: deleteProductRequisition } = useDeleteProductRequisition()
   const [isOpen, setIsOpen] = useState(false)
-  const navigate = useNavigate()
+  const refetchParams = {
+    page: pagination.pageIndex,
+    pageSize: pagination.pageSize,
+    order: 'DESC'
+  }
 
   const handleSubmit = (formSlug: string) => {
     deleteProductRequisition(formSlug, {
       onSuccess: () => {
         setIsOpen(false)
+        queryClient.invalidateQueries({
+          queryKey: ['productRequisitionByCreator', refetchParams],
+        })
         showToast(tToast('toast.deleteProductRequisitionSuccess'))
-        navigate(ROUTE.APPROVAL_PRODUCT_REQUISITIONS, { replace: true })
       },
       onError: (error) => {
         if (isAxiosError(error)) {
@@ -83,7 +89,7 @@ export default function DialogDeleteProductRequisition({
           <Button
             variant="destructive"
             onClick={() =>
-              requisition && handleSubmit(requisition.productRequisitionForm.slug || '')
+              requisition && handleSubmit(requisition.slug || '')
             }
           >
             {t('productRequisition.confirmDelete')}

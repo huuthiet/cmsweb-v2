@@ -1,0 +1,1 @@
+export { default as RequisitionListTabscontent } from './requisition-list-tab'

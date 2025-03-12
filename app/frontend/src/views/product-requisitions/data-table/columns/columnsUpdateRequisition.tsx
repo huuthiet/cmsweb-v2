@@ -8,7 +8,6 @@ import {
   DataTableColumnHeader,
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
@@ -20,9 +19,9 @@ import {
 } from '@/components/app/dialog'
 
 export const useColumnsUpdateRequisition = () // isExistProduct: boolean,
-// handleEditProduct: (product: IUpdateProductRequisitionQuantity) => void,
-// handleDeleteProduct: (requestProductSlug: string) => void
-: ColumnDef<IRequestProductInfoUpdate>[] => {
+  // handleEditProduct: (product: IUpdateProductRequisitionQuantity) => void,
+  // handleDeleteProduct: (requestProductSlug: string) => void
+  : ColumnDef<IRequestProductInfoUpdate>[] => {
   const [selectedProduct, setSelectedProduct] = useState<IRequestProductInfoUpdate>()
   const [openEdit, setOpenEdit] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
@@ -112,15 +111,15 @@ export const useColumnsUpdateRequisition = () // isExistProduct: boolean,
                   // isExistProduct={isExistProduct}
                   // openDialog={openEdit}
                   product={product as IRequestProductInfoUpdate}
-                  // component={null}
-                  // onOpenChange={onOpenEditChange}
+                // component={null}
+                // onOpenChange={onOpenEditChange}
                 />
                 <DialogDeleteProductInRequisitionUpdate
                   // handleDeleteProduct={handleConfirmDeleteProduct}
                   // openDialog={openDelete}
                   product={product as IRequestProductInfoUpdate}
-                  // component={null}
-                  // onOpenChange={onOpenDeleteChange}
+                // component={null}
+                // onOpenChange={onOpenDeleteChange}
                 />
                 {/* <DropdownMenuItem onClick={() => handleDelete(rowData)}>
                   Xóa vật tư

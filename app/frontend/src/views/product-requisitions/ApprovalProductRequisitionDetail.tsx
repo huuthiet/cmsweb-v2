@@ -214,7 +214,7 @@ const ApprovalProductRequisitionDetail: React.FC = () => {
           {hasRequiredPermissions({
             authority: Authority.DELETE,
             resource: Resource.PRODUCT_REQUISITION_FORM
-          }) && <DialogDeleteProductRequisition requisition={data?.result || null} />}
+          }) && <DialogDeleteProductRequisition requisition={data?.result.productRequisitionForm || null} />}
           {buttonStates.showButtons && (
             <>
               {buttonStates.cancelEnabled && (
