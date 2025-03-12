@@ -3,13 +3,16 @@ import {
   RequestProductResponseDto,
   UserApprovalResponseDto,
   UserResponseDto,
-  ProjectResponseDto
+  ProjectResponseDto,
 } from "@dto/response";
 import { BaseResponseDto } from "./base-response.dto";
 
 export class ProductRequisitionFormResponseDto extends BaseResponseDto {
   @AutoMap()
   code?: string;
+
+  @AutoMap()
+  PO?: string;
 
   @AutoMap()
   type?: string;
@@ -31,7 +34,7 @@ export class ProductRequisitionFormResponseDto extends BaseResponseDto {
 
   @AutoMap()
   projectName?: string;
-  
+
   @AutoMap(() => UserResponseDto)
   creator?: UserResponseDto;
 

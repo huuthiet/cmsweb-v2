@@ -60,6 +60,7 @@ class ProductRequisitionFormController {
    *       type: object
    *       required:
    *         - code
+   *         - PO
    *         - projectName
    *         - type
    *         - deadlineApproval
@@ -70,6 +71,9 @@ class ProductRequisitionFormController {
    *         code:
    *           type: string
    *           description: The code for the requisition form.
+   *         PO:
+   *           type: string
+   *           description: The PO code.
    *         projectName:
    *           type: string
    *           description: The name of the project.
@@ -92,6 +96,7 @@ class ProductRequisitionFormController {
    *             $ref: '#/components/schemas/CreateRequestProductDto'
    *       example:
    *         code: YCVT123
+   *         PO: 123
    *         projectName: project-789
    *         deadlineApproval: 2024-09-12 20:45:15
    *         type: urgent
@@ -162,6 +167,7 @@ class ProductRequisitionFormController {
    *       type: object
    *       required:
    *         - projectName
+   *         - PO
    *         - type
    *         - deadlineApproval
    *         - description
@@ -169,6 +175,9 @@ class ProductRequisitionFormController {
    *         projectName:
    *           type: string
    *           description: Project name
+   *         PO:
+   *           type: string
+   *           description: The PO code
    *         type:
    *           type: string
    *           description: Type of product requisition form, it can be normal or urgent
@@ -180,6 +189,7 @@ class ProductRequisitionFormController {
    *           description: Description for product requisition form
    *       example:
    *         projectName: project-123
+   *         PO: 123
    *         type: normal
    *         deadlineApproval: 2024-09-15 10:25:45
    *         description: Đã chỉnh sửa
@@ -772,7 +782,8 @@ class ProductRequisitionFormController {
   ): Promise<void> {
     try {
       const { slug } = req.params;
-      const result = await productRequisitionFormService.deleteProductRequisitionForm(slug);
+      const result =
+        await productRequisitionFormService.deleteProductRequisitionForm(slug);
       const response: TApiResponse<string> = {
         code: StatusCodes.OK,
         error: false,

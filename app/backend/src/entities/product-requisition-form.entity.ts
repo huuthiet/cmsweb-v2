@@ -14,6 +14,10 @@ export class ProductRequisitionForm extends Base {
   @AutoMap()
   code?: string;
 
+  @Column({ name: "PO_column" })
+  @AutoMap()
+  PO?: string;
+
   @Column({ name: "status_column" })
   @AutoMap()
   status?: string; //ProductRequisitionFormStatus in enums
@@ -63,16 +67,16 @@ export class ProductRequisitionForm extends Base {
   @JoinColumn({ name: "creator_column" })
   creator?: User;
 
-  @ManyToOne(
-    () => Project, 
-    (project) => project.productRequisitionForms,
-    { nullable: true }
-  )
+  @ManyToOne(() => Project, (project) => project.productRequisitionForms, {
+    nullable: true,
+  })
   @JoinColumn({ name: "project_column" })
   project?: Project;
 
   // a product requisition form can have many product purchase forms
-  @OneToMany(() => ProductPurchaseForm,
-    (productPurchaseForm) => productPurchaseForm.productRequisitionForm)
+  @OneToMany(
+    () => ProductPurchaseForm,
+    (productPurchaseForm) => productPurchaseForm.productRequisitionForm
+  )
   productPurchaseForms?: ProductPurchaseForm[];
 }

@@ -33,33 +33,41 @@ export const useRequisitionStore = create<IRequisitionStore>()(
       clearRequisition: () => set({ requisition: undefined }),
       addProductToRequisition: (product: IProductRequisitionInfo) => {
         const currentRequisition = get().requisition
+
         if (currentRequisition) {
+          const productSlug = product.product.slug
+
+          // If no slug, add new product to requisition
+          if (!productSlug) {
+            set({
+              requisition: {
+                ...currentRequisition,
+                requestProducts: [...currentRequisition.requestProducts, { ...product }]
+              }
+            })
+            showToast(i18next.t('toast.addNewProductSuccess', { ns: 'toast' }))
+            return
+          }
+
+          // If slug exists, check if product already exists in requisition
           const productExists = currentRequisition.requestProducts.some(
-            (p) => p.product.slug === product.product.slug
+            (p) => p.product.slug === productSlug
           )
+
           if (productExists) {
             showErrorToast(1000)
           } else {
             set({
               requisition: {
                 ...currentRequisition,
-                requestProducts: [
-                  ...currentRequisition.requestProducts,
-                  {
-                    ...product
-                    // product: product.product,
-                    // name: product.product.name, // Corrected assignment
-                    // provider: product.product.provider,
-                    // unit: { slug: product.product.unit.slug, name: product.product.unit.name },
-                    // description: product.product.description
-                  }
-                ]
+                requestProducts: [...currentRequisition.requestProducts, { ...product }]
               }
             })
             showToast(i18next.t('toast.addNewProductSuccess', { ns: 'toast' }))
           }
         }
       },
+
       updateProductToRequisition: (product: IProductRequisitionInfo) => {
         const currentRequisition = get().requisition
         if (currentRequisition) {

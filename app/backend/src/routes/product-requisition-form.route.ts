@@ -27,14 +27,14 @@ productRequisitionFormRoute.get(
 // [GET] /api/v1/productRequisitionForms
 productRequisitionFormRoute.get(
   "/",
-  authMiddleware.hasPermission(Action.READ, ProductRequisitionForm),
+  // authMiddleware.hasPermission(Action.READ, ProductRequisitionForm),
   productRequisitionFormController.getAllProductRequisitionForms
 );
 
 // [POST] /api/v1/productRequisitionForms
 productRequisitionFormRoute.post(
   "/",
-  authMiddleware.hasPermission(Action.CREATE, ProductRequisitionForm),
+  // authMiddleware.hasPermission(Action.CREATE, ProductRequisitionForm),
   productRequisitionFormController.createProductRequisitionForm
 );
 
@@ -47,7 +47,7 @@ productRequisitionFormRoute.patch(
 // [PATCH] /api/v1/productRequisitionForms/resubmit
 productRequisitionFormRoute.patch(
   "/resubmit",
-  authMiddleware.hasPermission(Action.UPDATE, ProductRequisitionForm),
+  // authMiddleware.hasPermission(Action.UPDATE, ProductRequisitionForm),
   productRequisitionFormController.resubmitProductRequisitionForm
 );
 

@@ -86,7 +86,6 @@ export const useDeleteProductInRequisition = (slug: string) => {
   return useMutation({
     mutationFn: (requestProductSlug: string) => deleteProductRequisition(requestProductSlug),
     onSuccess: () => {
-      console.log('success')
       queryClient.invalidateQueries({ queryKey: ['productRequisitionBySlug', slug] })
     }
   })
