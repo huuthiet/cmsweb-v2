@@ -50,6 +50,7 @@ export interface IProductRequisitionFormCreate {
     name: string
   }
   projectName: string
+  PO: string
   // project: {
   //   slug: string
   //   name: string
@@ -119,6 +120,7 @@ export interface IProductRequisitionFormInfo {
   deadlineApproval: string
   description: string
   projectName: string
+  PO: string
   // project: {
   //   name: string
   //   startDate: string
@@ -262,6 +264,7 @@ export interface IUpdateProductRequisitionQuantity {
 export interface IUpdateProductRequisitionGeneralInfo {
   slug: string
   projectName: string
+  PO: string
   // project: {
   //   slug: string
   //   name: string

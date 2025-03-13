@@ -45,6 +45,14 @@ export const useColumnsRequisitionListCreator = (): ColumnDef<IProductRequisitio
       }
     },
     {
+      accessorKey: 'PO',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Số PO" />,
+      cell: ({ row }) => {
+        const PO = row.original?.PO ? row.original.PO : null
+        return PO ? PO : 'N/A'
+      }
+    },
+    {
       accessorKey: 'deadlineApproval',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Thời hạn duyệt" />,
       cell: ({ row }) => {

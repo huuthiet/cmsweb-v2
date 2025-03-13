@@ -132,10 +132,7 @@ export const UpdateRequisitionForm: React.FC<IUpdateRequisitionFormProps> = ({
       },
       type: requisition?.type || 'normal',
       projectName: requisition?.projectName || '',
-      // project: {
-      //   slug: requisition?.project.slug || '',
-      //   name: requisition?.project.name || ''
-      // },
+      PO: requisition?.PO || '',
       note: requisition?.description || ''
     }
   })
@@ -158,10 +155,7 @@ export const UpdateRequisitionForm: React.FC<IUpdateRequisitionFormProps> = ({
         },
         type: requisition.type || 'normal',
         projectName: requisition.projectName || '',
-        // project: {
-        //   slug: requisition.project.slug || '',
-        //   name: requisition.project.name || ''
-        // },
+        PO: requisition.PO || '',
         note: requisition.description || ''
       })
       setDate(requisition.deadlineApproval ? new Date(requisition.deadlineApproval) : undefined)
@@ -174,6 +168,7 @@ export const UpdateRequisitionForm: React.FC<IUpdateRequisitionFormProps> = ({
       type: values.type,
       deadlineApproval: values.deadlineApproval,
       projectName: values.projectName,
+      PO: values.PO,
       description: values.note
     }
     onUpdateGeneralInfo(updatedValues)
@@ -268,12 +263,12 @@ export const UpdateRequisitionForm: React.FC<IUpdateRequisitionFormProps> = ({
                     if (newDate) {
                       const newDateTime = date
                         ? new Date(
-                            date.setFullYear(
-                              newDate.getFullYear(),
-                              newDate.getMonth(),
-                              newDate.getDate()
-                            )
+                          date.setFullYear(
+                            newDate.getFullYear(),
+                            newDate.getMonth(),
+                            newDate.getDate()
                           )
+                        )
                         : newDate
                       if (validateDate(newDateTime)) {
                         setDate(newDateTime)
@@ -373,6 +368,25 @@ export const UpdateRequisitionForm: React.FC<IUpdateRequisitionFormProps> = ({
         )}
       />
     ),
+    PO: (
+      <FormField
+        control={form.control}
+        name="PO"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>{t('productRequisition.PO')}</FormLabel>
+            <FormControl>
+              <Input
+                placeholder={t('productRequisition.PODescription')}
+                defaultValue={requisition?.PO}
+                {...field}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    ),
     note: (
       <FormField
         control={form.control}
@@ -397,13 +411,13 @@ export const UpdateRequisitionForm: React.FC<IUpdateRequisitionFormProps> = ({
   return (
     <div className="">
       <Tabs defaultValue="general-info" className="w-full">
-        <TabsList className="grid grid-cols-2 gap-4 mb-4 w-fit">
+        <TabsList className="grid grid-cols-2 gap-4 p-0 mb-4 w-fit">
           <TabsTrigger value="general-info">{t('productRequisition.generalInfo')}</TabsTrigger>
           <TabsTrigger value="products">{t('productRequisition.productList')}</TabsTrigger>
         </TabsList>
         <TabsContent value="general-info">
           <Card className="border-none">
-            <CardContent>
+            <CardContent className='p-0'>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleUpdateGeneralInfo)} className="space-y-6">
                   <div className="grid grid-cols-1 gap-4">
@@ -426,7 +440,7 @@ export const UpdateRequisitionForm: React.FC<IUpdateRequisitionFormProps> = ({
         </TabsContent>
         <TabsContent value="products">
           <Card className="border-none">
-            <CardContent>
+            <CardContent className='p-0'>
               <div className="mb-6">
                 <h3 className="mb-2 font-semibold">{t('productRequisition.addProduct')}</h3>
                 <DataTable
@@ -450,8 +464,8 @@ export const UpdateRequisitionForm: React.FC<IUpdateRequisitionFormProps> = ({
                     columns={columns}
                     data={requisition.requestProducts}
                     pages={1}
-                    onPageChange={() => {}}
-                    onPageSizeChange={() => {}}
+                    onPageChange={() => { }}
+                    onPageSizeChange={() => { }}
                   />
                 </div>
               )}

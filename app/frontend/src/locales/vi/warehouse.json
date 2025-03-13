@@ -1,5 +1,7 @@
 {
   "warehouse": {
+    "normal": "Bình thường",
+    "urgent": "Cần gấp",
     "list": "Kho hàng",
     "add": "Thêm kho hàng",
     "slug": "Mã phiếu",

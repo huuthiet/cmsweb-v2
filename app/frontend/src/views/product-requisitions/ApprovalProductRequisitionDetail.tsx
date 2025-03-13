@@ -290,6 +290,10 @@ const ApprovalProductRequisitionDetail: React.FC = () => {
                 {data?.result?.productRequisitionForm.projectName}
               </div>
               <div>
+                <strong>{t('requisitionDetail.PO')}</strong>
+                {data?.result?.productRequisitionForm.PO}
+              </div>
+              <div>
                 <strong>{t('requisitionDetail.note')}</strong>
                 {data?.result?.productRequisitionForm.description}
               </div>

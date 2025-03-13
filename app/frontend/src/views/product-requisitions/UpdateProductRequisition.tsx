@@ -37,6 +37,7 @@ const UpdateProductRequisition: React.FC = () => {
 
   const handleUpdateGeneralInfo = (data: IUpdateProductRequisitionGeneralInfo) => {
     if (data) {
+      console.log(data)
       updateGeneralInfo(data, {
         onSuccess: () => {
           showToast(tToast('toast.updateRequestSuccess'))
@@ -88,7 +89,7 @@ const UpdateProductRequisition: React.FC = () => {
         {t('productRequisition.updateProductRequisition')}
       </Label>
       <Card className="border-none shadow-none">
-        <CardContent className="flex flex-col">
+        <CardContent className="flex flex-col p-0">
           <UpdateRequisitionForm
             onResubmit={handleResubmit}
             onUpdateProductSubmit={handleConfirmUpdateProduct}

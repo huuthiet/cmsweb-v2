@@ -23,6 +23,7 @@ export const productRequisitionSchema = z.object({
     name: z.string().min(1, 'Tên công trình không hợp lệ')
   }),
   projectName: z.string().min(1, 'Tên dự án không hợp lệ'),
+  PO: z.string().min(1, 'Mã PO không hợp lệ'),
   // project: z.object({
   //   slug: z.string().min(1, 'Mã dự án không hợp lệ'),
   //   name: z.string().min(1, 'Tên dự án không hợp lệ')
@@ -69,6 +70,7 @@ export const productRequisitionGeneralInfoSchema = z.object({
     name: z.string().min(1, 'Tên công trình không hợp lệ')
   }),
   projectName: z.string().min(1, 'Tên dự án không hợp lệ'),
+  PO: z.string().min(1, 'Mã PO không hợp lệ'),
   // project: z.object({
   //   slug: z.string().min(1, 'Mã dự án không hợp lệ'),
   //   name: z.string().min(1, 'Tên dự án không hợp lệ')
@@ -84,6 +86,7 @@ export const productSearchSchema = z.object({
 export const updateProductRequisitionGeneralInfoSchema = z.object({
   slug: z.string().min(1, 'Mã yêu cầu không hợp lệ'),
   project: z.string().min(1, 'Mã dự án không hợp lệ'),
+  PO: z.string().min(1, 'Mã PO không hợp lệ'),
   type: z.enum(['normal', 'urgent']),
   deadlineApproval: z
     .string()
