@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
-import { NormalRequisitionListTabscontent, UrgentRequisitionListTabscontent } from '../tabscontent'
+import { NormalRequisitionByCreatorListTabscontent, NormalRequisitionListTabscontent, UrgentRequisitionByCreatorListTabscontent, UrgentRequisitionListTabscontent } from '../tabscontent'
 
-export default function RequisitionListTabs() {
+export default function RequisitionByCreatorListTabs() {
     const { t } = useTranslation(['productRequisition'])
     return (
         <Tabs defaultValue="normal">
@@ -16,10 +16,10 @@ export default function RequisitionListTabs() {
                 </TabsTrigger>
             </TabsList>
             <TabsContent value="normal" className="w-full p-0">
-                <NormalRequisitionListTabscontent />
+                <NormalRequisitionByCreatorListTabscontent />
             </TabsContent>
             <TabsContent value="urgent" className="p-0">
-                <UrgentRequisitionListTabscontent />
+                <UrgentRequisitionByCreatorListTabscontent />
             </TabsContent>
         </Tabs>
     )

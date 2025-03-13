@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import i18next from 'i18next'
+// import i18next from 'i18next'
 import { ReaderIcon } from '@radix-ui/react-icons'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -21,6 +21,7 @@ import {
   ROUTE,
   UserApprovalStage
 } from '@/constants'
+import moment from 'moment'
 
 const ApprovalProductRequisitionDetail: React.FC = () => {
   const queryClient = useQueryClient()
@@ -29,6 +30,7 @@ const ApprovalProductRequisitionDetail: React.FC = () => {
   const { t } = useTranslation(['productRequisition'])
   const { slug } = useParams<{ slug: string }>()
   const { data } = useRequisitionByUserApproval(slug!)
+  console.log('data', data)
   const { mutate: approveProductRequisition } = useApproveProductRequisition()
   const { roleApproval } = data?.result || {}
 
@@ -132,6 +134,10 @@ const ApprovalProductRequisitionDetail: React.FC = () => {
       : []
   }, [data])
 
+  console.log('userApprovals', userApprovals)
+
+
+
   const handleAccept = () => setOpenDialog(ApprovalAction.ACCEPT)
   const handleGiveBack = () => setOpenDialog(ApprovalAction.GIVE_BACK)
   const handleCancel = () => setOpenDialog(ApprovalAction.CANCEL)
@@ -183,8 +189,8 @@ const ApprovalProductRequisitionDetail: React.FC = () => {
     return userApprovals
       .flatMap((userApproval) =>
         userApproval.approvalLogs.map((log) => ({
-          user: userApproval.assignedUserApproval.user.fullname,
-          role: userApproval.assignedUserApproval.roleApproval,
+          user: userApproval.assignedUserApproval?.user?.fullname || '',
+          role: userApproval.assignedUserApproval?.roleApproval || '',
           status: log.status,
           content: log.content,
           createdAt: new Date(log.createdAt).toISOString() // Format as a string
@@ -213,7 +219,7 @@ const ApprovalProductRequisitionDetail: React.FC = () => {
           {hasRequiredPermissions({
             authority: Authority.DELETE,
             resource: Resource.PRODUCT_REQUISITION_FORM
-          }) && <DialogDeleteProductRequisition requisition={data?.result || null} />}
+          }) && <DialogDeleteProductRequisition requisition={data?.result.productRequisitionForm || null} />}
           {buttonStates.showButtons && (
             <>
               {buttonStates.cancelEnabled && (
@@ -260,6 +266,34 @@ const ApprovalProductRequisitionDetail: React.FC = () => {
           {data?.result && (
             <div className="grid grid-cols-1 gap-3 mb-4 text-sm sm:grid-cols-3 font-beVietNam">
               <div>
+                <strong>{t('requisitionDetail.requester')}</strong>
+                {data?.result?.productRequisitionForm.creator.fullname}
+              </div>
+              <div>
+                <strong>{t('requisitionDetail.createdAt')}</strong>
+                {moment(data?.result?.productRequisitionForm.createdAt).format('hh:mm DD/MM/YYYY')}
+              </div>
+              <div>
+                <strong>{t('requisitionDetail.requestCode')}</strong>
+                {data?.result?.productRequisitionForm.code}
+              </div>
+              <div>
+                <strong>{t('requisitionDetail.siteName')}</strong>
+                {
+                  data?.result?.productRequisitionForm.creator.userDepartments[0].department.site
+                    .name
+                }
+              </div>
+
+              <div>
+                <strong>{t('requisitionDetail.projectName')}</strong>
+                {data?.result?.productRequisitionForm.projectName}
+              </div>
+              <div>
+                <strong>{t('requisitionDetail.note')}</strong>
+                {data?.result?.productRequisitionForm.description}
+              </div>
+              <div>
                 <strong>{t('productRequisition.priority')}:</strong>{' '}
                 <span
                   className={
@@ -273,35 +307,12 @@ const ApprovalProductRequisitionDetail: React.FC = () => {
                     : t('requestPriority.urgent')}
                 </span>
               </div>
-              <div>
-                <strong>{t('requisitionDetail.requestCode')}</strong>
-                {data?.result?.productRequisitionForm.code}
-              </div>
-              <div>
-                <strong>{t('requisitionDetail.requestCode')}</strong>
-                {data?.result?.productRequisitionForm.creator.fullname}
-              </div>
-              <div>
-                <strong>{t('requisitionDetail.siteName')}</strong>
-                {
-                  data?.result?.productRequisitionForm.creator.userDepartments[0].department.site
-                    .name
-                }
-              </div>
-              <div>
-                <strong>{t('requisitionDetail.projectName')}</strong>
-                {data?.result?.productRequisitionForm.projectName}
-              </div>
-              <div>
-                <strong>{t('requisitionDetail.note')}</strong>
-                {data?.result?.productRequisitionForm.description}
-              </div>
-              <div>
+              {/* <div>
                 <strong>{t('requisitionDetail.status')}</strong>
                 <span className={getStatusColor(buttonStates.statusDisplay)}>
                   {buttonStates.statusDisplay}
                 </span>
-              </div>
+              </div> */}
             </div>
           )}
         </div>
@@ -332,22 +343,22 @@ const ApprovalProductRequisitionDetail: React.FC = () => {
   )
 }
 
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case i18next.t('status.waiting'):
-    case i18next.t('status.waitingStep2'):
-    case i18next.t('status.waitingStep3'):
-      return 'text-yellow-600 font-bold'
-    case i18next.t('status.approved'):
-      return 'text-green-600 font-bold'
-    case i18next.t('status.cancelled'):
-    case i18next.t('status.cancel'):
-    case i18next.t('status.recalledForReview'):
-    case i18next.t('status.returnedForReview'):
-      return 'text-red-600 font-bold'
-    default:
-      return ''
-  }
-}
+// const getStatusColor = (status: string) => {
+//   switch (status) {
+//     case i18next.t('status.waiting'):
+//     case i18next.t('status.waitingStep2'):
+//     case i18next.t('status.waitingStep3'):
+//       return 'text-yellow-600 font-bold'
+//     case i18next.t('status.approved'):
+//       return 'text-green-600 font-bold'
+//     case i18next.t('status.cancelled'):
+//     case i18next.t('status.cancel'):
+//     case i18next.t('status.recalledForReview'):
+//     case i18next.t('status.returnedForReview'):
+//       return 'text-red-600 font-bold'
+//     default:
+//       return ''
+//   }
+// }
 
 export default ApprovalProductRequisitionDetail

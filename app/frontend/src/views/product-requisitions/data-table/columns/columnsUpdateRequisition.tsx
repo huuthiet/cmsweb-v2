@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import i18next from 'i18next'
 import { MoreHorizontal } from 'lucide-react'
@@ -8,52 +7,20 @@ import {
   DataTableColumnHeader,
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui'
-import { IRequestProductInfoUpdate, IUpdateProductRequisitionQuantity } from '@/types'
+import { IRequestProductInfoUpdate } from '@/types'
 import {
   DialogDeleteProductInRequisitionUpdate,
   DialogUpdateProductRequisition
 } from '@/components/app/dialog'
 
 export const useColumnsUpdateRequisition = () // isExistProduct: boolean,
-// handleEditProduct: (product: IUpdateProductRequisitionQuantity) => void,
-// handleDeleteProduct: (requestProductSlug: string) => void
-: ColumnDef<IRequestProductInfoUpdate>[] => {
-  const [selectedProduct, setSelectedProduct] = useState<IRequestProductInfoUpdate>()
-  const [openEdit, setOpenEdit] = useState(false)
-  const [openDelete, setOpenDelete] = useState(false)
-
-  const handleEdit = (product: IRequestProductInfoUpdate) => {
-    setOpenEdit(true)
-    setSelectedProduct(product)
-  }
-
-  const handleDelete = (product: IRequestProductInfoUpdate) => {
-    setOpenDelete(true)
-    setSelectedProduct(product)
-  }
-
-  const onOpenEditChange = () => {
-    setOpenEdit(false)
-  }
-
-  const onOpenDeleteChange = () => {
-    setOpenDelete(false)
-  }
-
-  const handleConfirmEditProduct = (data: IUpdateProductRequisitionQuantity) => {
-    // handleEditProduct(data)
-    setOpenEdit(false)
-  }
-
-  const handleConfirmDeleteProduct = (requestProductSlug: string) => {
-    // handleDeleteProduct(requestProductSlug)
-    setOpenDelete(false)
-  }
+  // handleEditProduct: (product: IUpdateProductRequisitionQuantity) => void,
+  // handleDeleteProduct: (requestProductSlug: string) => void
+  : ColumnDef<IRequestProductInfoUpdate>[] => {
 
   return [
     {
@@ -112,15 +79,15 @@ export const useColumnsUpdateRequisition = () // isExistProduct: boolean,
                   // isExistProduct={isExistProduct}
                   // openDialog={openEdit}
                   product={product as IRequestProductInfoUpdate}
-                  // component={null}
-                  // onOpenChange={onOpenEditChange}
+                // component={null}
+                // onOpenChange={onOpenEditChange}
                 />
                 <DialogDeleteProductInRequisitionUpdate
                   // handleDeleteProduct={handleConfirmDeleteProduct}
                   // openDialog={openDelete}
                   product={product as IRequestProductInfoUpdate}
-                  // component={null}
-                  // onOpenChange={onOpenDeleteChange}
+                // component={null}
+                // onOpenChange={onOpenDeleteChange}
                 />
                 {/* <DropdownMenuItem onClick={() => handleDelete(rowData)}>
                   Xóa vật tư

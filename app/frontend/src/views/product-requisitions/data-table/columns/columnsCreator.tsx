@@ -16,15 +16,16 @@ import {
 import { IProductRequisitionFormInfo, ProductRequisitionStatus } from '@/types'
 import { ProductRequisitionByCreatorStatusBadge } from '@/components/app/badge'
 import { RequisitionTypeBadge } from '@/components/app/badge'
-import { DialogRequisitionDetail } from '@/components/app/dialog'
+import { DialogDeleteProductRequisition, DialogRequisitionDetail } from '@/components/app/dialog'
 import { RecalledStatusBadge } from '@/components/app/badge'
-import { ROUTE } from '@/constants'
+import { Authority, FormApprovalType, ROUTE } from '@/constants'
 import { useTranslation } from 'react-i18next'
+import { useUserInfoPermissionsStore } from '@/stores'
 
 export const useColumnsRequisitionListCreator = (): ColumnDef<IProductRequisitionFormInfo>[] => {
   const navigate = useNavigate()
   const { t } = useTranslation('productRequisition')
-
+  const { userRoles } = useUserInfoPermissionsStore()
   const handleEditRequisition = (requisition: IProductRequisitionFormInfo) => {
     navigate(ROUTE.EDIT_PRODUCT_REQUISITIONS.replace(':slug', requisition.slug))
   }
@@ -129,6 +130,12 @@ export const useColumnsRequisitionListCreator = (): ColumnDef<IProductRequisitio
                     {t('requisitionEdit.requestEdit')}
                   </DropdownMenuItem>
                 )}
+                {userRoles?.some(role =>
+                  role.permissions?.some(permission =>
+                    permission.authority === Authority.DELETE && permission.resource === FormApprovalType.PRODUCT_REQUISITION_FORM
+                  )
+                ) && <DialogDeleteProductRequisition requisition={requisition} />}
+
               </DropdownMenuContent>
             </DropdownMenu>
           </>

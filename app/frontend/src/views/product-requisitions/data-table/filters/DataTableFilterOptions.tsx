@@ -80,7 +80,6 @@ export default function DataTableFilterOptions({
       case FilterRequisitionStatus.CANCELED_STAGE_3:
         applyFilter(UserApprovalStage.APPROVAL_STAGE_3, RequisitionStatus.CANCEL, true)
         break
-
       default:
         filterConditions = []
     }
