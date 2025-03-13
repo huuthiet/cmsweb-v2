@@ -1,4 +1,4 @@
-import { useState } from 'react'
+// import { useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -23,19 +23,19 @@ import { DialogRequisitionDetail } from '@/components/app/dialog'
 
 export const useWarehouseColumns = (): ColumnDef<IProductRequisitionFormInfo>[] => {
   const { t } = useTranslation(['warehouse'])
-  const [openViewDialog, setOpenViewDialog] = useState(false)
-  const [, setSelectedRequisition] = useState<IProductRequisitionFormInfo | null>(null)
+  // const [, setOpenViewDialog] = useState(false)
+  // const [, setSelectedRequisition] = useState<IProductRequisitionFormInfo | null>(null)
   const { mutate: exportPDFProductRequisition } = useExportPDFProductRequisition()
   const { mutate: exportExcelProductRequisition } = useExportExcelProductRequisition()
 
-  const handleOpenViewDialog = (requisition: IProductRequisitionFormInfo) => {
-    setOpenViewDialog(true)
-    setSelectedRequisition(requisition)
-  }
+  // const handleOpenViewDialog = (requisition: IProductRequisitionFormInfo) => {
+  //   setOpenViewDialog(true)
+  //   setSelectedRequisition(requisition)
+  // }
 
-  const onViewDialogOpenChange = () => {
-    setOpenViewDialog(false)
-  }
+  // const onViewDialogOpenChange = () => {
+  //   setOpenViewDialog(false)
+  // }
 
   const handleExportPDFProductRequisition = (requestData: IExportProductRequisitionFormRequest) => {
     exportPDFProductRequisition(requestData, {
@@ -66,6 +66,14 @@ export const useWarehouseColumns = (): ColumnDef<IProductRequisitionFormInfo>[] 
       cell: ({ row }) => {
         const date = row.original.createdAt ? new Date(row.original.createdAt) : null
         return date ? format(date, 'HH:mm dd/MM/yyyy') : 'Không có'
+      }
+    },
+    {
+      accessorKey: 'PO',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Số PO" />,
+      cell: ({ row }) => {
+        const PO = row.original?.PO ? row.original.PO : null
+        return PO ? PO : 'N/A'
       }
     },
     {

@@ -22,7 +22,6 @@ import {
 } from '@/components/ui'
 import { productRequisitionSchema, TProductRequisitionSchema } from '@/schemas'
 import {
-  SelectProject,
   RequestPrioritySelect,
   SelectDepartmentRequisition
 } from '@/components/app/select'
@@ -79,6 +78,7 @@ export const CreateProductRequisitionForm: React.FC<IFormCreateProductProps> = (
       type: 'normal',
       requestProducts: [],
       projectName: requisition?.projectName || '',
+      PO: requisition?.PO || '',
       // project: {
       //   slug: requisition?.project.slug || '',
       //   name: requisition?.project.name || ''
@@ -179,12 +179,12 @@ export const CreateProductRequisitionForm: React.FC<IFormCreateProductProps> = (
                     if (newDate) {
                       const newDateTime = date
                         ? new Date(
-                            date.setFullYear(
-                              newDate.getFullYear(),
-                              newDate.getMonth(),
-                              newDate.getDate()
-                            )
+                          date.setFullYear(
+                            newDate.getFullYear(),
+                            newDate.getMonth(),
+                            newDate.getDate()
                           )
+                        )
                         : newDate
                       if (validateDate(newDateTime)) {
                         setDate(newDateTime)
@@ -289,6 +289,29 @@ export const CreateProductRequisitionForm: React.FC<IFormCreateProductProps> = (
               <Input
                 placeholder={t('productRequisition.projectNameDescription')}
                 defaultValue={requisition?.projectName}
+                {...field}
+              />
+              {/* <SelectProject
+                defaultValue={requisition?.project.slug}
+                onChange={(slug: string, name: string) => field.onChange({ slug, name })}
+              /> */}
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    ),
+    PO: (
+      <FormField
+        control={form.control}
+        name="PO"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>{t('productRequisition.PO')}</FormLabel>
+            <FormControl>
+              <Input
+                placeholder={t('productRequisition.PODescription')}
+                defaultValue={requisition?.PO}
                 {...field}
               />
               {/* <SelectProject

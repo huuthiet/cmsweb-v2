@@ -29,6 +29,7 @@ export const ConfirmProductForm: React.FC<IConfirmProductFormProps> = ({ onConfi
     return {
       code: requisition.code,
       projectName: requisition.projectName,
+      PO: requisition.PO,
       type: requisition.type,
       deadlineApproval: requisition.deadlineApproval,
       description: requisition.note || '',
@@ -105,6 +106,10 @@ export const ConfirmProductForm: React.FC<IConfirmProductFormProps> = ({ onConfi
               {getRequisition()?.code}
             </div>
             <div>
+              <strong>Số PO: </strong>
+              {requisition?.PO}
+            </div>
+            <div>
               <strong>Người yêu cầu: </strong>
               {requisition?.requester}
             </div>
@@ -128,8 +133,8 @@ export const ConfirmProductForm: React.FC<IConfirmProductFormProps> = ({ onConfi
         columns={columns}
         data={getRequisition()?.requestProducts || []}
         pages={1}
-        onPageChange={() => {}}
-        onPageSizeChange={() => {}}
+        onPageChange={() => { }}
+        onPageSizeChange={() => { }}
       />
 
       <div className="flex justify-end w-full gap-2 mt-4">

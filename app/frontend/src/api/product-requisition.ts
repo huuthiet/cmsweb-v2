@@ -123,7 +123,8 @@ export async function updateProductRequisitionGeneralInfo(
       type: data.type,
       deadlineApproval: data.deadlineApproval,
       projectName: data.projectName,
-      description: data.description
+      description: data.description,
+      PO: data.PO
     }
   )
   return response.data

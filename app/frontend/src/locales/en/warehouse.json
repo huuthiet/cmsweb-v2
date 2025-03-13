@@ -1,5 +1,7 @@
 {
   "warehouse": {
+    "normal": "Normal",
+    "urgent": "Urgent",
     "list": "Warehouse",
     "add": "Add warehouse",
     "slug": "Slug",
