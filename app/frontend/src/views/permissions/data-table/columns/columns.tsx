@@ -15,6 +15,7 @@ import { DialogDeletePermission, DialogUpdatePermission } from '@/components/app
 
 export const usePermissionColumns = (): ColumnDef<IPermission>[] => {
   const { t } = useTranslation(['permissions'])
+  const { t: tCommon } = useTranslation(['common'])
   return [
     {
       accessorKey: 'slug',
@@ -50,13 +51,13 @@ export const usePermissionColumns = (): ColumnDef<IPermission>[] => {
       cell: ({ row }) => {
         const { requiredOwner } = row.original
         return (
-          <div className="font-bold text-red-400">{requiredOwner ? 'Yêu cầu chủ sở hữu' : ''}</div>
+          <div className="font-bold text-destructive">{requiredOwner ? 'Yêu cầu chủ sở hữu' : ''}</div>
         )
       }
     },
     {
       id: 'actions',
-      header: 'Thao tác',
+      header: tCommon('common.action'),
       cell: ({ row }) => {
         const permission = row.original
         return (
@@ -64,12 +65,16 @@ export const usePermissionColumns = (): ColumnDef<IPermission>[] => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="w-8 h-8 p-0">
-                  <span className="sr-only">Thao tác</span>
+                  <span className="sr-only">
+                    {tCommon('common.action')}
+                  </span>
                   <MoreHorizontal className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Thao tác</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  {tCommon('common.action')}
+                </DropdownMenuLabel>
                 <DialogUpdatePermission permission={permission} />
                 <DialogDeletePermission permission={permission} />
               </DropdownMenuContent>

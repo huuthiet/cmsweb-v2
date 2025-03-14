@@ -24,6 +24,7 @@ import enWarehouse from '@/locales/en/warehouse.json'
 import enProducts from '@/locales/en/products.json'
 import enBackups from '@/locales/en/backups.json'
 import enNotifications from '@/locales/en/notifications.json'
+import enCommon from '@/locales/en/common.json'
 
 import viAuth from '@/locales/vi/auth.json'
 import viAccount from '@/locales/vi/account.json'
@@ -47,6 +48,7 @@ import viWarehouse from '@/locales/vi/warehouse.json'
 import viProducts from '@/locales/vi/products.json'
 import viBackups from '@/locales/vi/backups.json'
 import viNotifications from '@/locales/vi/notifications.json'
+import viCommon from '@/locales/vi/common.json'
 
 i18n
   .use(LanguageDetector) // Tự động phát hiện ngôn ngữ
@@ -75,7 +77,8 @@ i18n
         warehouse: enWarehouse,
         products: enProducts,
         backups: enBackups,
-        notifications: enNotifications
+        notifications: enNotifications,
+        common: enCommon
       },
       vi: {
         auth: viAuth,
@@ -99,7 +102,8 @@ i18n
         warehouse: viWarehouse,
         products: viProducts,
         backups: viBackups,
-        notifications: viNotifications
+        notifications: viNotifications,
+        common: viCommon
       }
     },
     lng: window.localStorage.getItem('i18nextLng') || 'vi',
@@ -123,7 +127,8 @@ i18n
       'companies',
       'sites',
       'assignedApprover',
-      'notifications'
+      'notifications',
+      'common'
     ], //Dùng để phân biệt các phần khác nhau của app
     defaultNS: 'auth' //Ngôn ngữ mặc định
   })

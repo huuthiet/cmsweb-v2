@@ -16,6 +16,7 @@ import { format } from 'date-fns'
 
 export const useNotificationColumns = (): ColumnDef<INotification>[] => {
   const { t } = useTranslation('notifications')
+  const { t: tCommon } = useTranslation(['common'])
 
   return [
     {
@@ -41,20 +42,24 @@ export const useNotificationColumns = (): ColumnDef<INotification>[] => {
       )
     },
     {
-      id: t('employees.actions'),
+      id: tCommon('common.action'),
       cell: ({ row }) => {
-        const product = row.original
+        const notification = row.original
         return (
           <div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="w-8 h-8 p-0">
-                  <span className="sr-only">Open menu</span>
+                  <span className="sr-only">
+                    {tCommon('common.action')}
+                  </span>
                   <MoreHorizontal className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="flex flex-col justify-start" align="end">
-                <DropdownMenuLabel>{t('notifications.actions')}</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  {tCommon('common.action')}
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {/* <DialogUpdateProduct product={product} /> */}
                 {/* <DialogDeleteProduct product={product} /> */}

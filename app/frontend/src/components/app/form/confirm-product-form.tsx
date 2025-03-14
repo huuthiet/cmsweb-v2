@@ -83,7 +83,9 @@ export const ConfirmProductForm: React.FC<IConfirmProductFormProps> = ({ onConfi
                 <span>QR3-01/001</span>
               </div>
               <div className="flex flex-row gap-1 sm:p-1">
-                <span>Lần ban hành:</span>
+                <span>
+                  {t('requisitionDetail.issuedDate')}:
+                </span>
                 <span>1</span>
               </div>
             </div>
@@ -92,37 +94,53 @@ export const ConfirmProductForm: React.FC<IConfirmProductFormProps> = ({ onConfi
         {getRequisition() && (
           <div className="grid grid-cols-1 gap-3 mb-4 text-sm sm:grid-cols-3 font-beVietNam">
             <div>
-              <strong>Mức ưu tiên: </strong>
-              <span className={requisition?.type === 'urgent' ? 'text-red-600 font-bold' : ''}>
-                {requisition?.type === 'normal' ? 'Bình thường' : 'Cần gấp'}
+              <strong>
+                {t('requisitionDetail.priority')}
+              </strong>
+              <span className={requisition?.type === 'urgent' ? 'text-destructive font-bold' : ''}>
+                {requisition?.type === 'normal' ? t('requestPriority.normal') : t('requestPriority.urgent')}
               </span>
             </div>
             <div>
-              <strong>Thời hạn duyệt: </strong>
+              <strong>
+                {t('requisitionDetail.deadlineApproval')}
+              </strong>
               <span>{formatDeadline(requisition?.deadlineApproval)}</span>
             </div>
             <div>
-              <strong>Mã phiếu yêu cầu: </strong>
+              <strong>
+                {t('requisitionDetail.requestCode')}
+              </strong>
               {getRequisition()?.code}
             </div>
             <div>
-              <strong>Số PO: </strong>
+              <strong>
+                {t('requisitionDetail.PO')}
+              </strong>
               {requisition?.PO}
             </div>
             <div>
-              <strong>Người yêu cầu: </strong>
+              <strong>
+                {t('requisitionDetail.requester')}
+              </strong>
               {requisition?.requester}
             </div>
             <div>
-              <strong>Công trình sử dụng: </strong>
+              <strong>
+                {t('requisitionDetail.siteName')}
+              </strong>
               {requisition?.site.name}
             </div>
             <div>
-              <strong>Dự án: </strong>
+              <strong>
+                {t('requisitionDetail.projectName')}
+              </strong>
               {requisition?.projectName}
             </div>
             <div>
-              <strong>Ghi chú: </strong>
+              <strong>
+                {t('requisitionDetail.note')}
+              </strong>
               {requisition?.note}
             </div>
           </div>

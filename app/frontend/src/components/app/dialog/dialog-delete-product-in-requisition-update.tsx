@@ -23,6 +23,7 @@ export function DialogDeleteProductInRequisitionUpdate({
   product: IRequestProductInfoUpdate | null
 }) {
   const { t } = useTranslation('productRequisition')
+  const { t: tCommon } = useTranslation('common')
   const { slug } = useParams()
   const { mutate: deleteProduct } = useDeleteProductInRequisition(slug as string)
   const [isOpen, setIsOpen] = useState(false)
@@ -49,24 +50,24 @@ export function DialogDeleteProductInRequisitionUpdate({
           <DialogTitle className="pb-6 text-destructive">
             <div className="flex items-center gap-2">
               <TriangleAlert className="w-6 h-6" />
-              Xóa vật tư
+              {t('productRequisition.deleteProduct')}
             </div>
           </DialogTitle>
           <DialogDescription className="p-2 bg-red-100 rounded-md text-destructive">
-            Lưu ý: Hành động này không thể hoàn tác!
+            {tCommon('common.warning')}
           </DialogDescription>
 
           <div className="py-2 text-sm text-gray-500 ">
-            Bạn sắp sửa xóa vật tư <span className="font-bold">{productName}</span> với mã vật tư{' '}
+            {t('productRequisition.deleteProductInRequisitionWarning1')} <span className="font-bold">{productName}</span> {t('productRequisition.deleteProductInRequisitionWarning2')}{' '}
             <span className="font-bold">{productCode}</span>.
           </div>
         </DialogHeader>
         <DialogFooter>
           <Button variant="outline" onClick={() => setIsOpen}>
-            Hủy
+            {tCommon('common.cancel')}
           </Button>
           <Button variant="destructive" onClick={() => product && handleSubmit(product)}>
-            Tôi đã hiểu, xóa vật tư này
+            {tCommon('common.confirmDelete')}
           </Button>
         </DialogFooter>
       </DialogContent>

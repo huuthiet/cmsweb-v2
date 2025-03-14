@@ -18,7 +18,7 @@ import { useRequisitionStore } from '@/stores'
 import { PlusCircledIcon } from '@radix-ui/react-icons'
 
 export function DialogAddProductRequest({ product }: { product: IProductInfo | null }) {
-  const { t } = useTranslation('tableData')
+  const { t } = useTranslation('productRequisition')
   const [isOpen, setIsOpen] = useState(false)
   const { addProductToRequisition } = useRequisitionStore()
   const handleSubmit = (data: TAddNewProductRequestSchema) => {
@@ -35,8 +35,8 @@ export function DialogAddProductRequest({ product }: { product: IProductInfo | n
       </DialogTrigger>
       <DialogContent className="rounded-md max-w-[20rem] sm:max-w-[60rem]">
         <DialogHeader>
-          <DialogTitle>{t('tableData.addNewProduct')}</DialogTitle>
-          <DialogDescription>{t('tableData.addNewProductDescription')}</DialogDescription>
+          <DialogTitle>{t('productRequisition.addNewProduct')}</DialogTitle>
+          <DialogDescription>{t('productRequisition.addNewProductDescription')}</DialogDescription>
         </DialogHeader>
         <AddNewProductRequestForm
           data={product || undefined}

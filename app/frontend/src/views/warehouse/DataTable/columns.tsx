@@ -23,6 +23,7 @@ import { DialogRequisitionDetail } from '@/components/app/dialog'
 
 export const useWarehouseColumns = (): ColumnDef<IProductRequisitionFormInfo>[] => {
   const { t } = useTranslation(['warehouse'])
+  const { t: tCommon } = useTranslation(['common'])
   // const [, setOpenViewDialog] = useState(false)
   // const [, setSelectedRequisition] = useState<IProductRequisitionFormInfo | null>(null)
   const { mutate: exportPDFProductRequisition } = useExportPDFProductRequisition()
@@ -103,7 +104,7 @@ export const useWarehouseColumns = (): ColumnDef<IProductRequisitionFormInfo>[] 
     },
     {
       id: 'actions',
-      header: 'Thao tác',
+      header: tCommon('common.action'),
       cell: ({ row }) => {
         const requisition = row.original
         return (
@@ -111,12 +112,16 @@ export const useWarehouseColumns = (): ColumnDef<IProductRequisitionFormInfo>[] 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="w-8 h-8 p-0">
-                  <span className="sr-only">Thao tác</span>
+                  <span className="sr-only">
+                    {tCommon('common.action')}
+                  </span>
                   <MoreHorizontal className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="flex flex-col justify-start">
-                <DropdownMenuLabel>Thao tác</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  {tCommon('common.action')}
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DialogRequisitionDetail requisition={requisition} />
                 <DropdownMenuSeparator />

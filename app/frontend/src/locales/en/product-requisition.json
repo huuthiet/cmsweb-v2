@@ -16,6 +16,7 @@
     "companyNameDescription": "Choose company",
     "departmentName": "Department name",
     "departmentNameDescription": "Select department",
+    "requisitionType": "Requisition type",
     "projectName": "Project name",
     "projectNameDescription": "Enter project name",
     "PO": "PO number",
@@ -30,6 +31,7 @@
     "selectPriority": "Select priority",
     "deadlineApproval": "Approval deadline",
     "status": "Status",
+    "returnStatus": "Return status",
     "deadlineApprovalDescription": "Select approval deadline",
     "productInformation": "Product information",
     "productInformationDescription": "Confirm product information",
@@ -68,6 +70,7 @@
     "addProductToRequestDescription": "Detailed product information",
     "addedProductToRequest": "Product added to requisition",
     "addedProductToRequestDescription": "List of products added to requisition",
+
     "confirmProductRequisitions": "Confirm product requisition",
     "confirmProductRequisitionsDescription": "Detailed product requisition information",
     "productRequisitionList": "Product requisition list",
@@ -75,18 +78,31 @@
     "updateProductRequisition": "Update product requisition",
     "update": "Update",
     "resubmit": "Resubmit",
+
     "approvalHistory": "Approval history",
     "approvalStage1": "Stage 1 approval",
     "approvalStage2": "Stage 2 approval",
     "approvalStage3": "Stage 3 approval",
     "approvalContent": "Approval content: ",
+    "open": "Open",
+    "close": "Close",
+
     "updateProduct": "Update product",
     "deleteProduct": "Delete product",
+
     "updateGeneralInfo": "Update general information",
     "generalInfo": "General information",
     "productList": "Product list",
     "addProduct": "Add product",
+    "addNewProduct": "Add new product",
+    "addNewProductDescription": "Enter all information below to add new product",
+
     "viewDetail": "View detail",
+
+    "deleteProductInRequisitionWarning1": "You are about to delete product",
+    "deleteProductInRequisitionWarning2": "from product requisition",
+    "deleteProductInRequisitionConfirmation": "Are you sure you want to delete this product?",
+
     "resubmitConfirmTitle": "Resubmit requisition",
     "descriptionInputLabel": "Description",
     "descriptionInputPlaceholder": "Enter description",
@@ -128,10 +144,13 @@
     "urgent": "Urgent"
   },
   "requisitionDetail": {
+    "issuedDate": "Issued date",
     "requestDetail": "Product requisition detail",
     "requestDetailDescription": "Detailed product requisition information",
     "requestCode": "Request code: ",
     "createdAt": "Created date: ",
+    "deadlineApproval": "Approval deadline",
+    "priority": "Priority",
     "requester": "Requester: ",
     "siteName": "Construction site: ",
     "companyName": "Company name: ",

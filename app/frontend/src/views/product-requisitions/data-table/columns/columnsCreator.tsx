@@ -25,6 +25,7 @@ import { useUserInfoPermissionsStore } from '@/stores'
 export const useColumnsRequisitionListCreator = (): ColumnDef<IProductRequisitionFormInfo>[] => {
   const navigate = useNavigate()
   const { t } = useTranslation('productRequisition')
+  const { t: tCommon } = useTranslation('common')
   const { userRoles } = useUserInfoPermissionsStore()
   const handleEditRequisition = (requisition: IProductRequisitionFormInfo) => {
     navigate(ROUTE.EDIT_PRODUCT_REQUISITIONS.replace(':slug', requisition.slug))
@@ -33,20 +34,20 @@ export const useColumnsRequisitionListCreator = (): ColumnDef<IProductRequisitio
   return [
     {
       accessorKey: 'code',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Mã yêu cầu" />,
-      cell: ({ row }) => row.original.code || 'Không có'
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t('productRequisition.requestCode')} />,
+      cell: ({ row }) => row.original.code || 'N/A'
     },
     {
       accessorKey: 'createdAt',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày tạo" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t('productRequisition.createdAt')} />,
       cell: ({ row }) => {
         const date = row.original.createdAt ? new Date(row.original.createdAt) : null
-        return date ? format(date, 'HH:mm dd/MM/yyyy') : 'Không có'
+        return date ? format(date, 'HH:mm dd/MM/yyyy') : 'N/A'
       }
     },
     {
       accessorKey: 'PO',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Số PO" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t('productRequisition.PO')} />,
       cell: ({ row }) => {
         const PO = row.original?.PO ? row.original.PO : null
         return PO ? PO : 'N/A'
@@ -54,28 +55,28 @@ export const useColumnsRequisitionListCreator = (): ColumnDef<IProductRequisitio
     },
     {
       accessorKey: 'deadlineApproval',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Thời hạn duyệt" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t('productRequisition.deadlineApproval')} />,
       cell: ({ row }) => {
         const date = row.original.deadlineApproval ? new Date(row.original.deadlineApproval) : null
-        return date ? format(date, 'HH:mm dd/MM/yyyy') : 'Không có'
+        return date ? format(date, 'HH:mm dd/MM/yyyy') : 'N/A'
       }
     },
     {
       accessorKey: 'productRequisitionForm',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Loại yêu cầu" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t('productRequisition.requisitionType')} />,
       cell: ({ row }) => {
         const { type } = row.original
-        return type ? <RequisitionTypeBadge type={type} /> : 'Không có'
+        return type ? <RequisitionTypeBadge type={type} /> : 'N/A'
       }
     },
     {
       accessorKey: 'creator.fullname',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Người tạo" />,
-      cell: ({ row }) => row.original.creator?.fullname || 'Không có'
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t('productRequisition.requester')} />,
+      cell: ({ row }) => row.original.creator?.fullname || 'N/A'
     },
     {
       id: 'company',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Công ty" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t('productRequisition.companyName')} />,
       cell: ({ row }) => {
         const { creator } = row.original
         const companyName = creator?.userDepartments?.[0]?.department?.site?.company?.name
@@ -84,7 +85,7 @@ export const useColumnsRequisitionListCreator = (): ColumnDef<IProductRequisitio
     },
     {
       accessorKey: 'isRecalled',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái hoàn" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t('productRequisition.returnStatus')} />,
       cell: ({ row }) => {
         const { status, isRecalled } = row.original
         return (
@@ -97,7 +98,7 @@ export const useColumnsRequisitionListCreator = (): ColumnDef<IProductRequisitio
     {
       accessorFn: (row) => row.status,
       id: 'status',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t('productRequisition.status')} />,
       cell: ({ row }) => {
         return (
           <ProductRequisitionByCreatorStatusBadge
@@ -112,7 +113,9 @@ export const useColumnsRequisitionListCreator = (): ColumnDef<IProductRequisitio
     },
     {
       id: 'actions',
-      header: () => <div className="text-[0.8rem] min-w-[4rem]">Thao tác</div>,
+      header: () => <div className="text-[0.8rem] min-w-[4rem]">
+        {tCommon('common.action')}
+      </div>,
       cell: ({ row }) => {
         const requisition = row.original
         const canEdit =
@@ -125,17 +128,21 @@ export const useColumnsRequisitionListCreator = (): ColumnDef<IProductRequisitio
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="w-8 h-8 p-0">
-                  <span className="sr-only">Thao tác</span>
+                  <span className="sr-only">
+                    {tCommon('common.action')}
+                  </span>
                   <MoreHorizontal className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Thao tác</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  {tCommon('common.action')}
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DialogRequisitionDetail requisition={requisition} />
                 {canEdit && (
                   <DropdownMenuItem onClick={() => handleEditRequisition(requisition)}>
-                    {t('requisitionEdit.requestEdit')}
+                    {t('productRequisition.requestEdit')}
                   </DropdownMenuItem>
                 )}
                 {userRoles?.some(role =>

@@ -10,7 +10,7 @@
     "unit": "Đơn vị",
     "description": "Mô tả",
     "status": "Trạng thái",
-    "actions": "Thao tác",
+
     "edit": "Chỉnh sửa",
     "editTitle": "Chỉnh sửa vật tư",
     "editDescription": "Nhập đầy đủ thông tin vào các trường để cập nhật vật tư",
