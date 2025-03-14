@@ -451,16 +451,19 @@ export function DataTablePagination<TData>({
 }
 
 export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps<TData>) {
+  const { t } = useTranslation('tableData')
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" className="items-center h-10 gap-1 lg:flex">
           <MixerHorizontalIcon className="w-4 h-4 mr-2" />
-          Hiển thị
+          {t('tableData.viewOptions')}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[150px]">
-        <DropdownMenuLabel>Hiện thị cột</DropdownMenuLabel>
+        <DropdownMenuLabel>
+          {t('tableData.viewOptions')}
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         {table
           .getAllColumns()

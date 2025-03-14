@@ -10,8 +10,10 @@
     "description": "Description",
     "unit": "Unit",
     "status": "Status",
-    "actions": "Action",
+
     "edit": "Edit product",
+    "editTitle": "Edit product",
+    "editDescription": "Enter all information into the fields to update product",
     "delete": "Delete product",
     "update": "Update product",
     "addProductTitle": "Add product",

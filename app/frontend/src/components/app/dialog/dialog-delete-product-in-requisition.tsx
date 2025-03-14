@@ -21,7 +21,8 @@ export function DialogDeleteProductInRequisition({
 }: {
   product: IProductRequisitionInfo | null
 }) {
-  const { t } = useTranslation('tableData')
+  const { t } = useTranslation('productRequisition')
+  const { t: tCommon } = useTranslation('common')
   const { deleteProductToRequisition } = useRequisitionStore()
   const [isOpen, setIsOpen] = useState(false)
 
@@ -35,7 +36,7 @@ export function DialogDeleteProductInRequisition({
       <DialogTrigger className="flex justify-start w-full" asChild>
         <DialogTrigger asChild>
           <Button variant="ghost" className="gap-1 text-sm" onClick={() => setIsOpen(true)}>
-            {t('tableData.deleteProduct')}
+            {t('productRequisition.deleteProduct')}
           </Button>
         </DialogTrigger>
       </DialogTrigger>
@@ -45,27 +46,27 @@ export function DialogDeleteProductInRequisition({
           <DialogTitle className="pb-4 border-b border-destructive text-destructive">
             <div className="flex items-center gap-2">
               <TriangleAlert className="w-6 h-6" />
-              {t('tableData.deleteProduct')}
+              {t('productRequisition.deleteProduct')}
             </div>
           </DialogTitle>
           <DialogDescription className="p-2 bg-red-100 rounded-md text-destructive">
-            {t('tableData.deleteProductDescription')}
+            {tCommon('common.warning')}
           </DialogDescription>
 
           <div className="py-4 text-sm text-gray-500">
-            {t('tableData.deleteProductWarning1')}{' '}
+            {t('productRequisition.deleteProductInRequisitionWarning1')}{' '}
             <span className="font-bold">{product?.product.name}</span>.
             <br />
             <br />
-            {t('tableData.deleteProductConfirmation')}
+            {t('productRequisition.deleteProductInRequisitionConfirmation')}
           </div>
         </DialogHeader>
         <DialogFooter className="flex flex-row justify-center gap-2">
           <Button variant="outline" onClick={() => setIsOpen}>
-            {t('tableData.cancel')}
+            {t('productRequisition.cancel')}
           </Button>
           <Button variant="destructive" onClick={() => product && handleSubmit(product)}>
-            {t('tableData.confirmDelete')}
+            {t('productRequisition.confirmDelete')}
           </Button>
         </DialogFooter>
       </DialogContent>

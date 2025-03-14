@@ -15,6 +15,7 @@ import { DialogUpdateResource } from '@/components/app/dialog'
 
 export const useResourceColumns = (): ColumnDef<IResource>[] => {
   const { t } = useTranslation(['resources'])
+  const { t: tCommon } = useTranslation(['common'])
   return [
     {
       accessorKey: 'slug',
@@ -26,7 +27,7 @@ export const useResourceColumns = (): ColumnDef<IResource>[] => {
     },
     {
       id: 'actions',
-      header: 'Thao tác',
+      header: tCommon('common.action'),
       cell: ({ row }) => {
         const resource = row.original
         return (
@@ -34,12 +35,16 @@ export const useResourceColumns = (): ColumnDef<IResource>[] => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="w-8 h-8 p-0">
-                  <span className="sr-only">Thao tác</span>
+                  <span className="sr-only">
+                    {tCommon('common.action')}
+                  </span>
                   <MoreHorizontal className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Thao tác</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  {tCommon('common.action')}
+                </DropdownMenuLabel>
                 <DialogUpdateResource resource={resource} />
               </DropdownMenuContent>
             </DropdownMenu>

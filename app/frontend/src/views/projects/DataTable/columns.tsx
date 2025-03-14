@@ -16,6 +16,7 @@ import { DialogDeleteProject, DialogUpdateProject } from '@/components/app/dialo
 
 export const useProjectColumns = (): ColumnDef<IProject>[] => {
   const { t } = useTranslation(['projects'])
+  const { t: tCommon } = useTranslation(['common'])
   return [
     {
       accessorKey: 'slug',
@@ -49,7 +50,7 @@ export const useProjectColumns = (): ColumnDef<IProject>[] => {
     },
     {
       id: 'actions',
-      header: 'Thao tác',
+      header: tCommon('common.action'),
       cell: ({ row }) => {
         const project = row.original
         return (
@@ -57,12 +58,16 @@ export const useProjectColumns = (): ColumnDef<IProject>[] => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="w-8 h-8 p-0">
-                  <span className="sr-only">Thao tác</span>
+                  <span className="sr-only">
+                    {tCommon('common.action')}
+                  </span>
                   <MoreHorizontal className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Thao tác</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  {tCommon('common.action')}
+                </DropdownMenuLabel>
                 <DialogUpdateProject project={project} />
                 <DialogDeleteProject project={project} />
               </DropdownMenuContent>

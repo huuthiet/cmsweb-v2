@@ -28,6 +28,7 @@ import {
 
 export const useEmployeeColumns = (): ColumnDef<IUserInfo>[] => {
   const { t } = useTranslation('employees')
+  const { t: tCommon } = useTranslation(['common'])
 
   return [
     {
@@ -98,7 +99,7 @@ export const useEmployeeColumns = (): ColumnDef<IUserInfo>[] => {
       }
     },
     {
-      id: t('employees.actions'),
+      id: tCommon('common.action'),
       cell: ({ row }) => {
         const user = row.original
         const hasDepartment = user?.userDepartments?.[0]?.department
@@ -109,12 +110,14 @@ export const useEmployeeColumns = (): ColumnDef<IUserInfo>[] => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="w-8 h-8 p-0">
-                  <span className="sr-only">Open menu</span>
+                  <span className="sr-only">
+                    {tCommon('common.action')}
+                  </span>
                   <MoreHorizontal className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="flex flex-col justify-start" align="end">
-                <DropdownMenuLabel>{t('employees.actions')}</DropdownMenuLabel>
+                <DropdownMenuLabel>{tCommon('common.action')}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DialogUpdateUsername userInfo={user as IUserInfo} />
                 <DialogAddUserRole user={user} />

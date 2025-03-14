@@ -12,8 +12,10 @@ import {
 import { IProductRequisitionInfo } from '@/types'
 import { DialogEditProductRequisition } from '@/components/app/dialog'
 import { DialogDeleteProductInRequisition } from '@/components/app/dialog'
+import { useTranslation } from 'react-i18next'
 
 export const useColumnsConfirm = (): ColumnDef<IProductRequisitionInfo>[] => {
+  const { t: tCommon } = useTranslation(['common'])
   return [
     {
       accessorKey: 'product.code',
@@ -51,7 +53,7 @@ export const useColumnsConfirm = (): ColumnDef<IProductRequisitionInfo>[] => {
     },
     {
       accessorKey: 'actions',
-      header: 'Thao tác',
+      header: tCommon('common.action'),
       cell: ({ row }) => {
         const product = row.original
         return (
@@ -59,7 +61,9 @@ export const useColumnsConfirm = (): ColumnDef<IProductRequisitionInfo>[] => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="w-8 h-8 p-0">
-                  <span className="sr-only">Actions</span>
+                  <span className="sr-only">
+                    {tCommon('common.action')}
+                  </span>
                   <MoreHorizontal className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
