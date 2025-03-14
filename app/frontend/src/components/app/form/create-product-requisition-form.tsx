@@ -45,12 +45,6 @@ export const CreateProductRequisitionForm: React.FC<IFormCreateProductProps> = (
     requisition?.deadlineApproval ? new Date(requisition.deadlineApproval) : undefined
   )
 
-  const validateDate = (selectedDate: Date | undefined) => {
-    if (!selectedDate) return false
-    const now = new Date()
-    return selectedDate > now
-  }
-
   const form = useForm<TProductRequisitionSchema>({
     resolver: zodResolver(productRequisitionSchema),
     defaultValues: {
@@ -79,10 +73,6 @@ export const CreateProductRequisitionForm: React.FC<IFormCreateProductProps> = (
       requestProducts: [],
       projectName: requisition?.projectName || '',
       PO: requisition?.PO || '',
-      // project: {
-      //   slug: requisition?.project.slug || '',
-      //   name: requisition?.project.name || ''
-      // },
       note: requisition?.note || ''
     }
   })
@@ -186,18 +176,15 @@ export const CreateProductRequisitionForm: React.FC<IFormCreateProductProps> = (
                           )
                         )
                         : newDate
-                      if (validateDate(newDateTime)) {
-                        setDate(newDateTime)
-                        field.onChange(format(newDateTime, 'yyyy-MM-dd HH:mm:ss'))
-                      }
+                      setDate(newDateTime)
+                      field.onChange(format(newDateTime, 'yyyy-MM-dd HH:mm:ss'))
                     }
                   }}
-                  disabled={(date) => date < new Date()}
                 />
                 <DateTimePicker
                   date={date}
                   setDate={(newDate) => {
-                    if (newDate && validateDate(newDate)) {
+                    if (newDate) {
                       setDate(newDate)
                       field.onChange(format(newDate, 'yyyy-MM-dd HH:mm:ss'))
                     }
@@ -244,21 +231,6 @@ export const CreateProductRequisitionForm: React.FC<IFormCreateProductProps> = (
         )}
       />
     ),
-    // site: (
-    //   <FormField
-    //     control={form.control}
-    //     name="site.name"
-    //     render={({ field }) => (
-    //       <FormItem>
-    //         <FormLabel>{t('productRequisition.constructionSite')}</FormLabel>
-    //         <FormControl>
-    //           <Input readOnly {...field} />
-    //         </FormControl>
-    //         <FormMessage />
-    //       </FormItem>
-    //     )}
-    //   />
-    // ),
     department: (
       <FormField
         control={form.control}
@@ -291,10 +263,6 @@ export const CreateProductRequisitionForm: React.FC<IFormCreateProductProps> = (
                 defaultValue={requisition?.projectName}
                 {...field}
               />
-              {/* <SelectProject
-                defaultValue={requisition?.project.slug}
-                onChange={(slug: string, name: string) => field.onChange({ slug, name })}
-              /> */}
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -314,10 +282,6 @@ export const CreateProductRequisitionForm: React.FC<IFormCreateProductProps> = (
                 defaultValue={requisition?.PO}
                 {...field}
               />
-              {/* <SelectProject
-                defaultValue={requisition?.project.slug}
-                onChange={(slug: string, name: string) => field.onChange({ slug, name })}
-              /> */}
             </FormControl>
             <FormMessage />
           </FormItem>

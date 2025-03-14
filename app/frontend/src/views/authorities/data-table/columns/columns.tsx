@@ -16,6 +16,7 @@ import { DialogDeleteAuthority, DialogUpdateAuthority } from '@/components/app/d
 
 export const useAuthorityColumns = (): ColumnDef<IAuthority>[] => {
   const { t } = useTranslation(['authorities'])
+  const { t: tCommon } = useTranslation(['common'])
   return [
     {
       accessorKey: 'slug',
@@ -43,7 +44,7 @@ export const useAuthorityColumns = (): ColumnDef<IAuthority>[] => {
     },
     {
       id: 'actions',
-      header: 'Thao tác',
+      header: tCommon('common.action'),
       cell: ({ row }) => {
         const authority = row.original
         return (
@@ -51,12 +52,16 @@ export const useAuthorityColumns = (): ColumnDef<IAuthority>[] => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="w-8 h-8 p-0">
-                  <span className="sr-only">Thao tác</span>
+                  <span className="sr-only">
+                    {tCommon('common.action')}
+                  </span>
                   <MoreHorizontal className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Thao tác</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  {tCommon('common.action')}
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DialogUpdateAuthority authority={authority} />
                 <DialogDeleteAuthority authority={authority} />

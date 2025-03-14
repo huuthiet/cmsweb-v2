@@ -1,0 +1,11 @@
+{
+  "common": {
+    "action": "Action",
+    "add": "Add",
+
+    "warning": "Warning: This action cannot be undone!",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "confirmDelete": "I understand, confirm delete"
+  }
+}

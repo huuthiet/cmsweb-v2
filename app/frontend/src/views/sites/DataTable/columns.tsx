@@ -17,6 +17,7 @@ import { DialogDeleteSite } from '@/components/app/dialog'
 
 export const useSiteColumns = (): ColumnDef<ISite>[] => {
   const { t } = useTranslation(['sites'])
+  const { t: tCommon } = useTranslation(['common'])
   return [
     {
       accessorKey: 'slug',
@@ -40,7 +41,7 @@ export const useSiteColumns = (): ColumnDef<ISite>[] => {
     },
     {
       id: 'actions',
-      header: 'Thao tác',
+      header: tCommon('common.action'),
       cell: ({ row }) => {
         const site = row.original
         return (
@@ -48,12 +49,16 @@ export const useSiteColumns = (): ColumnDef<ISite>[] => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="w-8 h-8 p-0">
-                  <span className="sr-only">Thao tác</span>
+                  <span className="sr-only">
+                    {tCommon('common.action')}
+                  </span>
                   <MoreHorizontal className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Thao tác</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  {tCommon('common.action')}
+                </DropdownMenuLabel>
                 <DialogUpdateSite site={site} />
                 <DialogDeleteSite site={site} />
               </DropdownMenuContent>

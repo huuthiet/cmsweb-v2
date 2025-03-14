@@ -16,11 +16,13 @@ import {
   DialogDeleteProductInRequisitionUpdate,
   DialogUpdateProductRequisition
 } from '@/components/app/dialog'
+import { useTranslation } from 'react-i18next'
 
-export const useColumnsUpdateRequisition = () // isExistProduct: boolean,
+export const useColumnsUpdateRequisition = ()
   // handleEditProduct: (product: IUpdateProductRequisitionQuantity) => void,
   // handleDeleteProduct: (requestProductSlug: string) => void
   : ColumnDef<IRequestProductInfoUpdate>[] => {
+  const { t: tCommon } = useTranslation(['common'])
 
   return [
     {
@@ -59,7 +61,7 @@ export const useColumnsUpdateRequisition = () // isExistProduct: boolean,
     },
     {
       accessorKey: 'actions',
-      header: 'Thao tác',
+      header: tCommon('common.action'),
       cell: ({ row }) => {
         const product = row.original
         return (
@@ -67,12 +69,16 @@ export const useColumnsUpdateRequisition = () // isExistProduct: boolean,
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="w-8 h-8 p-0">
-                  <span className="sr-only">Actions</span>
+                  <span className="sr-only">
+                    {tCommon('common.action')}
+                  </span>
                   <MoreHorizontal className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="flex flex-col justify-start w-full">
-                <DropdownMenuLabel>Thao tác</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  {tCommon('common.action')}
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DialogUpdateProductRequisition
                   // handleEditProduct={handleConfirmEditProduct}

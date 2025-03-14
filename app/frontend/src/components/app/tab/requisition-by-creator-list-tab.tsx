@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
-import { NormalRequisitionByWarehouseKeeperListTabscontent, UrgentRequisitionByWarehouseKeeperListTabscontent } from '../tabscontent'
+import { NormalRequisitionByCreatorListTabscontent, UrgentRequisitionByCreatorListTabscontent } from '../tabscontent'
 
 export default function RequisitionByCreatorListTabs() {
     const { t } = useTranslation(['productRequisition'])
@@ -9,17 +9,17 @@ export default function RequisitionByCreatorListTabs() {
         <Tabs defaultValue="normal">
             <TabsList className="grid grid-cols-2 gap-3 mb-10 sm:grid-cols-6 lg:mb-0">
                 <TabsTrigger value="normal" className="flex justify-center">
-                    {t('productRequisition.normal')}
+                    {t('requestPriority.normal')}
                 </TabsTrigger>
                 <TabsTrigger value="urgent" className="flex justify-center">
-                    {t('productRequisition.urgent')}
+                    {t('requestPriority.urgent')}
                 </TabsTrigger>
             </TabsList>
             <TabsContent value="normal" className="w-full p-0">
-                <NormalRequisitionByWarehouseKeeperListTabscontent />
+                <NormalRequisitionByCreatorListTabscontent />
             </TabsContent>
             <TabsContent value="urgent" className="p-0">
-                <UrgentRequisitionByWarehouseKeeperListTabscontent />
+                <UrgentRequisitionByCreatorListTabscontent />
             </TabsContent>
         </Tabs>
     )

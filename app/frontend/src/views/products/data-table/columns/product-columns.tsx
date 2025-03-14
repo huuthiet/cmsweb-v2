@@ -16,6 +16,7 @@ import { DialogUpdateProduct, DialogDeleteProduct } from '@/components/app/dialo
 
 export const useProductColumns = (): ColumnDef<IProductInfo>[] => {
   const { t } = useTranslation('products')
+  const { t: tCommon } = useTranslation(['common'])
 
   return [
     {
@@ -43,7 +44,7 @@ export const useProductColumns = (): ColumnDef<IProductInfo>[] => {
       header: ({ column }) => <DataTableColumnHeader column={column} title={t('products.unit')} />
     },
     {
-      id: t('employees.actions'),
+      id: tCommon('common.action'),
       cell: ({ row }) => {
         const product = row.original
         return (
@@ -51,12 +52,16 @@ export const useProductColumns = (): ColumnDef<IProductInfo>[] => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="w-8 h-8 p-0">
-                  <span className="sr-only">Open menu</span>
+                  <span className="sr-only">
+                    {tCommon('common.action')}
+                  </span>
                   <MoreHorizontal className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="flex flex-col justify-start" align="end">
-                <DropdownMenuLabel>{t('products.actions')}</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  {tCommon('common.action')}
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DialogUpdateProduct product={product} />
                 <DialogDeleteProduct product={product} />

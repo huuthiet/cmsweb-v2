@@ -22,7 +22,8 @@ interface IFormAddNewProductProps {
 }
 
 export const AddNewProductRequestForm: React.FC<IFormAddNewProductProps> = ({ data, onSubmit }) => {
-  const { t } = useTranslation('tableData')
+  const { t } = useTranslation('products')
+  const { t: tCommon } = useTranslation('common')
   const isEditMode = !!data
 
   const form = useForm<TAddNewProductRequestSchema>({
@@ -71,7 +72,7 @@ export const AddNewProductRequestForm: React.FC<IFormAddNewProductProps> = ({ da
                 name="product.code"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('tableData.productCode')}</FormLabel>
+                    <FormLabel>{t('products.code')}</FormLabel>
                     <FormControl>
                       <Input {...field} readOnly />
                     </FormControl>
@@ -85,7 +86,7 @@ export const AddNewProductRequestForm: React.FC<IFormAddNewProductProps> = ({ da
               name="product.name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('tableData.productName')}</FormLabel>
+                  <FormLabel>{t('products.name')}</FormLabel>
                   <FormControl>
                     <Input {...field} readOnly={isEditMode} />
                   </FormControl>
@@ -98,7 +99,7 @@ export const AddNewProductRequestForm: React.FC<IFormAddNewProductProps> = ({ da
               name="product.provider"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('tableData.provider')}</FormLabel>
+                  <FormLabel>{t('products.provider')}</FormLabel>
                   <FormControl>
                     <Input {...field} readOnly={isEditMode} />
                   </FormControl>
@@ -111,12 +112,12 @@ export const AddNewProductRequestForm: React.FC<IFormAddNewProductProps> = ({ da
               name="requestQuantity"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('tableData.quantity')}</FormLabel>
+                  <FormLabel>{t('products.quantity')}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
                       min="1"
-                      placeholder={t('tableData.quantity')}
+                      placeholder={t('products.quantity')}
                       {...field}
                       value={field.value || 1}
                       onChange={(e) => field.onChange(Number(e.target.value))}
@@ -132,7 +133,7 @@ export const AddNewProductRequestForm: React.FC<IFormAddNewProductProps> = ({ da
               name="product.unit"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('tableData.unit')}</FormLabel>
+                  <FormLabel>{t('products.unit')}</FormLabel>
                   <FormControl>
                     <SelectUnit
                       onChange={(value) =>
@@ -154,7 +155,7 @@ export const AddNewProductRequestForm: React.FC<IFormAddNewProductProps> = ({ da
               name="product.description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('tableData.description')}</FormLabel>
+                  <FormLabel>{t('products.description')}</FormLabel>
                   <FormControl>
                     <Input {...field} readOnly={isEditMode} />
                   </FormControl>
@@ -164,7 +165,7 @@ export const AddNewProductRequestForm: React.FC<IFormAddNewProductProps> = ({ da
             />
           </div>
           <div className="flex justify-end w-full">
-            <Button type="submit">{isEditMode ? t('tableData.add') : t('tableData.add')}</Button>
+            <Button type="submit">{tCommon('common.add')}</Button>
           </div>
         </form>
       </Form>

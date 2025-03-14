@@ -20,6 +20,7 @@ import {
 
 export const useRoleColumns = (): ColumnDef<IRole>[] => {
   const { t } = useTranslation('roles')
+  const { t: tCommon } = useTranslation('common')
   return [
     {
       accessorKey: 'slug',
@@ -51,7 +52,7 @@ export const useRoleColumns = (): ColumnDef<IRole>[] => {
 
     {
       id: 'actions',
-      header: t('roles.actions'),
+      header: tCommon('common.action'),
       cell: ({ row }) => {
         const role = row.original
         return (
@@ -59,7 +60,9 @@ export const useRoleColumns = (): ColumnDef<IRole>[] => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="w-8 h-8 p-0">
-                  <span className="sr-only">Thao tác</span>
+                  <span className="sr-only">
+                    {tCommon('common.action')}
+                  </span>
                   <MoreHorizontal className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>

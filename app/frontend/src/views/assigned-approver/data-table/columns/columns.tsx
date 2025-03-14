@@ -16,6 +16,7 @@ import { DialogDeleteAssignedApprover, DialogUpdateAssignedApprover } from '@/co
 
 export const useAssignedApproverColumns = (): ColumnDef<IAssignedApprover>[] => {
   const { t } = useTranslation(['assignedApprover'])
+  const { t: tCommon } = useTranslation(['common'])
   return [
     {
       accessorKey: 'formType',
@@ -49,7 +50,7 @@ export const useAssignedApproverColumns = (): ColumnDef<IAssignedApprover>[] => 
     },
     {
       id: 'actions',
-      header: 'Thao tác',
+      header: t('common.action'),
       cell: ({ row }) => {
         const approver = row.original
         return (
@@ -57,12 +58,16 @@ export const useAssignedApproverColumns = (): ColumnDef<IAssignedApprover>[] => 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="w-8 h-8 p-0">
-                  <span className="sr-only">Thao tác</span>
+                  <span className="sr-only">
+                    {t('common.action')}
+                  </span>
                   <MoreHorizontal className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Thao tác</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  {t('common.action')}
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DialogUpdateAssignedApprover approver={approver} />
                 <DialogDeleteAssignedApprover approver={approver} />

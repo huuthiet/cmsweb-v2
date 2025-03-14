@@ -15,13 +15,14 @@
     "companyName": "Tên công ty",
     "companyNameDescription": "Chọn công ty",
     "departmentName": "Tên bộ phận",
+    "requisitionType": "Loại yêu cầu",
     "departmentNameDescription": "Chọn bộ phận",
     "projectName": "Tên dự án",
     "projectNameDescription": "Nhập tên dự án",
     "PO": "Số PO",
     "PODescription": "Nhập số PO",
+    "company": "Công ty",
     "constructionSite": "Tên công trình",
-    "siteName": "Tên địa chỉ công trình",
     "selectSiteDescription": "Chọn địa chỉ công trình",
     "approver": "Người phê duyệt",
     "approverDescription": "Nhập tên người phê duyệt",
@@ -31,6 +32,7 @@
     "selectPriority": "Chọn mức độ ưu tiên",
     "deadlineApproval": "Hạn duyệt",
     "status": "Trạng thái",
+    "returnStatus": "Trạng thái hoàn lại",
     "deadlineApprovalDescription": "Chọn ngày hết hạn duyệt",
 
     "productInformation": "Thông tin vật tư",
@@ -109,8 +111,15 @@
     "generalInfo": "Thông tin chung",
     "productList": "Danh sách vật tư",
     "addProduct": "Thêm vật tư",
+    "addNewProduct": "Thêm vật tư mới",
+    "addNewProductDescription": "Nhập đầy đủ thông tin bên dưới để thêm vật tư mới",
 
     "viewDetail": "Xem chi tiết",
+
+    "deleteProductInRequisitionWarning1": "Bạn sắp sửa xóa vật tư ",
+    "deleteProductInRequisitionWarning2": " với mã vật tư ",
+    "deleteProductInRequisitionWarning3": " khỏi yêu cầu vật tư ",
+    "deleteProductInRequisitionConfirmation": "Bạn có chắc chắn muốn xóa vật tư này khỏi yêu cầu không?",
 
     "resubmitConfirmTitle": "Gửi lại yêu cầu",
     "descriptionInputLabel": "Nội dung",
@@ -153,10 +162,13 @@
     "urgent": "Cần gấp"
   },
   "requisitionDetail": {
+    "issuedDate": "Lần ban hành",
     "requestDetail": "Chi tiết vật tư yêu cầu",
     "requestDetailDescription": "Thông tin chi tiết của vật tư yêu cầu",
     "requestCode": "Mã yêu cầu: ",
     "createdAt": "Ngày tạo: ",
+    "deadlineApproval": "Hạn duyệt",
+    "priority": "Mức độ ưu tiên: ",
     "requester": "Người yêu cầu: ",
     "siteName": "Tên công trình: ",
     "companyName": "Tên công ty: ",
