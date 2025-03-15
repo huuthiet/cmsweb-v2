@@ -1,10 +1,7 @@
-import { useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
-import { PlusCircledIcon } from '@radix-ui/react-icons'
 import { useTranslation } from 'react-i18next'
 
 import {
-  Button,
   DataTableColumnHeader,
   Tooltip,
   TooltipContent,
@@ -15,13 +12,14 @@ import { IProductInfo } from '@/types'
 import { DialogAddProductRequest } from '@/components/app/dialog'
 
 export const useColumnsSearchProduct = (): ColumnDef<IProductInfo>[] => {
-  const { t } = useTranslation('tableData')
+  const { t } = useTranslation('productRequisition')
+  const { t: tProduct } = useTranslation('products')
 
   return [
     {
       accessorKey: 'addRequest',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title={t('tableData.addNewProduct')} />
+        <DataTableColumnHeader column={column} title={t('productRequisition.addProduct')} />
       ),
       cell: ({ row }) => {
         const product = row.original
@@ -34,7 +32,7 @@ export const useColumnsSearchProduct = (): ColumnDef<IProductInfo>[] => {
                 </div>
               </TooltipTrigger>
               <TooltipContent>
-                <p>{t('tableData.addNewProduct')}</p>
+                <p>{t('productRequisition.addProduct')}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -43,20 +41,20 @@ export const useColumnsSearchProduct = (): ColumnDef<IProductInfo>[] => {
     },
     {
       accessorKey: 'code',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Mã vật tư" />
+      header: ({ column }) => <DataTableColumnHeader column={column} title={tProduct('products.code')} />
     },
     {
       accessorKey: 'name',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Tên vật tư" />
+      header: ({ column }) => <DataTableColumnHeader column={column} title={tProduct('products.name')} />
     },
 
     {
       accessorKey: 'quantity',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng" />
+      header: ({ column }) => <DataTableColumnHeader column={column} title={tProduct('products.quantity')} />
     },
     {
       accessorKey: 'unit',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Đơn vị" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={tProduct('products.unit')} />,
       cell: ({ row }) => {
         const unit = row.original.unit
         return <span>{unit.name}</span>
@@ -64,11 +62,11 @@ export const useColumnsSearchProduct = (): ColumnDef<IProductInfo>[] => {
     },
     {
       accessorKey: 'description',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Mô tả" />
+      header: ({ column }) => <DataTableColumnHeader column={column} title={tProduct('products.description')} />
     },
     {
       accessorKey: 'provider',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Nhà cung cấp" />
+      header: ({ column }) => <DataTableColumnHeader column={column} title={tProduct('products.provider')} />
     }
   ]
 }

@@ -16,6 +16,7 @@ import { DialogDeleteDepartment, DialogUpdateDepartment } from '@/components/app
 
 export const useDepartmentColumns = (): ColumnDef<IDepartment>[] => {
   const { t } = useTranslation(['department'])
+  const { t: tCommon } = useTranslation(['common'])
   return [
     {
       accessorKey: 'slug',
@@ -39,7 +40,7 @@ export const useDepartmentColumns = (): ColumnDef<IDepartment>[] => {
     },
     {
       id: 'actions',
-      header: 'Thao tác',
+      header: tCommon('common.action'),
       cell: ({ row }) => {
         const department = row.original
         return (
@@ -47,12 +48,16 @@ export const useDepartmentColumns = (): ColumnDef<IDepartment>[] => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="w-8 h-8 p-0">
-                  <span className="sr-only">Thao tác</span>
+                  <span className="sr-only">
+                    {tCommon('common.action')}
+                  </span>
                   <MoreHorizontal className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Thao tác</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  {tCommon('common.action')}
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DialogUpdateDepartment department={department} />
                 <DialogDeleteDepartment department={department} />

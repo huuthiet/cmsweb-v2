@@ -15,7 +15,7 @@ import {
   UserAvatar
 } from '@/components/ui'
 import { DialogLogout } from '@/components/app/dialog'
-import { useAuthStore, useUserInfoPermissionsStore, useUserStore } from '@/stores'
+import { useAuthStore, useRequisitionStore, useUserInfoPermissionsStore, useUserStore } from '@/stores'
 import { Role, ROUTE } from '@/constants'
 import { hasRequiredRole, showToast } from '@/utils'
 
@@ -24,6 +24,7 @@ export function HeaderDropdown() {
   const { t: tAccount } = useTranslation('account')
   const { setLogout } = useAuthStore()
   const [open, setOpen] = useState(false)
+  const { clearRequisition } = useRequisitionStore()
   const { removeUserInfo, userInfo } = useUserStore()
   const { clearUserRoles } = useUserInfoPermissionsStore()
   const navigate = useNavigate()
@@ -32,6 +33,7 @@ export function HeaderDropdown() {
     setLogout()
     removeUserInfo()
     clearUserRoles()
+    clearRequisition()
     navigate(ROUTE.LOGIN, { replace: true })
     showToast(t('logout.logoutSuccess'))
   }
@@ -61,24 +63,24 @@ export function HeaderDropdown() {
             className="cursor-pointer"
             onClick={() => navigate(ROUTE.PERSONAL_ACCOUNT)}
           >
-            <div className="flex gap-2 items-center">
+            <div className="flex items-center gap-2">
               <UserIcon className="icon" />
               <span className="text-normal">{tAccount('account.title')}</span>
             </div>
           </DropdownMenuItem>
           {hasRequiredRole(Role.ADMIN) && (
             <DropdownMenuItem className="cursor-pointer" onClick={() => navigate(ROUTE.ADMIN)}>
-              <div className="flex gap-2 items-center">
+              <div className="flex items-center gap-2">
                 <UserCogIcon className="icon" />
                 <span className="text-normal">{tAccount('account.administration')}</span>
               </div>
             </DropdownMenuItem>
           )}
           <DropdownMenuItem
-            className="flex gap-2 justify-start items-center cursor-pointer text-danger hover:bg-red-100"
+            className="flex items-center justify-start gap-2 cursor-pointer text-danger hover:bg-red-100"
             onClick={() => setOpen(true)}
           >
-            <div className="flex gap-2 items-center">
+            <div className="flex items-center gap-2">
               <ExitIcon className="danger-icon" />
               <span className="text-danger">{t('logout.title')}</span>
             </div>
