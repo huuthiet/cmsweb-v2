@@ -16,7 +16,7 @@ import {
   registerMorgan,
 } from "@configs";
 import { logger } from "@lib";
-
+import startSchedulers from "schedulers";
 dotenv.config();
 
 const app: Express = express();
@@ -62,6 +62,8 @@ const app: Express = express();
 
   // Global error handling
   app.use(errorHandlerMiddleware.handler);
+
+  startSchedulers();
 
   app.listen(port, () => {
     logger.info(`[server]: Server is running at http://localhost:${port}`);
