@@ -96,7 +96,7 @@ class ProductRequisitionFormController {
    *             $ref: '#/components/schemas/CreateRequestProductDto'
    *       example:
    *         code: YCVT123
-   *         PO: 123
+   *         PO: po-123
    *         projectName: project-789
    *         deadlineApproval: 2024-09-12 20:45:15
    *         type: urgent
@@ -189,7 +189,7 @@ class ProductRequisitionFormController {
    *           description: Description for product requisition form
    *       example:
    *         projectName: project-123
-   *         PO: 123
+   *         PO: po-123
    *         type: normal
    *         deadlineApproval: 2024-09-15 10:25:45
    *         description: Đã chỉnh sửa
