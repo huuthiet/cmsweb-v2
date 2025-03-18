@@ -686,7 +686,6 @@ class ProductRequisitionFormService {
       UpdateGeneralInformationProductRequisitionFormRequestDto,
       plainData
     );
-    console.log({requestData})
     const errors = await validate(requestData);
     if (errors.length > 0) throw new ValidationError(errors);
 
@@ -831,6 +830,11 @@ class ProductRequisitionFormService {
         value: form.project?.name || "N/A",
         type: "data",
       },
+      {
+        cellPosition: "E7",
+        value: form.PO || "N/A",
+        type: "data",
+      },
     ];
 
     // Request products cell is already declared as an array
@@ -957,6 +961,7 @@ class ProductRequisitionFormService {
       siteName,
       createDate: moment(form.createdAt).format("DD/MM/YYYY"),
       projectName: form.project?.name,
+      PO: form.PO,
       requestProducts,
       requestUrl,
       userSignatures,
@@ -973,13 +978,11 @@ class ProductRequisitionFormService {
     };
   }
 
-  public async deleteProductRequisitionForm(
-    slug: string
-  ): Promise<number>{
+  public async deleteProductRequisitionForm(slug: string): Promise<number> {
     const form = await productRequisitionFormRepository.findOne({
       where: {
-        slug
-      }, 
+        slug,
+      },
       relations: [
         "project",
         "creator.userDepartments.department.site.company",
@@ -989,24 +992,30 @@ class ProductRequisitionFormService {
         "requestProducts.temporaryProduct.unit",
       ],
     });
-    if(!form) throw new GlobalError(ErrorCodes.FORM_NOT_FOUND);
-    
+    if (!form) throw new GlobalError(ErrorCodes.FORM_NOT_FOUND);
+
     await Promise.all([
-      form.userApprovals && await Promise.all(
-        form.userApprovals.map(async (userApproval) => {
-          // Xóa các approvalLogs của product
-          if (userApproval.approvalLogs) {
-            await Promise.all(
-              userApproval.approvalLogs.map(approvalLog => approvalLogRepository.softRemove(approvalLog))
-            );
-          }
-          // Xóa product
-          await userApprovalRepository.softRemove(userApproval);
-        })
-      ),
-      form.requestProducts && Promise.all(
-        form.requestProducts.map((product) => requestProductRepository.softRemove(product))
-      ),
+      form.userApprovals &&
+        (await Promise.all(
+          form.userApprovals.map(async (userApproval) => {
+            // Xóa các approvalLogs của product
+            if (userApproval.approvalLogs) {
+              await Promise.all(
+                userApproval.approvalLogs.map((approvalLog) =>
+                  approvalLogRepository.softRemove(approvalLog)
+                )
+              );
+            }
+            // Xóa product
+            await userApprovalRepository.softRemove(userApproval);
+          })
+        )),
+      form.requestProducts &&
+        Promise.all(
+          form.requestProducts.map((product) =>
+            requestProductRepository.softRemove(product)
+          )
+        ),
     ]);
 
     const deleted = await productRequisitionFormRepository.softDelete({ slug });
