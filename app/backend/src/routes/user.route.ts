@@ -26,6 +26,9 @@ userRoute.patch("/info", userController.updateUserInfo);
 // [PATCH] /api/v1/users/{slug}/username
 userRoute.patch("/:slug/username", userController.updateUsername);
 
+// [PATCH] /api/v1/users/{slug}/reset-password
+userRoute.patch("/:slug/reset-password", userController.resetPasswordUser);
+
 // [PATCH] /api/v1/users/signature
 userRoute.patch(
   "/upload/sign",
