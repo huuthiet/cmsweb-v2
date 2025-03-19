@@ -497,6 +497,51 @@ class UserController {
 
   /**
    * @swagger
+   * /users/{slug}/reset-password:
+   *   patch:
+   *     summary: Reset password
+   *     tags: [User]
+   *     parameters:
+   *       - in: path
+   *         name: slug
+   *         schema:
+   *           type: string
+   *         required: true
+   *         description: The slug of user
+   *         example: slug-123
+   *     responses:
+   *       200:
+   *         description: Username has updated successfully
+   *       500:
+   *         description: Server error
+   *       1004:
+   *         description: User not found
+   */
+  public async resetPasswordUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { slug } = req.params;
+
+      const result = await userService.resetPasswordUser(slug);
+      const response: TApiResponse<UserResponseDto> = {
+        code: StatusCodes.OK,
+        error: false,
+        message: `Reset password user successfully`,
+        method: req.method,
+        path: req.originalUrl,
+        result,
+      };
+      res.status(StatusCodes.OK).json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * @swagger
    * /users/{slug}:
    *   delete:
    *     summary: Delete user

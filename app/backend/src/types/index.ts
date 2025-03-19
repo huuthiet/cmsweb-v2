@@ -8,6 +8,7 @@ export type TEnv = {
     databaseMySql: string;
   };
   hashSalt: string;
+  resetPassWordDefault: string;
   jwtSecret: string;
   passportSecret: string;
   duration: number;
