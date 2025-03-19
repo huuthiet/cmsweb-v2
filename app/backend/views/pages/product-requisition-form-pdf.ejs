@@ -36,7 +36,7 @@
         </table>
        
         <!-- Form info -->
-        <div class="flex items-center justify-between mt-5">
+        <div class="grid grid-cols-3 w-full gap-4 mt-5">
             <div class="flex flex-col gap-2">
                 <div class=""><span class="font-bold">Người yêu cầu:</span> <%= creatorName %></div>
                 <div><span class="font-bold">Công trình sử dụng:</span> <%= siteName %></div>
@@ -44,6 +44,9 @@
             <div class="flex flex-col gap-2">
                 <div><span class="font-bold">Ngày:</span> <%= createDate %></div>
                 <div><span class="font-bold">Dự án:</span> <%= projectName %></div>
+            </div>
+            <div class="flex flex-col gap-2">
+                <div><span class="font-bold">PO:</span> <%= PO %></div>
             </div>
         </div>
 

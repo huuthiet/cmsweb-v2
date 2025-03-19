@@ -238,15 +238,28 @@ class UserService {
     return userDto;
   }
 
-  public async deleteUser(
-    slug: string
-  ): Promise<number> {
+  public async deleteUser(slug: string): Promise<number> {
     const user = await userRepository.findOneBy({ slug });
 
-    if(!user) throw new GlobalError(ErrorCodes.USER_NOT_FOUND);
+    if (!user) throw new GlobalError(ErrorCodes.USER_NOT_FOUND);
 
     const deleted = await userRepository.softDelete({ slug });
     return deleted.affected || 0;
+  }
+
+  public async resetPasswordUser(slug: string): Promise<UserResponseDto> {
+    const user = await userRepository.findOneBy({ slug });
+    if (!user) throw new GlobalError(ErrorCodes.USER_NOT_FOUND);
+
+    const newHashedPassword = await bcrypt.hash(
+      env.resetPassWordDefault,
+      env.hashSalt
+    );
+
+    Object.assign(user, { password: newHashedPassword });
+    const updatedUser = await userRepository.save(user);
+    const userDto = mapper.map(updatedUser, User, UserResponseDto);
+    return userDto;
   }
 }
 

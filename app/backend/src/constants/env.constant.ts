@@ -14,6 +14,7 @@ export const env: TEnv = {
     databaseMySql: process.env.DATABASE_MYSQL || "",
   },
   hashSalt: process.env.HASH_SALT || "",
+  resetPassWordDefault: process.env.RESET_PASSWORD_DEFAULT || "",
   jwtSecret: process.env.JWT_SECRET || "",
   passportSecret: process.env.PASSPORT_SECRET || "",
   port: port,
