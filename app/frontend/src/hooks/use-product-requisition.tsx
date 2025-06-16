@@ -124,15 +124,10 @@ export const useResubmitProductRequisition = (slug: string) => {
 }
 
 export const useApproveProductRequisition = () => {
-  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: IApproveProductRequisition) =>
       approveProductRequisition(data.formSlug, data.approvalLog),
-    onSuccess: (data, variables) => {
-      // Invalidate the specific requisition query
-      // queryClient.invalidateQueries({
-      //   queryKey: ['requisitionByUserApproval']
-      // })
+    onSuccess: (data) => {
       return data
     }
   })
