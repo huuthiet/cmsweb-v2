@@ -1,4 +1,6 @@
 import React from 'react'
+import { AxiosError } from 'axios'
+import { isAxiosError } from 'axios'
 import { useParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { ReaderIcon } from '@radix-ui/react-icons'
@@ -20,8 +22,6 @@ import {
   useUpdateProductRequisitionGeneralInfo,
   useUpdateProductRequisitionQuantity
 } from '@/hooks'
-import { isAxiosError } from 'axios'
-import { AxiosError } from 'axios'
 
 const UpdateProductRequisition: React.FC = () => {
   const { t } = useTranslation(['productRequisition'])
@@ -84,7 +84,7 @@ const UpdateProductRequisition: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <Label className="flex items-center gap-1 font-semibold text-normal text-md font-beVietNam">
+      <Label className="flex gap-1 items-center font-semibold text-normal text-md font-beVietNam">
         <ReaderIcon className="header-icon" />
         {t('productRequisition.updateProductRequisition')}
       </Label>

@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { NormalRequisitionByWarehouseKeeperListTabscontent, UrgentRequisitionByWarehouseKeeperListTabscontent } from '../tabscontent'
+import { RequisitionType } from '@/constants'
 
 export default function RequisitionByWarehouseKeeperListTabs() {
     const { t } = useTranslation(['warehouse'])
@@ -15,7 +16,7 @@ export default function RequisitionByWarehouseKeeperListTabs() {
                     {t('warehouse.urgent')}
                 </TabsTrigger>
             </TabsList>
-            <TabsContent value="normal" className="w-full p-0">
+            <TabsContent value="normal" className="p-0 w-full">
                 <NormalRequisitionByWarehouseKeeperListTabscontent />
             </TabsContent>
             <TabsContent value="urgent" className="p-0">
