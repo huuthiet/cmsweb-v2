@@ -13,7 +13,8 @@ export default function UrgentRequisitionByCreatorListTabscontent() {
     const { data, isLoading } = useProductRequisitionByCreator({
         page: pagination.pageIndex,
         pageSize: pagination.pageSize,
-        order: 'DESC'
+        order: 'DESC',
+        type: RequisitionType.URGENT
     })
 
     // get urgent requisition list
@@ -25,7 +26,7 @@ export default function UrgentRequisitionByCreatorListTabscontent() {
 
     return (
         <div
-            className={`flex w-full flex-col pr-2 transition-all duration-300 ease-in-out`}
+            className={`flex flex-col pr-2 w-full transition-all duration-300 ease-in-out`}
         >
             <DataTable
                 isLoading={isLoading}

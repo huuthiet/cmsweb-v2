@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router'
 
 import { usePagination, useProductRequisitionByApprover } from '@/hooks'
 import { IRequisitionFormResponseForApprover } from '@/types'
-import { ROUTE } from '@/constants'
+import { RequisitionType, ROUTE } from '@/constants'
 import { DataTableFilterOptions, useColumnsRequisitionList } from '@/views/product-requisitions/data-table'
 import { DataTable } from '@/components/ui'
 
@@ -16,13 +16,14 @@ export default function NormalRequisitionListTabscontent() {
     const { data, isLoading } = useProductRequisitionByApprover({
         page: pagination.pageIndex,
         pageSize: pagination.pageSize,
-        order: 'DESC'
+        order: 'DESC',
+        type: RequisitionType.NORMAL
     })
 
     // get normal requisition list
     const normalRequisitionList = useMemo(() => {
         return data?.result?.items?.filter(
-            (item) => item.productRequisitionForm.type === 'normal'
+            (item) => item.productRequisitionForm.type === RequisitionType.NORMAL
         ) || []
     }, [data?.result?.items])
 
@@ -49,7 +50,7 @@ export default function NormalRequisitionListTabscontent() {
 
     return (
         <div
-            className={`flex w-full flex-col pr-2 transition-all duration-300 ease-in-out`}
+            className={`flex flex-col pr-2 w-full transition-all duration-300 ease-in-out`}
         >
             <DataTable
                 isLoading={isLoading}
