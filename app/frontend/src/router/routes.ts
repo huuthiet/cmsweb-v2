@@ -43,11 +43,11 @@ export const sidebarRoutes: ISidebarRoute[] = [
         path: ROUTE.WAREHOUSE,
         permission: { authority: Authority.READ, resource: Resource.WAREHOUSE }
       },
-      {
-        title: 'sidebar.warehouseList',
-        path: ROUTE.WAREHOUSE_LIST,
-        permission: { authority: Authority.READ, resource: Resource.WAREHOUSE }
-      },
+      // {
+      //   title: 'sidebar.warehouseList',
+      //   path: ROUTE.WAREHOUSE_LIST,
+      //   permission: { authority: Authority.READ, resource: Resource.WAREHOUSE }
+      // },
       {
         title: 'sidebar.createWarehouse',
         path: ROUTE.ADD_WAREHOUSE,

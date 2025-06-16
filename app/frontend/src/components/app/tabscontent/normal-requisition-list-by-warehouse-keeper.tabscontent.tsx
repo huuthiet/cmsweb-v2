@@ -1,5 +1,3 @@
-import { useMemo } from 'react'
-
 import { useGetApprovedProductRequisition, usePagination } from '@/hooks'
 import { ProductRequisitionActionOptions } from '@/views/product-requisitions/data-table'
 import { DataTable } from '@/components/ui'
@@ -14,19 +12,22 @@ export default function NormalRequisitionByWarehouseKeeperListTabscontent() {
     const { data, isLoading } = useGetApprovedProductRequisition({
         page: pagination.pageIndex,
         pageSize: pagination.pageSize,
-        order: 'DESC'
+        order: 'DESC',
+        type: RequisitionType.NORMAL
     })
 
-    // get normal requisition list
-    const normalRequisitionList = useMemo(() => {
-        return data?.result?.items?.filter(
-            (item) => item.type === RequisitionType.NORMAL
-        ) || []
-    }, [data?.result?.items])
+    const normalRequisitionList = data?.result?.items || []
+
+    // use useEffect to get normal requisition list
+    // const normalRequisitionList = useMemo(() => {
+    //     return data?.result?.items?.filter(
+    //         (item) => item.type === RequisitionType.NORMAL
+    //     ) || []
+    // }, [data?.result?.items])
 
     return (
         <div
-            className={`flex w-full flex-col pr-2 transition-all duration-300 ease-in-out`}
+            className={`flex flex-col pr-2 w-full transition-all duration-300 ease-in-out`}
         >
             <DataTable
                 isLoading={isLoading}

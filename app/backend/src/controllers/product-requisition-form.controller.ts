@@ -1,7 +1,5 @@
 import {
   TApiResponse,
-  TGetAllProductRequisitionForms,
-  TGetAllProductRequisitionFormsCompletedApproval,
   TPaginationOptionResponse,
   TQueryRequest,
   TResubmitProductRequisitionFormRequestDto,
@@ -213,14 +211,6 @@ class ProductRequisitionFormController {
    *     tags: [ProductRequisitionForm]
    *     parameters:
    *       - in: query
-   *         name: type
-   *         schema:
-   *           type: string
-   *           enum: [normal, urgent]
-   *         required: false
-   *         description: The type of product requisition form (normal, urgent)
-   *         example: normal
-   *       - in: query
    *         name: order
    *         schema:
    *           type: string
@@ -255,7 +245,7 @@ class ProductRequisitionFormController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const query = req.query as unknown as TGetAllProductRequisitionForms;
+      const query = req.query as unknown as TQueryRequest;
       const creatorId = req.userId as string;
       logger.info(`[${ProductRequisitionFormController.name}]`, query);
       const results =
@@ -287,14 +277,6 @@ class ProductRequisitionFormController {
    *     summary: Get completed approval product requisition forms
    *     tags: [ProductRequisitionForm]
    *     parameters:
-   *       - in: query
-   *         name: type
-   *         schema:
-   *           type: string
-   *           enum: [normal, urgent]
-   *         required: false
-   *         description: The type of product requisition form (normal, urgent)
-   *         example: normal
    *       - in: query
    *         name: order
    *         schema:
@@ -330,8 +312,7 @@ class ProductRequisitionFormController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const query =
-        req.query as unknown as TGetAllProductRequisitionFormsCompletedApproval;
+      const query = req.query as unknown as TQueryRequest;
       logger.info(`[${ProductRequisitionFormController.name}]`, query);
       const results =
         await productRequisitionFormService.getAllProductRequisitionFormsCompletedApproval(

@@ -1,3 +1,4 @@
+import { RequisitionType } from '@/constants'
 import { IQuery } from './base.type'
 import { ApprovalLogStatus } from './product-requisition.type'
 
@@ -64,6 +65,7 @@ export interface INonExistingProductInfo {
 
 export interface IProductQuery extends IQuery {
   searchTerm?: string
+  type?: RequisitionType
 }
 
 export interface IApproveProductRequisition {
