@@ -1,7 +1,6 @@
 import {
   TCreateRequestProductRequestDto,
   TCreateApprovalLogRequestDto,
-  TQueryRequest,
 } from "@types";
 
 export type TCreateProductRequisitionFormRequestDto = {
@@ -34,12 +33,4 @@ export type TUpdateGeneralInformationProductRequisitionFormRequestDto = {
   type?: string;
   deadlineApproval?: string;
   description?: string;
-};
-
-export type TGetAllProductRequisitionFormsCompletedApproval = TQueryRequest & {
-  type?: string; //normal, urgent
-};
-
-export type TGetAllProductRequisitionForms = TQueryRequest & {
-  type?: string; //normal, urgent
 };

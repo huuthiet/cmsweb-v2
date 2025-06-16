@@ -23,8 +23,6 @@ import {
   TResubmitProductRequisitionFormRequestDto,
   TUpdateGeneralInformationProductRequisitionFormRequestDto,
   TFileResponseDto,
-  TGetAllProductRequisitionFormsCompletedApproval,
-  TGetAllProductRequisitionForms,
 } from "@types";
 import {
   ExportRequestProductResponseDto,
@@ -65,12 +63,12 @@ import { productRequisitionFormProducer } from "producer";
 class ProductRequisitionFormService {
   public async getAllProductRequisitionForms(
     creatorId: string,
-    options: TGetAllProductRequisitionForms
+    options: TQueryRequest
   ): Promise<TPaginationOptionResponse<ProductRequisitionFormResponseDto[]>> {
     // Get the total number of products
     const totalProductRequisitionForm =
       await productRequisitionFormRepository.count({
-        where: { creator: { id: creatorId }, type: options.type },
+        where: { creator: { id: creatorId } },
       });
 
     // Parse and validate pagination parameters
@@ -79,7 +77,7 @@ class ProductRequisitionFormService {
     const totalPages = Math.ceil(totalProductRequisitionForm / pageSize);
 
     const forms = await productRequisitionFormRepository.find({
-      where: { creator: { id: creatorId }, type: options.type },
+      where: { creator: { id: creatorId } },
       take: pageSize,
       skip: (page - 1) * pageSize,
       order: { type: "DESC", createdAt: options.order },
@@ -107,7 +105,7 @@ class ProductRequisitionFormService {
   }
 
   public async getAllProductRequisitionFormsCompletedApproval(
-    options: TGetAllProductRequisitionFormsCompletedApproval
+    options: TQueryRequest
   ): Promise<TPaginationOptionResponse<ProductRequisitionFormResponseDto[]>> {
     // Get the total number of products
     const totalProductRequisitionForm =
@@ -118,7 +116,6 @@ class ProductRequisitionFormService {
             ProductRequisitionFormStatus.EXPORTING,
             ProductRequisitionFormStatus.DONE,
           ]),
-          type: options.type,
         },
       });
 
@@ -135,7 +132,6 @@ class ProductRequisitionFormService {
           ProductRequisitionFormStatus.EXPORTING,
           ProductRequisitionFormStatus.DONE,
         ]),
-        type: options.type,
       },
       take: pageSize,
       skip: (page - 1) * pageSize,
