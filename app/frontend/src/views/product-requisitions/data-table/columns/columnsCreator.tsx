@@ -127,7 +127,7 @@ export const useColumnsRequisitionListCreator = (): ColumnDef<IProductRequisitio
           <>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="w-8 h-8 p-0">
+                <Button variant="ghost" className="p-0 w-8 h-8">
                   <span className="sr-only">
                     {tCommon('common.action')}
                   </span>

@@ -50,7 +50,7 @@ const DialogDeleteUserDepartment: React.FC<IFormDeleteUserDepartmentProps> = ({ 
       <DialogContent className="max-w-[22rem] rounded-md sm:max-w-[32rem] font-beVietNam">
         <DialogHeader>
           <DialogTitle className="pb-4 border-b border-destructive text-destructive">
-            <div className="flex items-center gap-2">
+            <div className="flex gap-2 items-center">
               <TriangleAlert className="w-6 h-6" />
               {t('employees.deleteUserDepartment')}
             </div>
@@ -61,14 +61,14 @@ const DialogDeleteUserDepartment: React.FC<IFormDeleteUserDepartmentProps> = ({ 
 
           <div className="py-4 text-sm text-gray-500">
             {t('employees.deleteUserDepartmentWarning1')}{' '}
-            <span className="font-bold">{user?.userDepartments[0].department.description}</span>
+            <span className="font-bold">{user?.userDepartments[0]?.department?.description || ''}</span>
             {t('employees.deleteUserDepartmentWarning2')}{' '}
             <span className="font-bold">{user?.fullname}</span>.
             <br />
             {t('employees.deleteUserDepartmentConfirmation')}
           </div>
         </DialogHeader>
-        <DialogFooter className="flex flex-row justify-center gap-2">
+        <DialogFooter className="flex flex-row gap-2 justify-center">
           <Button variant="outline" onClick={() => setIsOpen(false)}>
             {t('employees.cancel')}
           </Button>
