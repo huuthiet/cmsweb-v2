@@ -87,9 +87,11 @@ export const useEmployeeColumns = (): ColumnDef<IUserInfo>[] => {
             {userDepartments &&
               userDepartments.map((item) => {
                 return item?.department?.description ? (
-                  <Badge className="font-normal bg-green-500 w-fit hover:bg-green-500">
-                    {item?.department?.description}
-                  </Badge>
+                  <div className='flex justify-center min-w-[14rem]'>
+                    <Badge className="py-1 font-normal bg-green-500 hover:bg-green-500">
+                      {item?.department?.description}
+                    </Badge>
+                  </div>
                 ) : (
                   <div></div>
                 )
@@ -102,14 +104,14 @@ export const useEmployeeColumns = (): ColumnDef<IUserInfo>[] => {
       id: tCommon('common.action'),
       cell: ({ row }) => {
         const user = row.original
-        const hasDepartment = user?.userDepartments?.[0]?.department
+        const hasDepartment = user?.userDepartments?.some(dep => dep.department != null)
         const hasRole = user?.userRoles
 
         return (
           <div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="w-8 h-8 p-0">
+                <Button variant="ghost" className="p-0 w-8 h-8">
                   <span className="sr-only">
                     {tCommon('common.action')}
                   </span>
