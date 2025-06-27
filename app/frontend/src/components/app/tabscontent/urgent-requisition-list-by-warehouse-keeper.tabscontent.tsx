@@ -18,13 +18,6 @@ export default function UrgentRequisitionByWarehouseKeeperListTabscontent() {
 
     const urgentRequisitionList = data?.result?.items || []
 
-    // get urgent requisition list
-    // const urgentRequisitionList = useMemo(() => {
-    //     return data?.result?.items?.filter(
-    //         (item) => item.type === RequisitionType.URGENT
-    //     ) || []
-    // }, [data?.result?.items])
-
     return (
         <div
             className={`flex flex-col pr-2 w-full transition-all duration-300 ease-in-out`}

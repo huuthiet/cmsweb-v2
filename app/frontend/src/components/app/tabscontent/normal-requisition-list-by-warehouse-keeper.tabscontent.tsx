@@ -18,13 +18,6 @@ export default function NormalRequisitionByWarehouseKeeperListTabscontent() {
 
     const normalRequisitionList = data?.result?.items || []
 
-    // use useEffect to get normal requisition list
-    // const normalRequisitionList = useMemo(() => {
-    //     return data?.result?.items?.filter(
-    //         (item) => item.type === RequisitionType.NORMAL
-    //     ) || []
-    // }, [data?.result?.items])
-
     return (
         <div
             className={`flex flex-col pr-2 w-full transition-all duration-300 ease-in-out`}
