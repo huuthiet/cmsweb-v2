@@ -24,19 +24,8 @@ import { DialogRequisitionDetail } from '@/components/app/dialog'
 export const useWarehouseColumns = (): ColumnDef<IProductRequisitionFormInfo>[] => {
   const { t } = useTranslation(['warehouse'])
   const { t: tCommon } = useTranslation(['common'])
-  // const [, setOpenViewDialog] = useState(false)
-  // const [, setSelectedRequisition] = useState<IProductRequisitionFormInfo | null>(null)
   const { mutate: exportPDFProductRequisition } = useExportPDFProductRequisition()
   const { mutate: exportExcelProductRequisition } = useExportExcelProductRequisition()
-
-  // const handleOpenViewDialog = (requisition: IProductRequisitionFormInfo) => {
-  //   setOpenViewDialog(true)
-  //   setSelectedRequisition(requisition)
-  // }
-
-  // const onViewDialogOpenChange = () => {
-  //   setOpenViewDialog(false)
-  // }
 
   const handleExportPDFProductRequisition = (requestData: IExportProductRequisitionFormRequest) => {
     exportPDFProductRequisition(requestData, {
@@ -69,6 +58,23 @@ export const useWarehouseColumns = (): ColumnDef<IProductRequisitionFormInfo>[] 
         return date ? format(date, 'HH:mm dd/MM/yyyy') : 'Không có'
       }
     },
+    {
+      id: 'approvalStage3Time',
+      header: () => t('warehouse.approvalStage3Time'),
+      cell: ({ row }) => {
+        const approvals = row.original.userApprovals
+        const stage3 = approvals?.find(
+          (a) => a.assignedUserApproval?.roleApproval === 'approval_stage_3'
+        )
+        const approvalLog = stage3?.approvalLogs?.[0]?.createdAt
+
+        return approvalLog
+          ? new Date(approvalLog).toLocaleString('vi-VN')
+          : '-'
+      },
+      enableSorting: false
+    },
+
     {
       accessorKey: 'PO',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Số PO" />,
@@ -111,7 +117,7 @@ export const useWarehouseColumns = (): ColumnDef<IProductRequisitionFormInfo>[] 
           <div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="p-0 w-8 h-8">
+                <Button variant="ghost" className="w-8 h-8 p-0">
                   <span className="sr-only">
                     {tCommon('common.action')}
                   </span>

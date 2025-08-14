@@ -12,6 +12,7 @@
     "downloading": "Downloading your file...",
     "pdfExport": "Export PDF",
     "excelExport": "Export Excel",
-    "approvedRequisitionList": "Approved Requisition List"
+    "approvedRequisitionList": "Approved Requisition List",
+    "approvalStage3Time": "Approval Stage 3 Time"
   }
 }
