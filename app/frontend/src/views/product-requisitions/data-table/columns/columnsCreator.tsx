@@ -18,7 +18,7 @@ import { ProductRequisitionByCreatorStatusBadge } from '@/components/app/badge'
 import { RequisitionTypeBadge } from '@/components/app/badge'
 import { DialogDeleteProductRequisition, DialogRequisitionDetail } from '@/components/app/dialog'
 import { RecalledStatusBadge } from '@/components/app/badge'
-import { Authority, FormApprovalType, ROUTE } from '@/constants'
+import { Authority, FormApprovalType, RequisitionStatus, ROUTE } from '@/constants'
 import { useTranslation } from 'react-i18next'
 import { useUserInfoPermissionsStore } from '@/stores'
 
@@ -149,7 +149,7 @@ export const useColumnsRequisitionListCreator = (): ColumnDef<IProductRequisitio
                   role.permissions?.some(permission =>
                     permission.authority === Authority.DELETE && permission.resource === FormApprovalType.PRODUCT_REQUISITION_FORM
                   )
-                ) && <DialogDeleteProductRequisition requisition={requisition} />}
+                ) && requisition.status === RequisitionStatus.WAITING && <DialogDeleteProductRequisition requisition={requisition} />}
 
               </DropdownMenuContent>
             </DropdownMenu>

@@ -37,7 +37,6 @@ const UpdateProductRequisition: React.FC = () => {
 
   const handleUpdateGeneralInfo = (data: IUpdateProductRequisitionGeneralInfo) => {
     if (data) {
-      console.log(data)
       updateGeneralInfo(data, {
         onSuccess: () => {
           showToast(tToast('toast.updateRequestSuccess'))

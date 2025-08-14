@@ -119,8 +119,18 @@ export const AddNewProductRequestForm: React.FC<IFormAddNewProductProps> = ({ da
                       min="1"
                       placeholder={t('products.quantity')}
                       {...field}
-                      value={field.value || 1}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      value={field.value ?? ''} // Cho phép null/undefined => hiển thị trống
+                      onFocus={(e) => e.target.select()} // Chọn hết khi focus
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        // Cho phép rỗng để user gõ mới
+                        field.onChange(val === '' ? '' : Number(val));
+                      }}
+                      onBlur={(e) => {
+                        let val = Number(e.target.value);
+                        if (!val || val < 1) val = 1; // Nếu trống hoặc < 1 => set về 1
+                        field.onChange(val);
+                      }}
                     />
                   </FormControl>
                   <FormMessage />
