@@ -31,7 +31,7 @@ class PDFService {
 
       const buffer = await page.pdf({
         format: "A4",
-        landscape: true,
+        // landscape: true,
         printBackground: true,
       });
 
