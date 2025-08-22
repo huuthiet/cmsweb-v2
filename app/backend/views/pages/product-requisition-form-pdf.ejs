@@ -16,36 +16,36 @@
                         <img src="<%= requestUrl %>/api/<%= tag %>/files/<%= companyLogo  %>" alt="logo" class="w-20">
                     </div>
                 </td>
-                <td rowspan="2" class="border border-black px-4 py-2 uppercase text-center font-bold text-xl">
+                <td rowspan="2" class="border border-black py-2 uppercase text-center font-bold text-lg">
                     <h2>PHIẾU YÊU CẦU VẬT TƯ</h2>
                 </td>
-                <td class="border border-black px-4 py-2 text-center">
+                <td class="border border-black py-2 text-center">
                     KMH            
                 </td>
-                <td class="border border-black px-4 py-2 text-center uppercase">QR3-01/001
+                <td class="border border-black py-2 text-center uppercase">QR3-01/001
                 </td>
             </tr>
             <tr class="">
-                <td class="border border-black px-4 py-2 uppercase text-center">
+                <td class="border border-black py-2 uppercase text-center">
                     Lần Ban Hành
                 </td>
-                <td class="border border-black px-4 py-2 text-center">
+                <td class="border border-black py-2 text-center">
                     1
                 </td>
             </tr>
         </table>
        
         <!-- Form info -->
-        <div class="grid grid-cols-3 w-full gap-4 mt-5">
-            <div class="flex flex-col gap-2">
+        <div class="grid grid-cols-12 w-full gap-1 mt-5">
+            <div class="flex flex-col gap-2 col-span-6">
                 <div class=""><span class="font-bold">Người yêu cầu:</span> <%= creatorName %></div>
-                <div><span class="font-bold">Công trình sử dụng:</span> <%= siteName %></div>
+                <div><span class="font-bold">Công trình sử dụng:</span> nguyen huu thiet phan quyet thang</div>
             </div>
-            <div class="flex flex-col gap-2">
+            <div class="flex flex-col gap-2 col-span-3">
                 <div><span class="font-bold">Ngày:</span> <%= createDate %></div>
                 <div><span class="font-bold">Dự án:</span> <%= projectName %></div>
             </div>
-            <div class="flex flex-col gap-2">
+            <div class="flex flex-col gap-2 col-span-3">
                 <div><span class="font-bold">PO:</span> <%= PO %></div>
             </div>
         </div>
