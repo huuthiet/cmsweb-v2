@@ -3,38 +3,44 @@ import { UserApproval } from "@entities";
 import { ErrorCodes, GlobalError } from "@exception";
 import { mapper } from "@mappers";
 import { userApprovalRepository } from "@repositories";
-import { TPaginationOptionResponse, TQueryRequest } from "@types";
+import {
+  TPaginationOptionResponse,
+  TGetAllProductRequisitionForms,
+} from "@types";
 import { parsePagination } from "@utils";
+import { FindOptionsWhere } from "typeorm";
 
 class UserApprovalService {
   public async getUserApprovals(
     userId: string,
-    options: TQueryRequest
+    options: TGetAllProductRequisitionForms
   ): Promise<TPaginationOptionResponse<UserApprovalFormResponseDto[]>> {
     // Parse and validate pagination parameters
     const { page, pageSize } = parsePagination(options);
 
-    const totalApprovalForms = await userApprovalRepository.count({
-      where: {
-        assignedUserApproval: {
-          user: {
-            id: userId,
-          },
+    const whereConditions: FindOptionsWhere<UserApproval> = {
+      assignedUserApproval: {
+        user: {
+          id: userId,
         },
       },
+    };
+
+    if (options.type) {
+      whereConditions.productRequisitionForm = {
+        type: options.type,
+      };
+    }
+
+    const totalApprovalForms = await userApprovalRepository.count({
+      where: whereConditions,
     });
 
     // Calculate pagination details
     const totalPages = Math.ceil(totalApprovalForms / pageSize);
 
     const approvalForms = await userApprovalRepository.find({
-      where: {
-        assignedUserApproval: {
-          user: {
-            id: userId,
-          },
-        },
-      },
+      where: whereConditions,
       take: pageSize,
       skip: (page - 1) * pageSize,
       order: {
