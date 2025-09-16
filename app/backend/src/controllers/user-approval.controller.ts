@@ -2,7 +2,11 @@ import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 
 import { userApprovalService } from "@services";
-import { TApiResponse, TPaginationOptionResponse, TQueryRequest } from "@types";
+import {
+  TApiResponse,
+  TPaginationOptionResponse,
+  TGetAllProductRequisitionForms,
+} from "@types";
 import { UserApprovalFormResponseDto } from "@dto/response";
 
 class UserApprovalController {
@@ -54,6 +58,13 @@ class UserApprovalController {
    *         required: true
    *         description: The number of product requisition forms to retrieve
    *         example: 10
+   *       - in: query
+   *         name: type
+   *         schema:
+   *           type: string
+   *         required: false
+   *         description: The type of product requisition forms to retrieve
+   *         example: 'normal'
    *     responses:
    *       200:
    *         description: User approval have been retrieved successfully.
@@ -67,7 +78,7 @@ class UserApprovalController {
   ): Promise<void> {
     try {
       const { userId = "" } = req;
-      const query = req.query as unknown as TQueryRequest;
+      const query = req.query as unknown as TGetAllProductRequisitionForms;
       const results = await userApprovalService.getUserApprovals(userId, query);
       const response: TApiResponse<
         TPaginationOptionResponse<UserApprovalFormResponseDto[]>
